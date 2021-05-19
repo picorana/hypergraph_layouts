@@ -1,0 +1,1 @@
+var ModuleWirings = {"pc-axis":"/extension/pc-axis/","gdata":"/extension/gdata/","wikidata":"/extension/wikidata/","jython":"/extension/jython/","database":"/extension/database/","sample":"/extension/sample/","phonetic":"/extension/phonetic/","core":"/"};

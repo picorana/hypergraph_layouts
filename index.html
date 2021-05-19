@@ -1,0 +1,136 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/d3.min.js"></script>
+  <script src="lib/glpk.min.js"></script>
+
+  <script src="src/stratisfimal/simplegraph.js"></script>
+  <script src="src/stratisfimal/simpleLp.js"></script>
+
+  <style>
+      text {
+          font-family: Arial;
+          font-size: x-small;
+          color: gray;
+          text-anchor: middle;
+      }
+
+      svg {
+          padding: 5%;
+      }
+
+  </style>
+</head>
+<body></body>
+</html>
+
+<script>
+    d3.json("data/inria-teams.json").then((data) =>{
+
+        console.log(data)
+
+        let firstdate = Infinity
+        for (let el in data){
+            let startdate = parseInt(data[el].period[0].split("/")[2])
+            if (startdate < firstdate) firstdate = startdate;
+        }
+
+        firstdate = firstdate; // REMOVE THIS FOR FULL TEST
+
+        let svg = d3.select('body')
+            .append('svg')
+            .attr("width", 3000)
+            .attr("height", 500)
+
+        let graph = new Graph();
+
+        // let groupnames = ["AVIZ", "IN-SITU", "EX-SITU", "ILDA", "VASY", "CONVECS", "IPARLA", "POTIOC", "MANAO", "PHOENIX"]
+        let groupnames = ["AVIZ", "IN-SITU"]
+
+        let totalnodecount = 0;
+
+        for (let el in data){
+            totalnodecount++;
+            if (groupnames.includes(data[el].name)) {
+                // console.log(data[el])
+
+                let newgroup = {nodes:[]}
+                graph.addGroup(newgroup);
+
+                let startdate = parseInt(data[el].period[0].split("/")[2])
+                let enddate = parseInt(data[el].period[1].split("/")[2])
+                let prevnode;
+
+                for (let i=0; i<=enddate-startdate; i++){
+                    let newnode = {
+                        name: data[el].name,
+                        id: data[el].name.replaceAll("-", ""),
+                        depth: i + startdate - firstdate,
+                        fullname: data[el].fullname
+                    }
+
+                    if (graph.nodeIndex[newnode.depth] == undefined) {
+                        graph.addNode(newnode)
+                        newgroup.nodes.push(newnode)
+                    } else if (!graph.nodeIndex[newnode.depth].find(n => n.name == newnode.name)){
+                        graph.addNode(newnode)
+                        newgroup.nodes.push(newnode)
+                    } else {
+                        newnode = graph.nodeIndex[newnode.depth].find(n => n.name == newnode.name)
+                    }
+
+                    if (prevnode != undefined){
+                        graph.addEdge({nodes: [prevnode, newnode]})
+                    }
+
+                    prevnode = newnode;
+                }
+
+                // connect "becomes" and "spins-off"
+                for (let r of data[el].genealogy_details){
+                    // if (!groupnames.includes(r[0].split(" ")[0]) || !groupnames.includes(r[1].split(" ")[0])) console.log(r)
+
+                    if (r[0] == data[el].fullname || r[2] == data[el].fullname) {
+                        
+                        let lastnode = graph.nodes.filter(n => n.fullname == r[2])[0]
+
+                        if (lastnode == undefined) continue;
+
+                        let firstgroupnodes = graph.nodeIndex[lastnode.depth-1].filter(n => n.fullname == r[0])
+                        let firstnode = firstgroupnodes[firstgroupnodes.length - 1]
+
+                        if (lastnode != undefined && firstnode != undefined && 
+                            !graph.edges.find(e => e.nodes[0] == firstnode && e.nodes[1] == lastnode)) {
+                                graph.addEdge({nodes: [firstnode, lastnode], edgetype: r[1]})
+                            }
+                    } 
+                } 
+            }
+        }
+
+        let algorithm = new SimpleLp(graph)
+        algorithm.options.crossings_reduction_active = false;
+        algorithm.options.bendiness_reduction_active = true;
+        algorithm.options.simplify_for_groups_enabled = true;
+        algorithm.arrange();
+        algorithm.apply_solution();
+
+        graph.draw(svg);
+
+        console.log("ALGORITHM SOLVE TIME: ", algorithm.solveTime, "ms")
+        console.log("NUM NODES:", graph.nodes.length)
+
+        // svg.selectAll("path").filter(e => e.edgetype == "becomes").attr("stroke-dasharray", "5 3")
+        svg.selectAll("path").filter(e => e.edgetype == "spins-off").attr("stroke-dasharray", "3 3")
+        svg.selectAll("text").style("font-size", "0.5em")
+
+        for (let i in graph.nodeIndex){
+            svg.append("text")
+                .attr("x", 20 + i*50)
+                .attr("y", 400)
+                .text(firstdate + parseInt(i))
+        }
+    })
+</script>

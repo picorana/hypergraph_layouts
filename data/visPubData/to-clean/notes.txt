@@ -1,0 +1,5 @@
+Commande pour splitter la colonne "OriginalAffiliation" pour avoir le pays
+\,(?=[^,]*$)
+
+
+J'ai utilisé les affiliations déjà cleanées comme ref
