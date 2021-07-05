@@ -14,11 +14,9 @@ class Graph {
     }
 
     addNode(node){
-        // if (this.nodes.name.find(n => n.name == node.name) != undefined) 
-        // fix when it becomes a problem
-        let charsToReplace = [" ", "=", "<", ">", "'"]
+        let charsToReplace = [" ", "=", "<", ">", "'", "-", ",", "(", ")"]
 
-        if (node.id == undefined) {
+        if (node.id == undefined || charsToReplace.some(c => node.name.includes(c))) {
             let tmpname = node.name
             for (let char of charsToReplace){
                 tmpname = tmpname.replaceAll(char, "")
@@ -27,6 +25,8 @@ class Graph {
         }
         node.id += this.nodes.length;
 
+        node.graph = this;
+
         this.nodes.push(node);
         this.addLevelsToNodeIndex(node.depth);
         this.nodeIndex[node.depth].push(node);
@@ -34,6 +34,10 @@ class Graph {
 
     addNodes(nodeArr){
         for (let node of nodeArr) this.addNode(node);
+    }
+
+    getAllNodes(){
+        return this.nodes;
     }
 
     addLevelsToNodeIndex(depth){
@@ -241,13 +245,9 @@ class Graph {
                 g.append('circle')
                     .datum(node)
                     .attr('class', 'node')
-                    // .attr('fill', '#ccc')
-                    // .attr('stroke', 'black')
-                    // .attr('stroke-width', 2)
                     .attr('r', 5)
                     .attr('cx', 0)
                     .attr('cy', 0)
-                    // .attr('stroke', '#303E3F')
                     .attr('stroke-width', 0)
                     .attr('fill', node.color? node.color : colors[0])
 

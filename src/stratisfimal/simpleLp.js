@@ -21,7 +21,8 @@ class SimpleLp {
             simplify_for_groups_enabled: true,
             keep_groups_rect: true,
             group_distance: 0,
-            restrict_group_sizes: true
+            restrict_group_sizes: true,
+            single_line_groups: false
         };
 
         if (this.options.keep_groups_rect) this.g.keep_groups_rect = true;
@@ -66,8 +67,7 @@ class SimpleLp {
     solve(){
         let prob = this.modelToString(this.model)
         this.modelString = prob;
-
-        console.log(this.modelString)
+        // console.log(this.modelString)
 
         this.result = {}
         let objective, i;
@@ -127,6 +127,7 @@ class SimpleLp {
         if (this.options.bendiness_reduction_active){
             this.addBendinessReductionToSubjectTo();
             this.addBendinessReductionToMinimize();
+            this.addGroupPositionalHints();
         }
 
         // adds variables for groups in definitions
@@ -156,12 +157,34 @@ class SimpleLp {
         }
     }
 
+    addGroupPositionalHints(){
+        let hintdivisionvar = 100;
+        let maxYBottom = Math.max.apply(0, this.g.nodeIndex.map(n => n.length)) + 1;
+
+        for (let group of this.g.groups){
+            if (group.hints == undefined) continue;
+            if (group.hints.top != 0 && group.hints.bottom != 0){
+
+            }
+            else if (group.hints.top != 0){
+                this.model.minimize += (group.hints.top/hintdivisionvar) + " ytop_" + group.id + " + ";
+                this.model.minimize += (group.hints.top/hintdivisionvar) + " ybottom_" + group.id + " + ";  
+            }
+            else if (group.hints.bottom != 0){
+                this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 3) 
+                this.model.minimize += " - " + (group.hints.bottom/hintdivisionvar) + " ytop_" + group.id;
+                this.model.minimize += " - " + (group.hints.bottom/hintdivisionvar) + " ybottom_" + group.id + " + ";  
+                this.model.subjectTo += "ybottom_" + group.id + " <= " + maxYBottom+ "\n";
+            }
+        }
+    }
+
     addBendinessReductionToMinimize(){
         for (let e of this.g.edges){
             if (this.isSameRankEdge(e)) continue;
             this.model.minimize +=  this.options.bendiness_reduction_weight + " bend_" + e.nodes[0].id + "_" + e.nodes[1].id + " + "
         }
-        this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 2) + "\n\n"
+        // this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 2) 
     }
 
     addCrossingsToMinimize(){
@@ -402,9 +425,10 @@ class SimpleLp {
 
                 // every node in the group should be within the boundaries of the group, below ytop and above ybottom
                 for (let node of group.nodes){
-                    // this.model.subjectTo += "y_" + node.id + " - ytop_" + group.id + " >= " + (-this.options.group_distance) + "\n"
-                    // this.model.subjectTo += "y_" + node.id + " - ybottom_" + group.id + " <= " + (-1 -this.options.group_distance) +"\n" 
-                    this.model.subjectTo += "y_" + node.id + " - ytop_" + group.id + " = " + (0) + "\n"
+                    if (!this.options.single_line_groups) {
+                        this.model.subjectTo += "y_" + node.id + " - ytop_" + group.id + " >= " + (-this.options.group_distance) + "\n"
+                        this.model.subjectTo += "y_" + node.id + " - ybottom_" + group.id + " <= " + (-1 -this.options.group_distance) +"\n" 
+                    } else this.model.subjectTo += "y_" + node.id + " - ytop_" + group.id + " = " + (0) + "\n"
                 }
 
                 // find all groups spanning across the same ranks
@@ -412,8 +436,17 @@ class SimpleLp {
                     if (group == group2) continue;
                     if (!this.areElementsComparable(group, group2)) continue;
 
-                    let groupranks = new Set(group.nodes.map(n => n.depth))
-                    let group2ranks = new Set(group2.nodes.map(n => n.depth))
+                    let groupranks = new Set();
+                    let group2ranks = new Set();
+                    let leftmostnode1 = group.nodes.find(n => n.depth == Math.min.apply(0, group.nodes.map(nn => nn.depth)))
+                    let rightmostnode1 = group.nodes.find(n => n.depth == Math.max.apply(0, group.nodes.map(nn => nn.depth)))
+                    let leftmostnode2 = group2.nodes.find(n => n.depth == Math.min.apply(0, group2.nodes.map(nn => nn.depth)))
+                    let rightmostnode2 = group2.nodes.find(n => n.depth == Math.max.apply(0, group2.nodes.map(nn => nn.depth)))
+                    for (let i = leftmostnode1.depth; i<=rightmostnode1.depth; i++) groupranks.add(i);
+                    for (let i = leftmostnode2.depth; i<=rightmostnode2.depth; i++) group2ranks.add(i);
+
+                    // let groupranks = new Set(group.nodes.map(n => n.depth))
+                    // let group2ranks = new Set(group2.nodes.map(n => n.depth))
 
                     let commonranks = new Set([...groupranks].filter(x => group2ranks.has(x)));
                     if (commonranks.size > 0) {
@@ -429,7 +462,6 @@ class SimpleLp {
                             let p2 = this.mkxDict(" + ", 'g' + group.id, 'g' + group2.id, this.m, false)[0]
                             let finalsum2 = this.mkxDict(" + ", 'g' + group.id, 'g' + group2.id, this.m, false)[1]
 
-                            
                             this.model.subjectTo += "ybottom_" + group2.id + "" + p + " - ytop_" + group.id + " < " + (-finalsum) + "\n";
                             this.model.subjectTo += "- ytop_" + group2.id + "" + p2 + " + ybottom_" + group.id + " <= " + (this.m + finalsum2) + "\n";
                         }

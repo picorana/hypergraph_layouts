@@ -11,6 +11,7 @@
   <script src="src/stratisfimal/simpleLp.js"></script>
   <script src="src/drawgraph.js"></script>
   <script src="src/utils.js"></script>
+  <script src="src/problemlist.js"></script>
 
   <style>
       text {
@@ -31,9 +32,12 @@
 
 <script>
 
+    
+
     function * find_disconnected_elems(data){
 
         let visitNode = (node, arr) => {
+            if (node == undefined) return;
             if (node.visited == true) {return;}
             
             arr.push(node.fullname);
@@ -54,12 +58,6 @@
                     visitNode(e2, arr);
                 }
             }
-
-            // if (node.collabgroups != undefined && node.collabgroups.length != 0){
-            //     for (let g of node.collabgroups){
-            //         visitNode(data[g], arr);
-            //     }
-            // }
         }
 
         for (let el in data){
@@ -76,9 +74,8 @@
 
         for (let el in data){
             if (groupnames.includes(data[el].fullname)) {
-                // console.log(data[el].name)
-
-                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name}
+                
+                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el].theme}
                 graph.addGroup(newgroup);
 
                 let startdate = parseInt(data[el].period[0].split("/")[2])
@@ -95,7 +92,7 @@
                 }
 
                 if (graph.nodeIndex[newnode1.depth] != undefined && 
-                    graph.nodeIndex[newnode1.depth].map(n => n.name).includes(newnode1.name)) newnode1.depth++;
+                    graph.nodeIndex[newnode1.depth].map(n => n.fullname).includes(newnode1.fullname)) newnode1.depth++;
 
                 graph.addNode(newnode1)
                 newgroup.nodes.push(newnode1)
@@ -184,123 +181,6 @@
         }
     }
 
-    function evaluate_collab_distance(problemlist, data){
-        let res = 0
-
-        for (let graph of problemlist){
-
-            let collabgroups = [... new Set(graph.groups.map(gr => data[gr.fullname.split("(")[1].replaceAll(")", "")].fullcollabgroups))]
-                .filter(n => n != undefined).flat()
-
-            let wmedianarr = []
-
-            for (let c of collabgroups){
-                for (let group of c.groups){
-                    let incidentgraph = problemlist.find(g2 => g2.groups.find(gr => gr.fullname == group))
-                    if (incidentgraph == graph || incidentgraph == undefined) continue;
-                    res += Math.abs(problemlist.indexOf(graph) - problemlist.indexOf(incidentgraph))*c.val;
-                }
-            }
-        }
-
-        return res;
-    }
-
-    function sort_problemlist(problemlist, data, fixed_position_graph){
-        let max_iterations = 3
-
-        console.log("evaluate collab distance: ", evaluate_collab_distance(problemlist, data))
-
-        for (let iter=0; iter<max_iterations; iter++){
-            for (let graph of problemlist){
-
-                let collabgroups = [... new Set(graph.groups.map(gr => data[gr.fullname.split("(")[1].replaceAll(")", "")].fullcollabgroups))]
-                    .filter(n => n != undefined).flat()
-
-                let wmedianarr = []
-
-                for (let c of collabgroups){
-                    for (let group of c.groups){
-                        let incidentgraph = problemlist.find(g2 => g2.groups.find(gr => gr.fullname == group))
-                        if (incidentgraph == graph || incidentgraph == undefined) continue;
-                        wmedianarr.push(problemlist.indexOf(incidentgraph))
-                    }
-                }
-
-                // replace median with weighted average
-                graph.wmedian = median(wmedianarr)
-            }
-        }
-
-        problemlist.sort((a, b) => {
-            if (a == fixed_position_graph) {return -1;}
-            else if (b == fixed_position_graph) {return 1;}
-            else return a.wmedian > b.wmedian;
-        })
-
-        get_position_hints(problemlist)
-
-        console.log("evaluate collab distance: ", evaluate_collab_distance(problemlist, data))
-    }
-
-    function sort_problemlist2(problemlist, data, fixed_position_graph){
-
-        console.log("evaluate collab distance: ", evaluate_collab_distance(problemlist, data))
-
-        var mat = [];
-
-        for (let i=0; i<problemlist.length; i++){
-            mat[i] = [];
-            for (let j=0; j<problemlist.length; j++){
-                mat[i][j] = 0;
-            }
-        }
-
-        for (let i in problemlist){
-            let graph = problemlist[i];
-
-            let collabgroups = [... new Set(graph.groups.map(gr => data[gr.fullname.split("(")[1].replaceAll(")", "")].fullcollabgroups))]
-                .filter(n => n != undefined).flat()
-
-            for (let c of collabgroups){
-                for (let group of c.groups){
-                    let incidentgraph = problemlist.find(g2 => g2.groups.find(gr => gr.fullname == group))
-                    if (incidentgraph == graph || incidentgraph == undefined) continue;
-                    // console.log(i, problemlist.indexOf(incidentgraph), c.val);
-                    mat[i][problemlist.indexOf(incidentgraph)] += c.val;
-                    // mat[i][problemlist.indexOf(incidentgraph)] = 1;
-                }
-            }
-        }
-
-        // console.log(mat)
-
-        mat = reorder.mat2graph(mat, true);
-        let barycenter = reorder.barycenter_order(mat);
-        let perm = reorder.adjacent_exchange(mat, barycenter[0], barycenter[1])[0];
-        // let perm = reorder.optimal_leaf_order()
-    	//     .distance(reorder.distance.manhattan)();
-        console.log("perm", reorder.adjacent_exchange(mat, barycenter[0], barycenter[1]));
-
-        // console.log(problemlist.map(p => p.groups[0].name))
-
-        problemlist.sort((a, b) => {
-            // let index_a = perm.indexOf(problemlist.indexOf(a));
-            // let index_b = perm.indexOf(problemlist.indexOf(b));
-
-            let index_a = perm[problemlist.indexOf(a)];
-            let index_b = perm[problemlist.indexOf(b)];
-
-            // console.log(index_a, index_b)
-            return index_a < index_b;
-        })
-
-        // console.log(problemlist.map(p => p.groups[0].name))
-
-        console.log("evaluate collab distance: ", evaluate_collab_distance(problemlist, data))
-
-        get_position_hints(problemlist)
-    }
 
     function get_position_hints(problemlist){
         for (let i in problemlist){
@@ -359,16 +239,80 @@
         // console.log("RESULT:", algorithm.result)
     }
 
-    function analyze_and_draw(data, data2){
-        // console.log(data, data2)
+    function add_collabs_to_plist(plist, collabdata, verbose = false){
+        if (verbose) console.log("found", 
+            Object.keys(collabdata).map(o => Object.keys(collabdata[o])).flat().length, 
+            "works over ", Object.keys(collabdata), "years")
 
-        add_collabdata(data, data2)
+        let discarded_collabs_because_single_member = []
+        let discarded_collabs_because_0_value = []
+        let discarded_collabs_because_member_not_in_graph = []
+        let collabs_out_of_bounds = []
+
+        let collab_value_cutoff = 3;
+
+        for (let year in collabdata){
+            for (let collab in collabdata[year]){
+                if (collab.split(":").length < 2) {discarded_collabs_because_single_member.push(collab); continue}
+                if (collabdata[year][collab] < collab_value_cutoff) {discarded_collabs_because_0_value.push(collab); continue}
+                let newedge = {nodes: [], weight: collabdata[year][collab]}
+
+                if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
+                    discarded_collabs_because_member_not_in_graph.push(collab);
+                    continue;
+                }
+
+                for (let i=0; i<collab.split(":").length; i++){
+                    let d = parseInt(year) - firstdate;
+                    let pgroup = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
+
+                    if (pgroup == undefined){
+                        discarded_collabs_because_member_not_in_graph.push(collab)
+                        continue;
+                    }
+                    
+                    // find closest node in that group:
+                    let mind = Math.min.apply(0, pgroup.nodes.map(n => Math.abs(parseInt(n.depth) - d)))
+                    let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
+                    let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
+                    
+                    if (pgroup.nodes.find(n => n.depth == d) == undefined && new Date(year) >= new Date(groupPeriod[0]) && new Date(year) <= new Date(groupPeriod[1])){
+                        let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname}
+                        let problem = plist.getProblemFromNode(p)
+                        problem.addNode(newnode);
+                        pgroup.nodes.push(newnode);
+                        p = newnode;
+                    } else if (!new Date(year) >= new Date(groupPeriod[0]) || !new Date(year) <= new Date(groupPeriod[1])) {
+                        collabs_out_of_bounds.push({
+                            'year': year, 
+                            'collab': collab, 
+                            'group': collab.split(":")[i].split("(")[1].replaceAll(")", ""),
+                            'dates': data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period})
+                    }
+
+                    if (p != undefined) newedge.nodes.push(p);
+                    if (p == undefined) discarded_collabs_because_member_not_in_graph.push(collab)
+                }
+
+                if (newedge.nodes.length > 1) plist.intergraph_edges.push(newedge);
+            }
+        }
+
+        if (verbose){
+            console.log(discarded_collabs_because_single_member.length, "works discarded because they have a single member:", discarded_collabs_because_single_member)
+            console.log(discarded_collabs_because_0_value.length, "works discarded because they have a value of 0:", discarded_collabs_because_0_value)
+            console.log(discarded_collabs_because_member_not_in_graph.length, "works discarded because members are not in the current displayed nodes:", discarded_collabs_because_member_not_in_graph)
+            console.log(plist.intergraph_edges.length, "works currently in the visualization", plist.intergraph_edges)
+            console.log(collabs_out_of_bounds.length, "works that might be out of the bounds of groups", collabs_out_of_bounds)
+        }
+    }
+
+    function analyze_and_draw(data, data2){
+        // add_collabdata(data, data2)
         window.data = data;
         window.collab_data = data2;
 
-        let groupnamelist = [];
-        for (let arr of find_disconnected_elems(data, data2)) groupnamelist.push(arr);
-        console.log(groupnamelist)
+        console.log(data)
 
         let firstdate = Infinity
         for (let el in data){
@@ -377,41 +321,89 @@
         }
         window.firstdate = firstdate;
 
-        let graph;
-        let time = 0;
-        let problemlist = [];
-        window.problemlist = problemlist;
-        // let reversed_collabdata = reverse_collabdata(data2);
+        let themes = [...new Set(Object.keys(data).map(d => data[d].theme))]
 
-        for (let i=0; i<10; i++){
-            problemlist.push(process_collab_group(data, groupnamelist[i], firstdate));
+        let largeplist = new ProblemList();
+
+        for (let theme of themes){
+            let plist = new ProblemList();
+
+            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
+
+            let groupsinthisthemedata = {}
+            for (let group of groupsinthistheme){
+                groupsinthisthemedata[group.id] = group
+            }
+            // console.log(groupsinthisthemedata)
+            let groupnamelist = [];
+            for (let arr of find_disconnected_elems(groupsinthisthemedata, data2)) groupnamelist.push(arr);
+            console.log(groupnamelist)
+            for (let i=0; i<groupnamelist.length; i++){
+                plist.graphlist.push(process_collab_group(data, groupnamelist[i], firstdate))
+            }
+
+            // for (let group of groupsinthistheme){
+            //     let graph = process_collab_group(data, [group.fullname], firstdate)
+            //     plist.graphlist.push(graph);
+            // }
+            add_collabs_to_plist(plist, data2);
+
+            largeplist.graphlist.push(plist)
         }
 
-        sort_problemlist(problemlist, data);
+        add_collabs_to_plist(largeplist, data2);
 
-        for (let i=0; i<problemlist.length; i++){
-            time += solve_subproblem(problemlist[i]);
+        largeplist.sort_problemlist(true)
+
+        for (let problem of largeplist.graphlist){
+            problem.sort_problemlist()
+
+            for (let graph of problem.graphlist){
+                solve_subproblem(graph);
+            }
         }
 
-        for (let i=0; i<problemlist.length; i++){
-            drawgraph(svg, problemlist[i], 50, 50, 40 + i*150);
-        }
+        largeplist.draw(svg)
 
-        console.log("full solve time:", time)
+        for (let theme of themes) svg.selectAll("rect").filter(d => d.theme == theme).attr("fill", d3.schemeTableau10[themes.indexOf(theme)%10])
+
+        // let groupnamelist = [];
+        // for (let arr of find_disconnected_elems(data, data2)) groupnamelist.push(arr);
+        // // console.log(groupnamelist)
+
+        // let firstdate = Infinity
+        // for (let el in data){
+        //     let startdate = parseInt(data[el].period[0].split("/")[2])
+        //     if (startdate < firstdate) firstdate = startdate;
+        // }
+        // window.firstdate = firstdate;
+
+        // let graph;
+        // let time = 0;
+        // let problemlist = [];
+
+        // for (let i=0; i<329; i++){
+        //     problemlist.push(process_collab_group(data, groupnamelist[i], firstdate));
+        // }
+
+        // let plist = new ProblemList();
+        // plist.graphlist = problemlist;
+
+        // add_collabs_to_plist(plist, data2);
+        
+        // // plist.sort_problemlist()
+
+        // for (let i=0; i<problemlist.length; i++){
+        //     time += solve_subproblem(plist.graphlist[i]);
+        // }
+
+        // plist.draw(svg);
+
+        // console.log("full solve time:", time)
 
         // svg.selectAll("path").filter(e => e.edgetype == "becomes").attr("stroke-dasharray", "5 3")
-        svg.selectAll("path").filter(e => e.edgetype == "spins-off").attr("stroke-dasharray", "3 3")
+        svg.selectAll("path").filter(e => e != undefined && e.edgetype == "spins-off").attr("stroke-dasharray", "2 2")
         svg.selectAll("text").style("font-size", "0.5em")
-
-        for (let i=0; i<=2024-firstdate; i++){
-            svg.append("text")
-                .attr("x", 20 + i*50)
-                .attr("y", 10)
-                .text(firstdate + parseInt(i))
-        }
-
-        // SHOW COLLABORATIONS
-        // draw_collaborations(data2);
     }
 
     let svg = d3.select('body')

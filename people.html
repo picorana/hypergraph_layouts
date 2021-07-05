@@ -10,7 +10,6 @@
   <script src="src/stratisfimal/simplegraph.js"></script>
   <script src="src/stratisfimal/simpleLp.js"></script>
   <script src="src/drawgraph.js"></script>
-  <script src="src/utils.js"></script>
 
   <style>
       text {
@@ -342,10 +341,13 @@
     function solve_subproblem(graph){
         try {
             let algorithm = new SimpleLp(graph)
-            algorithm.options.crossings_reduction_active = false;
+            algorithm.options.crossings_reduction_active = true;
             algorithm.options.bendiness_reduction_active = true;
             algorithm.options.simplify_for_groups_enabled = true;
-            algorithm.options.single_line_groups = true;
+            algorithm.restrict_group_sizes = false;
+            algorithm.makeModel();
+            console.log("VARS", algorithm.model.bounds.split("\n").length)
+            console.log("CONSTRAINTS", algorithm.model.subjectTo.split("\n").length)
             algorithm.arrange();
             algorithm.apply_solution();
 
@@ -419,9 +421,46 @@
         .attr("width", 3000)
         .attr("height", 50000)
 
-    d3.json("data/inria-teams.json").then((data) =>{
-        d3.json("data/inria-collab.json").then((data2) => {
-            analyze_and_draw(data, data2);
-        })
+    // d3.json("data/inria-teams.json").then((data) =>{
+    //     d3.json("data/inria-collab.json").then((data2) => {
+    //         analyze_and_draw(data, data2);
+    //     })
+    // })
+
+    d3.json("data/visPubData/vispubdata_PAOH_affiliation_cleaned_june202_agg3_filter30.json").then((data) => {
+        let graph = new Graph();
+        
+        let count = 0;
+        let nodecount = 0;
+        for (let person of data.nodes.filter(n => n.entity_type == "researcher" && n.affiliation.includes("Inria, France"))){
+            let lastnode = null;
+            if (person.affiliation.filter(a => a != null).length == 1) continue;
+
+            for (let i=0; i<person.affiliation.length; i++){
+                let affiliation = person.affiliation[i]
+                if (affiliation == null) continue;
+
+                let newnode = {depth: parseInt(i), name: person.name, id: "u" + nodecount++}
+                graph.addNode(newnode);
+                if (!graph.groups.find(gr => gr.name == affiliation)){
+                    graph.addGroup({name: affiliation, fullname: affiliation, nodes: [newnode]})   
+                } else {
+                    graph.groups.find(gr => gr.name == affiliation).nodes.push(newnode);
+                }
+                if (lastnode != null){
+                    graph.addEdge({nodes: [lastnode, newnode]});
+                }
+                lastnode = newnode;
+            }
+
+            count++;
+            if (count == 10) break;
+        }
+
+        graph.groups = graph.groups.filter(gr => gr.nodes.length > 1)
+
+        solve_subproblem(graph);
+        drawgraph(svg, graph, 100, 40, 30)
+
     })
 </script>
