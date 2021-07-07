@@ -103,6 +103,7 @@ class ProblemList {
 
         let getNodeCoordX = (node) => (20 + nodexdist * (node.depth));
         let getNodeCoordY = (node) => {
+            if (node.actual_y != undefined) return node.actual_y;
             if (node.y != undefined) {
                 node.actual_y = toppadding + node.y * nodeydist;
                 return toppadding + node.y * nodeydist;
@@ -211,22 +212,17 @@ class ProblemList {
                 .attr('class', 'edgepath')
                 .attr('fill', 'none')
                 .attr('stroke', 'red')
-                .attr('stroke-width', 1*Math.min(edge.weight/3, 2))
+                .attr('stroke-width', 1*Math.min(edge.weight/6, 2))
                 .attr("opacity", 0.15*edge.weight)
                 .attr('d', () => {
                     let m = 0;
-                    let s1 = 0;
-                    let s2 = 0;
                     // if (edge.nodes[0].depth == edge.nodes[1].depth) 
                     m = nodexdist*.2 + (Math.abs((edge.nodes[0].actual_y) - (edge.nodes[1].actual_y))/(nodeydist/2));
-                    // else {
-                        // s1 = nodexdist*.4;
-                        // s2 = -nodexdist*.4;
-                    // }
+ 
                     return line([
                         [getNodeCoordX(edge.nodes[0]), edge.nodes[0].actual_y ], 
-                        [getNodeCoordX(edge.nodes[0]) + m + s1, edge.nodes[0].actual_y ], 
-                        [getNodeCoordX(edge.nodes[1]) + m + s2, edge.nodes[1].actual_y ],
+                        [getNodeCoordX(edge.nodes[0]) + m, edge.nodes[0].actual_y ], 
+                        [getNodeCoordX(edge.nodes[1]) + m, edge.nodes[1].actual_y ],
                         [getNodeCoordX(edge.nodes[1]), edge.nodes[1].actual_y ]
                     ])
                 })
@@ -241,11 +237,11 @@ class ProblemList {
                 .attr('stroke-width', 5)
                 .attr('d', () => line([[900, topl - 5], [900, bottoml - 5]]))
 
-            svg.append('text')
+            if (this.problemname != undefined) svg.append('text')
                 .style('text-anchor', 'start')
                 .attr('x', 910)
                 .attr('y', topl)
-                .text(this.getAllGroups()[0].theme)
+                .text(this.problemname)
         }
         
     }

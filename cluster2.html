@@ -37,6 +37,7 @@
     function * find_disconnected_elems(data){
 
         let visitNode = (node, arr) => {
+            if (node == undefined) return;
             if (node.visited == true) {return;}
             
             arr.push(node.fullname);
@@ -73,8 +74,7 @@
 
         for (let el in data){
             if (groupnames.includes(data[el].fullname)) {
-                // console.log(data[el].name)
-
+                
                 let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el].theme}
                 graph.addGroup(newgroup);
 
@@ -92,7 +92,7 @@
                 }
 
                 if (graph.nodeIndex[newnode1.depth] != undefined && 
-                    graph.nodeIndex[newnode1.depth].map(n => n.name).includes(newnode1.name)) newnode1.depth++;
+                    graph.nodeIndex[newnode1.depth].map(n => n.fullname).includes(newnode1.fullname)) newnode1.depth++;
 
                 graph.addNode(newnode1)
                 newgroup.nodes.push(newnode1)
@@ -249,7 +249,7 @@
         let discarded_collabs_because_member_not_in_graph = []
         let collabs_out_of_bounds = []
 
-        let collab_value_cutoff = 1;
+        let collab_value_cutoff = 2;
 
         for (let year in collabdata){
             for (let collab in collabdata[year]){
@@ -257,16 +257,14 @@
                 if (collabdata[year][collab] < collab_value_cutoff) {discarded_collabs_because_0_value.push(collab); continue}
                 let newedge = {nodes: [], weight: collabdata[year][collab]}
 
-                if (collab.split(":").filter(c => plist.graphlist.map(g => g.groups).flat().find(n => n.fullname == c)).length < 2) {
+                if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
                     discarded_collabs_because_member_not_in_graph.push(collab);
                     continue;
                 }
 
                 for (let i=0; i<collab.split(":").length; i++){
                     let d = parseInt(year) - firstdate;
-                    let pgroup = plist.graphlist.map(g => g.groups).flat().find(n => n.fullname == collab.split(":")[i]);
-
-                    // console.log(d, collab.split(":")[i], pgroup)
+                    let pgroup = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
 
                     if (pgroup == undefined){
                         discarded_collabs_because_member_not_in_graph.push(collab)
@@ -309,14 +307,19 @@
         }
     }
 
-    function analyze_and_draw(data, data2){
+    function analyze_and_draw(data, data2, cluster_data){
         // add_collabdata(data, data2)
         window.data = data;
         window.collab_data = data2;
 
-        let groupnamelist = [];
-        for (let arr of find_disconnected_elems(data, data2)) groupnamelist.push(arr);
-        // console.log(groupnamelist)
+        let clean_id = (id) => {
+            let charsToReplace = [" ", "=", "<", ">", "'", "-", ",", "(", ")"]
+            let tmpname = id
+            for (let char of charsToReplace){
+                tmpname = tmpname.replaceAll(char, "")
+            }
+            id = tmpname
+        }
 
         let firstdate = Infinity
         for (let el in data){
@@ -325,32 +328,112 @@
         }
         window.firstdate = firstdate;
 
-        let graph;
-        let time = 0;
-        let problemlist = [];
+        let clusters = new Set(cluster_data.nodes.map(n => n.communities.filter(nn => nn != null)).flat())
 
-        for (let i=0; i<50; i++){
-            problemlist.push(process_collab_group(data, groupnamelist[i], firstdate));
+        let largeplist = new ProblemList();
+
+        for (let cluster of clusters){
+            let plist = new ProblemList();
+            plist.problemname = cluster;
+
+            let groupsinthiscluster = cluster_data.nodes.filter(n => n.communities.filter(nn => nn != null)[n.communities.filter(nn => nn != null).length - 1] == cluster).map(n => data[n.id])
+
+            let groupsinthisclusterdata = {}
+            for (let group of groupsinthiscluster){
+                groupsinthisclusterdata[group.id] = group 
+            }
+
+            let groupnamelist = [];
+            for (let arr of find_disconnected_elems(groupsinthisclusterdata, data2)) groupnamelist.push(arr);
+            for (let i=0; i<groupnamelist.length; i++){
+                plist.graphlist.push(process_collab_group(data, groupnamelist[i], firstdate))
+            }
+
+            add_collabs_to_plist(plist, data2);
+
+            largeplist.graphlist.push(plist);
         }
 
-        let plist = new ProblemList();
-        plist.graphlist = problemlist;
+        add_collabs_to_plist(largeplist, data2);
 
-        add_collabs_to_plist(plist, data2);
-        
-        plist.sort_problemlist(true)
+        console.log(largeplist.getAllGroups())
 
-        for (let i=0; i<problemlist.length; i++){
-            time += solve_subproblem(plist.graphlist[i]);
+        largeplist.sort_problemlist(true)
+
+        for (let problem of largeplist.graphlist){
+            problem.sort_problemlist()
+
+            for (let graph of problem.graphlist){
+                solve_subproblem(graph);
+            }
         }
 
-        plist.draw(svg);
+        largeplist.draw(svg)
 
-        console.log("full solve time:", time)
+        // for (let theme of themes) svg.selectAll("rect").filter(d => d.theme == theme).attr("fill", d3.schemeTableau10[themes.indexOf(theme)%10])
 
-        // svg.selectAll("path").filter(e => e.edgetype == "becomes").attr("stroke-dasharray", "5 3")
-        svg.selectAll("path").filter(e => e.edgetype == "spins-off").attr("stroke-dasharray", "2 2")
-        svg.selectAll("text").style("font-size", "0.5em")
+        // svg.selectAll("path").filter(e => e != undefined && e.edgetype == "spins-off").attr("stroke-dasharray", "2 2")
+        // svg.selectAll("text").style("font-size", "0.5em")
+    }
+
+    function gen_data(data, data2){
+        let res = {
+            "metadata": {
+                "format": "2.1.0",
+                "name": "name",
+                "graph type": "bipartite",
+                "nodes": "nodes",
+                "links": "links",
+                "time_slot": "time slot",
+                "entity_type": "entity_type",
+                "source_entity_type": "hyperedge",
+                "target_entity_type": "node",
+                "community": [
+                    "family"
+                ]
+            }, 
+            "nodes": [],
+            "links": []
+        }
+
+        for (let entry in data){
+            let g = data[entry];
+
+            res["nodes"].push({
+                id: g.id,
+                entity_type: "node",
+                name: g.name
+            })
+        }
+
+        for (let year in data2){
+            let cyear = data2[year]
+
+            for (let collab in cyear){
+                let groups = collab.split(":").map(g => g.split("(")[1].replace(")", ""))
+                if (groups.length < 2) continue;
+
+                let cur_id = "_e_" + groups.reduce((a, b) => a + "_" + b) + "_" + res["nodes"].length
+
+                res["nodes"].push({
+                    id: cur_id,
+                    entity_type: "hyperedge",
+                    ts: year,
+                    raw_ts: year
+                })
+
+                for (let group of groups){
+                    res["links"].push({
+                        source: cur_id,
+                        target: group,
+                        ts: year
+                    })
+                }
+            }
+        }
+
+        window.res = res;
+        console.log(JSON.stringify(res))
     }
 
     let svg = d3.select('body')
@@ -358,9 +441,36 @@
         .attr("width", 3000)
         .attr("height", 50000)
 
+    
     d3.json("data/inria-teams.json").then((data) =>{
         d3.json("data/inria-collab.json").then((data2) => {
-            analyze_and_draw(data, data2);
+            d3.json("data/inria-collab-g-clusters.json").then((cluster_data) => {
+                analyze_and_draw(data, data2, cluster_data);
+            })
         })
     })
+
+    // GENERATE DATA
+    // d3.json("data/inria-teams.json").then((data) =>{
+    //     d3.json("data/inria-collab.json").then((data2) => {
+    //         gen_data(data, data2);
+    //     })
+    // })
+
+    // REQUEST CLUSTERS
+    // d3.json("data/inria-collab-g.json").then((data) =>{
+    //     let url = "https://apister.lri.fr/aleclust/dynamiClustering/louvain_tdf"
+
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("POST", url, true);
+    //     xhr.setRequestHeader('Content-Type', 'application/json');
+    //     xhr.onreadystatechange = function() {
+    //         if(xhr.readyState == 4 && xhr.status == 200) {
+    //             let response = JSON.parse(xhr.responseText);
+    //             console.log(xhr.responseText);
+    //             console.log(response);
+    //         }
+    //     }
+    //     xhr.send(JSON.stringify(data));
+    // })
 </script>

@@ -249,7 +249,7 @@
         let discarded_collabs_because_member_not_in_graph = []
         let collabs_out_of_bounds = []
 
-        let collab_value_cutoff = 3;
+        let collab_value_cutoff = 2;
 
         for (let year in collabdata){
             for (let collab in collabdata[year]){
@@ -327,6 +327,7 @@
 
         for (let theme of themes){
             let plist = new ProblemList();
+            plist.problemname = theme;
 
             let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
 
