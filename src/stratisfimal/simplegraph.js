@@ -40,6 +40,20 @@ class Graph {
         return this.nodes;
     }
 
+    removeNode(node){
+        for (let group of this.groups){
+            if (group.nodes.includes(node)) group.nodes.splice(group.nodes.indexOf(node), 1)
+        }
+
+        this.nodeIndex[node.depth].splice(this.nodeIndex[node.depth].indexOf(node), 1)
+        this.nodes.splice(this.nodes.indexOf(node), 1)
+    }
+
+    removeNodes(nodes){
+        console.log(nodes)
+        for (let node of nodes){this.removeNode(node)}
+    }
+
     addLevelsToNodeIndex(depth){
         while (this.nodeIndex.length <= depth){
             this.nodeIndex.push([]);

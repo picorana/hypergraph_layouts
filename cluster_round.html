@@ -11,7 +11,7 @@
   <script src="src/stratisfimal/simpleLp.js"></script>
   <script src="src/drawgraph.js"></script>
   <script src="src/utils.js"></script>
-  <script src="src/problemlist.js"></script>
+  <script src="src/problemlist_round.js"></script>
 
   <style>
       text {
@@ -37,6 +37,7 @@
     function * find_disconnected_elems(data){
 
         let visitNode = (node, arr) => {
+            if (node == undefined) return;
             if (node.visited == true) {return;}
             
             arr.push(node.fullname);
@@ -73,8 +74,7 @@
 
         for (let el in data){
             if (groupnames.includes(data[el].fullname)) {
-                // console.log(data[el].name)
-
+                
                 let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el].theme}
                 graph.addGroup(newgroup);
 
@@ -92,7 +92,7 @@
                 }
 
                 if (graph.nodeIndex[newnode1.depth] != undefined && 
-                    graph.nodeIndex[newnode1.depth].map(n => n.name).includes(newnode1.name)) newnode1.depth++;
+                    graph.nodeIndex[newnode1.depth].map(n => n.fullname).includes(newnode1.fullname)) newnode1.depth++;
 
                 graph.addNode(newnode1)
                 newgroup.nodes.push(newnode1)
@@ -240,36 +240,37 @@
     }
 
     function add_collabs_to_plist(plist, collabdata, verbose = false){
-        if (verbose) console.log("found", 
-            Object.keys(collabdata).map(o => Object.keys(collabdata[o])).flat().length, 
-            "works over ", Object.keys(collabdata), "years")
 
-        let discarded_collabs_because_single_member = []
-        let discarded_collabs_because_0_value = []
-        let discarded_collabs_because_member_not_in_graph = []
-        let collabs_out_of_bounds = []
+        let eqSet = (as, bs) => {
+            if (as.size !== bs.size) return false;
+            for (var a of as) if (!bs.has(a)) return false;
+            return true;
+        }
 
-        let collab_value_cutoff = 1;
+        let collab_value_cutoff = 2;
 
         for (let year in collabdata){
             for (let collab in collabdata[year]){
-                if (collab.split(":").length < 2) {discarded_collabs_because_single_member.push(collab); continue}
-                if (collabdata[year][collab] < collab_value_cutoff) {discarded_collabs_because_0_value.push(collab); continue}
-                let newedge = {nodes: [], weight: collabdata[year][collab]}
+                if (collab.split(":").length < 2) {continue}
+                if (collabdata[year][collab] < collab_value_cutoff) {continue}
 
-                if (collab.split(":").filter(c => plist.graphlist.map(g => g.groups).flat().find(n => n.fullname == c)).length < 2) {
-                    discarded_collabs_because_member_not_in_graph.push(collab);
+                if (window.timerange != undefined && (year <= window.timerange[0] || year >= window.timerange[1])) continue;
+                
+                let newedge = {
+                    nodes: [], 
+                    weight: collabdata[year][collab],
+                    children: []
+                }
+
+                if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
                     continue;
                 }
 
                 for (let i=0; i<collab.split(":").length; i++){
                     let d = parseInt(year) - firstdate;
-                    let pgroup = plist.graphlist.map(g => g.groups).flat().find(n => n.fullname == collab.split(":")[i]);
-
-                    // console.log(d, collab.split(":")[i], pgroup)
+                    let pgroup = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
 
                     if (pgroup == undefined){
-                        discarded_collabs_because_member_not_in_graph.push(collab)
                         continue;
                     }
                     
@@ -278,34 +279,27 @@
                     let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
                     let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
                     
-                    if (pgroup.nodes.find(n => n.depth == d) == undefined && new Date(year) >= new Date(groupPeriod[0]) && new Date(year) <= new Date(groupPeriod[1])){
-                        let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname}
-                        let problem = plist.getProblemFromNode(p)
-                        problem.addNode(newnode);
-                        pgroup.nodes.push(newnode);
-                        p = newnode;
-                    } else if (!new Date(year) >= new Date(groupPeriod[0]) || !new Date(year) <= new Date(groupPeriod[1])) {
-                        collabs_out_of_bounds.push({
-                            'year': year, 
-                            'collab': collab, 
-                            'group': collab.split(":")[i].split("(")[1].replaceAll(")", ""),
-                            'dates': data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period})
-                    }
+                    let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname, mirrornode: pgroup.nodes[0]}
+                    let problem = plist.getProblemFromNode(p)
+
+                    p = newnode;
 
                     if (p != undefined) newedge.nodes.push(p);
-                    if (p == undefined) discarded_collabs_because_member_not_in_graph.push(collab)
                 }
 
-                if (newedge.nodes.length > 1) plist.intergraph_edges.push(newedge);
-            }
-        }
+                if (newedge.nodes.length <= 1) continue;
 
-        if (verbose){
-            console.log(discarded_collabs_because_single_member.length, "works discarded because they have a single member:", discarded_collabs_because_single_member)
-            console.log(discarded_collabs_because_0_value.length, "works discarded because they have a value of 0:", discarded_collabs_because_0_value)
-            console.log(discarded_collabs_because_member_not_in_graph.length, "works discarded because members are not in the current displayed nodes:", discarded_collabs_because_member_not_in_graph)
-            console.log(plist.intergraph_edges.length, "works currently in the visualization", plist.intergraph_edges)
-            console.log(collabs_out_of_bounds.length, "works that might be out of the bounds of groups", collabs_out_of_bounds)
+                let sameedge = plist.intergraph_edges.find(e => { 
+                    return eqSet(new Set(e.nodes.map(n => n.mirrornode.fullname)), new Set(newedge.nodes.map(n => n.mirrornode.fullname)))
+                })
+                if (sameedge != undefined) {
+                    sameedge.weight += newedge.weight;
+                    sameedge.children.push(newedge);
+                } else {
+                    newedge.children.push(newedge);
+                    plist.intergraph_edges.push(newedge);
+                }
+            }
         }
     }
 
@@ -314,9 +308,7 @@
         window.data = data;
         window.collab_data = data2;
 
-        let groupnamelist = [];
-        for (let arr of find_disconnected_elems(data, data2)) groupnamelist.push(arr);
-        console.log(groupnamelist)
+        // console.log(data)
 
         let firstdate = Infinity
         for (let el in data){
@@ -325,31 +317,62 @@
         }
         window.firstdate = firstdate;
 
-        let graph;
-        let time = 0;
-        let problemlist = [];
+        window.timerange = [2000, 2020]
 
-        for (let i=50; i<70; i++){
-            problemlist.push(process_collab_group(data, groupnamelist[i], firstdate));
+        let themes = [...new Set(Object.keys(data).map(d => data[d].theme))]
+
+        let largeplist = new ProblemList();
+
+        for (let theme of themes){
+            let plist = new ProblemList();
+            plist.problemname = theme;
+
+            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
+            // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
+
+            let groupsinthisthemedata = {}
+            for (let group of groupsinthistheme){
+                groupsinthisthemedata[group.id] = group
+            }
+            // console.log(groupsinthisthemedata)
+            let groupnamelist = [];
+            for (let arr of find_disconnected_elems(groupsinthisthemedata, data2)) groupnamelist.push(arr);
+            // console.log(groupnamelist)
+            for (let i=0; i<groupnamelist.length; i++){
+                plist.graphlist.push(process_collab_group(data, groupnamelist[i], firstdate))
+            }
+
+            add_collabs_to_plist(plist, data2);
+
+            plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
+
+            largeplist.graphlist.push(plist)
+
+            if (themes.indexOf(theme) == 15) break;
         }
 
-        let plist = new ProblemList();
-        plist.graphlist = problemlist;
+        add_collabs_to_plist(largeplist, data2);
 
-        add_collabs_to_plist(plist, data2);
-        
-        plist.sort_problemlist(true)
+        // largeplist.totalnodes = largeplist.getAllNodes().length;
 
-        for (let i=0; i<problemlist.length; i++){
-            time += solve_subproblem(plist.graphlist[i]);
+        largeplist.assignNodeY();
+
+        largeplist.sort_problemlist_round()
+
+        for (let problem of largeplist.graphlist){
+            problem.sort_problemlist()
+
+            for (let graph of problem.graphlist){
+                solve_subproblem(graph);
+            }
         }
 
-        plist.draw(svg);
+        largeplist.assignNodeY();
 
-        console.log("full solve time:", time)
+        largeplist.draw(svg)
+        largeplist.draw_intergraph_edges(svg);
 
-        // svg.selectAll("path").filter(e => e.edgetype == "becomes").attr("stroke-dasharray", "5 3")
-        svg.selectAll("path").filter(e => e.edgetype == "spins-off").attr("stroke-dasharray", "2 2")
+        svg.selectAll("path").filter(e => e != undefined && e.edgetype == "spins-off").attr("stroke-dasharray", "2 2")
         svg.selectAll("text").style("font-size", "0.5em")
     }
 

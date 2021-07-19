@@ -16,6 +16,8 @@ class ProblemList {
                     sum += Math.abs(p.index - this_index) * p.weight;
                 }
             }
+            // let this_connected_edges = this.getEdgesIncidentToProblem(problem);
+            // for (let edge of this_connected_edges)
         }
         return sum;
     }
@@ -50,18 +52,19 @@ class ProblemList {
     }
 
     getEdgesIncidentToProblem (problem) {
-        if (problem instanceof Graph) return this.intergraph_edges.filter(e => e.nodes.some(n => this.getProblemFromNode(n) == problem))
-        else return this.intergraph_edges.filter(e => e.nodes.some(n => this.getProblemFromNode(n, false) == problem))
+        if (problem instanceof Graph) return this.intergraph_edges.filter(e => e.nodes.some(n => this.getProblemFromNode(n.mirrornode) == problem))
+        else return this.intergraph_edges.filter(e => e.nodes.some(n => this.getProblemFromNode(n.mirrornode, false) == problem))
     }
 
     getIndexOfOtherConnectedProblems (problem) {
         let result = [];
         let edgelist = this.getEdgesIncidentToProblem(problem)
+
         for (let edge of edgelist){
             for (let node of edge.nodes){
-                if (problem.getAllNodes().includes(node)) continue;
+                if (problem.getAllNodes().includes(node.mirrornode)) continue;
                 else result.push({
-                    index: this.graphlist.indexOf(this.getProblemFromNode(node, problem instanceof ProblemList ? false : true)),
+                    index: this.graphlist.indexOf(this.getProblemFromNode(node.mirrornode, problem instanceof ProblemList ? false : true)),
                     weight: edge.weight
                 });
             }
@@ -93,6 +96,34 @@ class ProblemList {
         }
     }
 
+    assignNodeY(){
+        let getGraphs = (problem, l = []) => {
+            if (problem instanceof Graph) {
+                l.push(problem);
+            } else {
+                for (let p of problem.graphlist) getGraphs(p, l)
+            }
+        }
+
+        let glist = []
+        getGraphs(this, glist)
+        
+        let init_y = 0;
+        for (let g of glist){
+            for (let group of g.groups){
+                for (let node of group.nodes){
+                    if (node.y != undefined) node.list_y = node.y;
+                    else node.list_y = g.groups.indexOf(group);
+                    node.list_y += init_y;
+                }
+            }
+
+            let gHeight = Math.max.apply(0, g.nodes.map(n => n.list_y))
+
+            init_y = gHeight + 1;
+        }
+    }
+
     draw(svg, subproblem = false){
         let nodesize = 5;
         let nodeydist = 6;
@@ -103,16 +134,17 @@ class ProblemList {
 
         let getNodeCoordX = (node) => (20 + nodexdist * (node.depth));
         let getNodeCoordY = (node) => {
-            if (node.actual_y != undefined) return node.actual_y;
-            if (node.y != undefined) {
-                node.actual_y = toppadding + node.y * nodeydist;
-                return toppadding + node.y * nodeydist;
-            }
-            else {
-                node.actual_y = parseFloat(toppadding + node.graph.nodeIndex[node.depth].indexOf(node) * nodeydist)
-                return parseFloat(toppadding + node.graph.nodeIndex[node.depth].indexOf(node) * nodeydist)
-            }
+            node.actual_y = toppadding + node.list_y * nodeydist;
+            return node.actual_y;
         };
+
+        // let theta = 2 * Math.PI / 50;
+
+        // let getNodeCoordX = (node) => 500 + 500*Math.sin(nodexdist * (node.depth) * theta);
+        // let getNodeCoordY = (node) => {
+        //     node.actual_y = 500 + 500*Math.cos(node.list_y * nodeydist * theta);
+        //     return node.actual_y;
+        // };
 
         let line = d3.line().curve(d3.curveBasis);
         let colors = ['#303E3F', '#A3B9B6'];
@@ -120,12 +152,10 @@ class ProblemList {
         let themes = [...new Set(this.getAllGroups().map(gr => gr.theme))]
 
         for (let i in this.graphlist){
-            if (i != 0) toppadding = this.graphlist[i-1].graph_height;
-
             if (this.graphlist[i] instanceof ProblemList){
                 this.graphlist[i].toppadding = toppadding;
                 this.graphlist[i].draw(svg, true);
-                this.graphlist[i].graph_height = Math.max.apply(0, this.graphlist[i].getAllNodes().map(n => n.actual_y)) + nodeydist
+                this.graphlist[i].graph_height = Math.max.apply(0, this.graphlist[i].getAllNodes().map(n => getNodeCoordY(n))) + nodeydist
                 continue;
             }
 
@@ -167,9 +197,7 @@ class ProblemList {
 
                 svg.append("text")
                     .attr("font-family", "Arial")
-                    // .attr("x", left + (right-left)/2)
                     .attr("x", 700)
-                    // .attr("y", top - nodesize/2)
                     .attr("y", top)
                     .attr("opacity", 0)
                     .attr("id", "g-text-" + group.fullname.replaceAll(" ", "").replaceAll("(", "").replaceAll(")", ""))
@@ -177,11 +205,11 @@ class ProblemList {
 
                 svg.append('rect')
                     .datum(group)
+                    .attr("id", "g-" + id_cleanup(group.fullname))
                     .attr('x', left - nodesize/2)
                     .attr('y', top - nodesize/2 +1.5)
                     .attr('width', right - left + nodesize/2)
                     .attr('height', bottom - top + nodesize/2)
-                    // .attr('fill', colors[0])
                     .attr('fill', this.color)
                     .attr('class', 'grouprect')
                     .attr("rx", 2)
@@ -197,69 +225,20 @@ class ProblemList {
 
             graph.graph_height = Math.max.apply(0, graph.nodes.map(n => getNodeCoordY(n))) + nodeydist;
 
-            // for (let node of graph.nodes){
-            //     svg.append("circle")
-            //         .attr("cx", getNodeCoordX(node))
-            //         .attr("cy", getNodeCoordY(node))
-            //         .attr("r", 1)
-            //         .attr("fill", colors[0])
-            // }
+            for (let node of graph.nodes){
+                svg.append("circle")
+                    .attr("cx", getNodeCoordX(node))
+                    .attr("cy", getNodeCoordY(node))
+                    .attr("r", 1)
+                    .attr("fill", colors[1])
+                    .on("mouseover", () => console.log(node.name))
+            }
+
         }
-
-        for (let edge of this.intergraph_edges){
-            svg.append('path')
-                .datum(edge)
-                .attr('id', 'edge-' + edge.nodes[0].id + "-" + edge.nodes[1].id)
-                .attr('class', 'edgepath')
-                .attr('fill', 'none')
-                .attr('stroke', 'red')
-                .attr('stroke-width', 1*Math.min(edge.weight/6, 2))
-                .attr("opacity", 0.15*edge.weight)
-                .attr('d', () => {
-                    let m = 0;
-                    // if (edge.nodes[0].depth == edge.nodes[1].depth) 
-                    m = nodexdist*.2 + (Math.abs((edge.nodes[0].actual_y) - (edge.nodes[1].actual_y))/(nodeydist/2));
- 
-                    return line([
-                        [getNodeCoordX(edge.nodes[0]), edge.nodes[0].actual_y ], 
-                        [getNodeCoordX(edge.nodes[0]) + m, edge.nodes[0].actual_y ], 
-                        [getNodeCoordX(edge.nodes[1]) + m, edge.nodes[1].actual_y ],
-                        [getNodeCoordX(edge.nodes[1]), edge.nodes[1].actual_y ]
-                    ])
-                })
-        }
-
-        // for (let edge of this.intergraph_edges){
-        //     svg.append('path')
-        //         .datum(edge)
-        //         .attr('id', 'edge-' + edge.nodes[0].id + "-" + edge.nodes[1].id)
-        //         .attr('class', 'edgepath')
-        //         .attr('fill', 'none')
-        //         .attr('stroke', colors[0])
-        //         .attr('stroke-width', 1*Math.min(edge.weight/6, 2))
-        //         .attr("opacity", 0.5*edge.weight)
-        //         .attr('d', () => { 
-        //             let topnode = edge.nodes.reduce((a, b) => a.actual_y < b.actual_y? a : b)
-        //             let bottomnode = edge.nodes.reduce((a, b) => a.actual_y > b.actual_y? a : b)
-        //             return line([
-        //                 [getNodeCoordX(topnode), topnode.actual_y ], 
-        //                 [getNodeCoordX(bottomnode), bottomnode.actual_y ]
-        //             ])
-        //         })
-
-        //     for (let node of edge.nodes){
-        //         svg.append('circle')
-        //         .attr('fill', colors[0])
-        //         .attr("opacity", 0.5*edge.weight)
-        //         .attr('cx', getNodeCoordX(node))
-        //         .attr('cy', node.actual_y)
-        //         .attr('r', 1)
-        //     }
-        // }
 
         if (subproblem) {
             let topl = ogtopl;
-            let bottoml = Math.max.apply(0, this.getAllNodes().map(n => {getNodeCoordY(n); return n.actual_y}));
+            let bottoml = Math.max.apply(0, this.getAllNodes().map(n => {return getNodeCoordY(n)}));
 
             svg.append("path")
                 .attr('stroke', colors[1])
@@ -273,5 +252,98 @@ class ProblemList {
                 .text(this.problemname)
         }
         
+    }
+
+    draw_intergraph_edges(svg){
+
+        let line = d3.line().curve(d3.curveBasis);
+
+        let getNodeCoordY = (node) => {
+            if (node.mirrornode == undefined) {console.log(node); return 0}
+            return node.mirrornode.actual_y;
+        }
+
+        let getEdgeTopNodeY = (edge) => {
+            return Math.min.apply(0, edge.nodes.map(n => getNodeCoordY(n)))
+        }
+
+        let getEdgeBottomNodeY = (edge) => {
+            return Math.max.apply(0, edge.nodes.map(n => getNodeCoordY(n)))
+        }
+
+        let getEdgeLength = (edge) => {
+            return Math.abs(getEdgeTopNodeY(edge) - getEdgeBottomNodeY(edge))
+        }
+
+        this.intergraph_edges.sort((a, b) => getEdgeLength(a) > getEdgeLength(b)? 1 : -1)
+
+        let assignEdgeX = () => {
+            let edgeIndex = [[]]
+
+            let fits = (edge, index) => {
+                for (let entry of edgeIndex[index]){
+                    if (!((getEdgeTopNodeY(edge) < entry[0] && getEdgeBottomNodeY(edge) < entry[0]) || (getEdgeTopNodeY(edge) > entry[1] && getEdgeBottomNodeY(edge) > entry[1]))) 
+                        return false;
+                }
+                return true;
+            }
+
+            for (let edge of this.intergraph_edges){
+                let index = 0;
+
+                while (!fits(edge, index)) {
+                    index++;
+                    if (edgeIndex[index] == undefined) edgeIndex[index] = [];
+                } 
+
+                edge.x = index;
+                edgeIndex[index].push([getEdgeTopNodeY(edge), getEdgeBottomNodeY(edge)]);
+            }
+        }
+
+        assignEdgeX();
+
+        for (let edge of this.intergraph_edges){
+
+            // if (edge.x == undefined) edge.x = 600 + this.intergraph_edges.indexOf(edge)*5;
+            // else 
+                edge.x = 600 + edge.x * 8;
+
+            for (let node of edge.nodes){
+                svg.append("circle")
+                    .attr("r", 0.8)
+                    .attr("fill", "red")
+                    .attr("cx", edge.x)
+                    .attr("cy", getNodeCoordY(node))
+            }
+
+            svg.append('path')
+                .datum(edge)
+                .attr('id', 'edge-' + edge.nodes[0].id + "-" + edge.nodes[1].id)
+                .attr('class', 'edgepath')
+                .attr('fill', 'none')
+                .attr('stroke', 'red')
+                .attr('stroke-width', .5*Math.log(edge.weight))
+                .attr('pointer-events', 'visibleStroke')
+                // .attr("opacity", 0.15*edge.weight)
+                .attr('d', () => {
+                    let m = 0;
+                    let y1 = getEdgeTopNodeY(edge)
+                    let y2 = getEdgeBottomNodeY(edge)
+
+                    return line([
+                        [edge.x, y1], 
+                        [edge.x + m, y1], 
+                        [edge.x + m, y2],
+                        [edge.x, y2]
+                    ])
+                })
+                .on("mouseover", () => {
+                    for (let node of edge.nodes) d3.select("#g-" + id_cleanup(node.fullname)).attr("stroke", "black")
+                })
+                .on("mouseout", () => {
+                    for (let node of edge.nodes) d3.select("#g-" + id_cleanup(node.fullname)).attr("stroke", "none")
+                })
+        }
     }
 }
