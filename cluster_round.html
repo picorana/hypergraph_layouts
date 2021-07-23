@@ -5,7 +5,11 @@
   <meta charset="utf-8">
   <script src="lib/d3.min.js"></script>
   <script src="lib/glpk.min.js"></script>
-  <script src="lib/reorder.min.js"></script>
+  <!-- <script src="lib/reorder.min.js"></script> -->
+  <script src="lib/d3-interpolate.min.js"></script>
+  <script src="node_modules/nouislider/dist/nouislider.min.js"></script>
+
+  <link rel="stylesheet" href="node_modules/nouislider/dist/nouislider.min.css">
 
   <script src="src/stratisfimal/simplegraph.js"></script>
   <script src="src/stratisfimal/simpleLp.js"></script>
@@ -207,16 +211,80 @@
         }
     }
 
-    function recompute_layout(selected_elem){
-        let groupid = selected_elem.split("-")[1]
-        // console.log(selected_elem)
-        let fixed_position_graph = window.problemlist.find(graph => graph.groups.find(group => selected_elem == "group-" + id_cleanup(group.fullname)))
-        sort_problemlist(window.problemlist, window.data, fixed_position_graph);
-        get_position_hints(window.problemlist);
-        for (let problem of window.problemlist){
-            solve_subproblem(problem);
+    function addSlider(startdate, enddate){
+        let optionbox = document.createElement("div")
+        document.body.appendChild(optionbox)
+
+        let btn = document.createElement("button")
+        btn.innerHTML = "Toggle time"
+        btn.style.margin = "50px"
+        btn.onclick = () => {
+            options.split_by_year = !options.split_by_year
+            loadAndDoEverything();
         }
-        update_drawing_coords();
+        optionbox.appendChild(btn)
+
+        let slider = document.createElement("div");
+        optionbox.appendChild(slider)
+
+        noUiSlider.create(slider, {
+            range: {
+                'min': startdate,
+                'max': enddate
+            },
+
+            step: 1,
+
+            // Handles start at ...
+            start: [window.timerange[0], window.timerange[1]],
+
+            // ... must be at least 300 apart
+            // margin: 300,
+
+            // ... but no zmore than 600
+            // limit: 600,
+
+            // Display colored bars between handles
+            connect: true,
+
+            // Put '0' at the bottom of the slider
+            direction: 'rtl',
+            orientation: 'vertical',
+
+            // Move handle on tap, bars are draggable
+            behaviour: 'tap-drag',
+            tooltips: true,
+            // format: wNumb({
+            //     decimals: 0
+            // }),
+
+            // Show a scale with the slider
+            pips: {
+                mode: 'steps',
+                stepped: true,
+                density: 10
+            }
+        });
+
+        slider.noUiSlider.on("set", () => { 
+            // window.firstdate = slider.noUiSlider.get()[0];
+            window.timerange = slider.noUiSlider.get();
+            options.timerange = window.timerange
+            loadAndDoEverything();
+        })
+
+        slider.noUiSlider.on("change", () => { 
+            // window.firstdate = slider.noUiSlider.get()[0];
+            window.timerange = slider.noUiSlider.get();
+            options.timerange = window.timerange
+            loadAndDoEverything();
+        })
+
+        slider.style.height = window.innerHeight - 200 + "px";
+        slider.style.marginLeft = '100px';
+        optionbox.style.position = "fixed"
+        optionbox.style.top = "10px"
+        optionbox.style.textAlign = "center"
     }
 
     function solve_subproblem(graph){
@@ -232,11 +300,6 @@
             if (algorithm.solveTime != undefined ) return parseInt(algorithm.solveTime);
             else return 0;
         } catch (error) {console.log("error in algorithm application");}
-        
-        // console.log(graph)
-        // console.log("ALGORITHM SOLVE TIME: ", algorithm.solveTime, "ms")
-        // console.log("NUM NODES:", graph.nodes.length)
-        // console.log("RESULT:", algorithm.result)
     }
 
     function add_collabs_to_plist(plist, collabdata, verbose = false){
@@ -247,18 +310,19 @@
             return true;
         }
 
-        let collab_value_cutoff = 2;
+        // let collab_value_cutoff = 2;
 
         for (let year in collabdata){
             for (let collab in collabdata[year]){
                 if (collab.split(":").length < 2) {continue}
-                if (collabdata[year][collab] < collab_value_cutoff) {continue}
+                if (collabdata[year][collab] < options.collab_value_cutoff) {continue}
 
                 if (window.timerange != undefined && (year <= window.timerange[0] || year >= window.timerange[1])) continue;
                 
                 let newedge = {
                     nodes: [], 
                     weight: collabdata[year][collab],
+                    year: year,
                     children: []
                 }
 
@@ -292,23 +356,31 @@
                 let sameedge = plist.intergraph_edges.find(e => { 
                     return eqSet(new Set(e.nodes.map(n => n.mirrornode.fullname)), new Set(newedge.nodes.map(n => n.mirrornode.fullname)))
                 })
-                if (sameedge != undefined) {
-                    sameedge.weight += newedge.weight;
-                    sameedge.children.push(newedge);
+
+                if (options.split_by_year){
+                    if (sameedge != undefined && newedge.year == sameedge.year) {
+                        sameedge.weight += newedge.weight;
+                        sameedge.children.push(newedge);
+                    } else {
+                        newedge.children.push(newedge);
+                        plist.intergraph_edges.push(newedge);
+                    }
                 } else {
-                    newedge.children.push(newedge);
-                    plist.intergraph_edges.push(newedge);
+                    if (sameedge != undefined) {
+                        sameedge.weight += newedge.weight;
+                        sameedge.children.push(newedge);
+                    } else {
+                        newedge.children.push(newedge);
+                        plist.intergraph_edges.push(newedge);
+                    }
                 }
             }
         }
     }
 
     function analyze_and_draw(data, data2){
-        // add_collabdata(data, data2)
         window.data = data;
         window.collab_data = data2;
-
-        // console.log(data)
 
         let firstdate = Infinity
         for (let el in data){
@@ -317,15 +389,15 @@
         }
         window.firstdate = firstdate;
 
-        window.timerange = [2000, 2020]
-
-        let themes = [...new Set(Object.keys(data).map(d => data[d].theme))]
+        let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
 
         let largeplist = new ProblemList();
+        largeplist.options = options;
 
         for (let theme of themes){
             let plist = new ProblemList();
             plist.problemname = theme;
+            plist.problemid = id_cleanup(theme);
 
             let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
@@ -334,12 +406,14 @@
             for (let group of groupsinthistheme){
                 groupsinthisthemedata[group.id] = group
             }
-            // console.log(groupsinthisthemedata)
+
             let groupnamelist = [];
             for (let arr of find_disconnected_elems(groupsinthisthemedata, data2)) groupnamelist.push(arr);
-            // console.log(groupnamelist)
+
             for (let i=0; i<groupnamelist.length; i++){
-                plist.graphlist.push(process_collab_group(data, groupnamelist[i], firstdate))
+                let newproblem = process_collab_group(data, groupnamelist[i], firstdate)
+                plist.graphlist.push(newproblem)
+                newproblem.parent = plist;
             }
 
             add_collabs_to_plist(plist, data2);
@@ -347,20 +421,19 @@
             plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
 
             largeplist.graphlist.push(plist)
+            plist.parent = largeplist;
 
-            if (themes.indexOf(theme) == 15) break;
+            if (themes.indexOf(theme) == options.numthemes) break;
         }
 
         add_collabs_to_plist(largeplist, data2);
-
-        // largeplist.totalnodes = largeplist.getAllNodes().length;
 
         largeplist.assignNodeY();
 
         largeplist.sort_problemlist_round()
 
         for (let problem of largeplist.graphlist){
-            problem.sort_problemlist()
+            problem.sort_problemlist_round()
 
             for (let graph of problem.graphlist){
                 solve_subproblem(graph);
@@ -376,14 +449,31 @@
         svg.selectAll("text").style("font-size", "0.5em")
     }
 
+    loadAndDoEverything = () => {
+        svg.selectAll("*").remove();
+        d3.json("data/inria-teams.json").then((data) =>{
+            d3.json("data/inria-collab.json").then((data2) => {
+                analyze_and_draw(data, data2);
+            })
+        })
+    }
+
     let svg = d3.select('body')
         .append('svg')
         .attr("width", 3000)
         .attr("height", 50000)
 
-    d3.json("data/inria-teams.json").then((data) =>{
-        d3.json("data/inria-collab.json").then((data2) => {
-            analyze_and_draw(data, data2);
-        })
-    })
+    window.timerange = [2000, 2004]
+
+    addSlider(2000, 2020);
+
+    let options = {
+        split_by_year: true,
+        timerange: window.timerange,
+        collab_value_cutoff: 3,
+        numthemes: 10
+    }
+
+    loadAndDoEverything();
+
 </script>

@@ -236,21 +236,21 @@ class ProblemList {
 
         }
 
-        if (subproblem) {
-            let topl = ogtopl;
-            let bottoml = Math.max.apply(0, this.getAllNodes().map(n => {return getNodeCoordY(n)}));
+        // if (subproblem) {
+        //     let topl = ogtopl;
+        //     let bottoml = Math.max.apply(0, this.getAllNodes().map(n => {return getNodeCoordY(n)}));
 
-            svg.append("path")
-                .attr('stroke', colors[1])
-                .attr('stroke-width', 5)
-                .attr('d', () => line([[900, topl - 5], [900, bottoml - 5]]))
+        //     svg.append("path")
+        //         .attr('stroke', colors[1])
+        //         .attr('stroke-width', 5)
+        //         .attr('d', () => line([[900, topl - 5], [900, bottoml - 5]]))
 
-            if (this.problemname != undefined) svg.append('text')
-                .style('text-anchor', 'start')
-                .attr('x', 910)
-                .attr('y', topl)
-                .text(this.problemname)
-        }
+        //     if (this.problemname != undefined) svg.append('text')
+        //         .style('text-anchor', 'start')
+        //         .attr('x', 910)
+        //         .attr('y', topl)
+        //         .text(this.problemname)
+        // }
         
     }
 

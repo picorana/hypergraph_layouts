@@ -1,0 +1,7 @@
+{
+  "dependencies": {
+    "d3-interpolate": "^3.0.1",
+    "gradient-path": "^2.1.0",
+    "nouislider": "^15.2.0"
+  }
+}
