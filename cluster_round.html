@@ -232,33 +232,13 @@
                 'min': startdate,
                 'max': enddate
             },
-
             step: 1,
-
-            // Handles start at ...
             start: [window.timerange[0], window.timerange[1]],
-
-            // ... must be at least 300 apart
-            // margin: 300,
-
-            // ... but no zmore than 600
-            // limit: 600,
-
-            // Display colored bars between handles
             connect: true,
-
-            // Put '0' at the bottom of the slider
             direction: 'rtl',
             orientation: 'vertical',
-
-            // Move handle on tap, bars are draggable
             behaviour: 'tap-drag',
             tooltips: true,
-            // format: wNumb({
-            //     decimals: 0
-            // }),
-
-            // Show a scale with the slider
             pips: {
                 mode: 'steps',
                 stepped: true,
@@ -282,6 +262,41 @@
 
         slider.style.height = window.innerHeight - 200 + "px";
         slider.style.marginLeft = '100px';
+        slider.style.position = "absolute"
+        slider.style.top = '100px'
+
+        let slider2 = document.createElement("div");
+        optionbox.appendChild(slider2)
+
+        noUiSlider.create(slider2, {
+            range: {
+                'min': 5,
+                'max': 15
+            },
+            step: 1,
+            start: 10,
+            connect: true,
+            direction: 'rtl',
+            orientation: 'vertical',
+            behaviour: 'tap-drag',
+            tooltips: true,
+            pips: {
+                mode: 'steps',
+                stepped: true,
+                density: 10
+            }
+        });
+
+        slider2.noUiSlider.on("set", () => { 
+            options.numthemes = slider2.noUiSlider.get();
+            loadAndDoEverything();
+        })
+
+        slider2.style.height = window.innerHeight - 200 + "px";
+        slider2.style.marginLeft = '300px';
+        slider2.style.position = "absolute"
+        slider2.style.top = '100px'
+
         optionbox.style.position = "fixed"
         optionbox.style.top = "10px"
         optionbox.style.textAlign = "center"
@@ -442,6 +457,9 @@
 
         largeplist.assignNodeY();
 
+        largeplist.totalnodes = Math.max.apply(0, largeplist.getAllNodes().map(n => n.list_y));
+        console.log(largeplist.totalnodes)
+
         largeplist.draw(svg)
         largeplist.draw_intergraph_edges(svg);
 
@@ -470,8 +488,9 @@
     let options = {
         split_by_year: true,
         timerange: window.timerange,
-        collab_value_cutoff: 3,
-        numthemes: 10
+        collab_value_cutoff: 2,
+        numthemes: 10,
+        split_hyperedges: true,    
     }
 
     loadAndDoEverything();
