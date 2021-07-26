@@ -7,9 +7,9 @@
   <script src="lib/glpk.min.js"></script>
   <!-- <script src="lib/reorder.min.js"></script> -->
   <script src="lib/d3-interpolate.min.js"></script>
-  <script src="node_modules/nouislider/dist/nouislider.min.js"></script>
+  <script src="lib/nouislider.min.js"></script>
 
-  <link rel="stylesheet" href="node_modules/nouislider/dist/nouislider.min.css">
+  <link rel="stylesheet" href="lib/nouislider.min.css">
 
   <script src="src/stratisfimal/simplegraph.js"></script>
   <script src="src/stratisfimal/simpleLp.js"></script>
@@ -457,8 +457,8 @@
 
         largeplist.assignNodeY();
 
-        largeplist.totalnodes = Math.max.apply(0, largeplist.getAllNodes().map(n => n.list_y));
-        console.log(largeplist.totalnodes)
+        // largeplist.totalnodes = Math.max.apply(0, largeplist.getAllNodes().map(n => n.list_y));
+        // console.log(largeplist.totalnodes)
 
         largeplist.draw(svg)
         largeplist.draw_intergraph_edges(svg);
