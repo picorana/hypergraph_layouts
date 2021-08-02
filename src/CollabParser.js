@@ -103,16 +103,16 @@ class CollabParser {
                 if (collabdata[year][collab] < options.collab_value_cutoff) {continue}
 
                 if (window.timerange != undefined && (year <= window.timerange[0] || year >= window.timerange[1])) continue;
-                
+
+                if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
+                    continue;
+                }
+
                 let newedge = {
                     nodes: [], 
                     weight: collabdata[year][collab],
                     year: year,
                     children: []
-                }
-
-                if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
-                    continue;
                 }
 
                 for (let i=0; i<collab.split(":").length; i++){

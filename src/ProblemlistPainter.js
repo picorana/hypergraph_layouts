@@ -23,7 +23,7 @@ class ProblemListPainter {
         this.intergraph_edge_r = this.plist.options.split_by_year? 4 : 5;
         this.intergraph_edge_p = this.plist.options.split_by_year? 120: 95;
         
-        this.intergraph_edge_linear_p = 700;
+        this.intergraph_edge_linear_p = 650;
         this.intergraph_edge_linear_distance = 6;
     }
 
@@ -59,7 +59,7 @@ class ProblemListPainter {
     draw(svg){
         svg.selectAll("*").remove();
 
-        if (this.plist.options.split_by_year){
+        if (this.plist.options.split_by_year && this.drawtype == "round"){
             this.draw_year_bounds(svg);
         }
         
@@ -149,7 +149,9 @@ class ProblemListPainter {
 
             if (i == 0){
                 p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) + gwidth])
-                p.push([this.getNodeCoordX(n), this.getNodeCoordY(n)])
+                p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) + gwidth])
+                p.push([this.getNodeCoordX(n) - 3, this.getNodeCoordY(n)])
+                p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) - gwidth])
                 p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) - gwidth])
             }
         }
@@ -160,7 +162,9 @@ class ProblemListPainter {
 
             if (i == depthspan.length - 1){
                 p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) - gwidth])
-                p.push([this.getNodeCoordX(n), this.getNodeCoordY(n)])
+                p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) - gwidth])
+                p.push([this.getNodeCoordX(n) + 3, this.getNodeCoordY(n)])
+                p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) + gwidth])
                 p.push([this.getNodeCoordX(n), this.getNodeCoordY(n) + gwidth])
             }
         }
@@ -260,6 +264,17 @@ class ProblemListPainter {
                     for (let node of group.nodes){
                         node.color = this.plist.graphlist[i].color;
                     }
+
+                    if (this.drawtype == "cylinder-vertical") {
+                        if (d3.select("#gname-text-" + p[0][1]).empty())
+                        svg.append("text")
+                            .attr("id", "gname-text-" + p[0][1])
+                            .attr("x", 1000)
+                            .attr("y", p[0][1])
+                            .attr("fill", "gray")
+                            .style("font-size", "0.3em")
+                            .text(group.name)
+                    }
                 }
             }
         }
@@ -293,6 +308,7 @@ class ProblemListPainter {
     draw_group_bounds(){
 
         for (let subproblem of this.plist.graphlist){
+            
             let topl = Math.min.apply(0, subproblem.getAllNodes().map(n => n.list_y));
             let bottoml = Math.max.apply(0, subproblem.getAllNodes().map(n => n.list_y));
     
@@ -307,7 +323,7 @@ class ProblemListPainter {
             let r = []
             for (let i = topl + 1; i<bottoml - 1; i++){
                 if (this.drawtype == "round") r.push(this.toRadial(15, i));
-                if (this.drawtype == "cylinder-vertical") r.push([200, this.getNodeCoordY({list_y: i, depth: 0})])
+                if (this.drawtype == "cylinder-vertical") r.push([400, this.getNodeCoordY({list_y: i, depth: 0})])
             }
 
             if (this.drawtype == "cylinder-vertical" && Math.abs(r[0][1] - r[r.length - 1][1]) > this.plist.totalnodes * this.nodeydist * .5) continue;
@@ -525,8 +541,8 @@ class ProblemListPainter {
             .attr('d', () => {
                 let r = [];
                 for (let i = n1; i<=n2; i++){
-                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + 700, this.getNodeCoordY({list_y: i})])
-                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + 700])
+                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p, this.getNodeCoordY({list_y: i})])
+                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p])
                 }    
                 return this.line(r);
             })
@@ -541,8 +557,8 @@ class ProblemListPainter {
             .attr('d', () => {
                 let r = [];
                 for (let i = this.getEdgeBottomNodeY(edge); i<=this.plist.totalnodes; i++){
-                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + 700, i * this.nodeydist + this.options.padding_y])
-                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + 700])
+                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p, i * this.nodeydist + this.options.padding_y])
+                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p])
                 }
                 return this.line(r);
             })
@@ -555,8 +571,8 @@ class ProblemListPainter {
             .attr('d', () => {
                 let r = [];
                 for (let i = 0; i <= this.getEdgeTopNodeY(edge); i++){
-                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + 700, i * this.nodeydist + this.options.padding_y])
-                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + 700])
+                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p, i * this.nodeydist + this.options.padding_y])
+                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p])
                 }
                 return this.line(r);
             })
@@ -612,17 +628,17 @@ class ProblemListPainter {
 
         for (let edge of this.plist.intergraph_edges){
 
-            for (let node of edge.nodes){
-                let c = svg.append("circle")
-                    .attr("r", 2)
-                    .attr("fill", node.mirrornode.color)
-                    .attr("cx", this.drawtype == "round" ? this.toRadial(edge.x, node.mirrornode.list_y, this.intergraph_edge_r, this.intergraph_edge_p)[0] : edge.x * 6 + this.options.padding_x + 700)
-                    .attr("cy", this.drawtype == "round" ? this.toRadial(edge.x, node.mirrornode.list_y, this.intergraph_edge_r, this.intergraph_edge_p)[1] : this.getNodeCoordY(node.mirrornode))
+            // for (let node of edge.nodes){
+            //     let c = svg.append("circle")
+            //         .attr("r", 2)
+            //         .attr("fill", node.mirrornode.color)
+            //         .attr("cx", this.drawtype == "round" ? this.toRadial(edge.x, node.mirrornode.list_y, this.intergraph_edge_r, this.intergraph_edge_p)[0] : edge.x * 6 + this.options.padding_x + 700)
+            //         .attr("cy", this.drawtype == "round" ? this.toRadial(edge.x, node.mirrornode.list_y, this.intergraph_edge_r, this.intergraph_edge_p)[1] : this.getNodeCoordY(node.mirrornode))
 
-                if (this.drawtype == "cylinder-horizontal")
-                    c.attr("cx", this.getNodeCoordX(node.mirrornode))
-                    c.attr("cy", edge.x * 6 + this.options.padding_x + 700)
-            } 
+            //     if (this.drawtype == "cylinder-horizontal")
+            //         c.attr("cx", this.getNodeCoordX(node.mirrornode))
+            //         c.attr("cy", edge.x * 6 + this.options.padding_x + 700)
+            // } 
 
             // sort then split edges
             edge.nodes.sort((a, b) => a.mirrornode.list_y > b.mirrornode.list_y ? 1 : -1)
