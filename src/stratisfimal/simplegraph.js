@@ -379,5 +379,5 @@ class Graph {
 }
 
 try {
-    module.exports = exports = SimpleGraph;
+    module.exports = exports = Graph;
  } catch (e) {}

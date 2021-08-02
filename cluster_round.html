@@ -8,14 +8,21 @@
   <!-- <script src="lib/reorder.min.js"></script> -->
   <script src="lib/d3-interpolate.min.js"></script>
   <script src="lib/nouislider.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+
+  <script src="https://code.easypz.io/easypz.latest.min.js"></script>
 
   <link rel="stylesheet" href="lib/nouislider.min.css">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
 
   <script src="src/stratisfimal/simplegraph.js"></script>
   <script src="src/stratisfimal/simpleLp.js"></script>
   <script src="src/drawgraph.js"></script>
   <script src="src/utils.js"></script>
   <script src="src/problemlist_round.js"></script>
+  <script src="src/ProblemlistSorter.js"></script>
+  <script src="src/ProblemlistPainter.js"></script>
+  <script src="src/CollabParser.js"></script>
 
   <style>
       text {
@@ -29,135 +36,71 @@
           padding: 5%;
       }
 
-  </style>
-</head>
-<body></body>
-</html>
+      .optionbox {
+          position: fixed;
+          top: 0px;
+          background-color: #b2c6d7;
+          padding: 1%;
+      }
 
-<script>
+  </style>
+
+</head>
+
+<body>
+
+    <div class="container-fluid optionbox">
+        <div class="row">
+            <div class="col-sm" style="max-width: 15%">
+                
+                <div class="row">
+
+                </div>
+
+                <div class="row">
+                    <input type="checkbox" class="btn-check" id="toggletimebtn" autocomplete="off" onclick="options.split_by_year = !options.split_by_year
+                        loadAndDoEverything();">
+                    <label class="btn btn-primary" for="toggletimebtn">toggle time</label>
+                </div>
+
+                <div class="row">
+                    <div>shape: </div>
+
+                    <input type="radio" class="btn-check" name="options" id="shape1" autocomplete="off" onclick="changeShape('cylinder-horizontal')">
+                    <label class="btn btn-secondary" for="shape1">cylinder-horizontal</label>
+
+                    <input type="radio" class="btn-check" name="options" id="shape2" autocomplete="off" checked onclick="changeShape('cylinder-vertical')">
+                    <label class="btn btn-secondary" for="shape2">cylinder-vertical</label>
+
+                    <input type="radio" class="btn-check" name="options" id="shape3" autocomplete="off" onclick="changeShape('round')">
+                    <label class="btn btn-secondary" for="shape3">round</label>
+                </div>
+
+               
+            
+            </div>
+
+            <div class="col-lg" style="padding-left: 2%;">
+
+                <div class="row" id="divslider1" style="padding-top: 2%;">
+                    year range:   &emsp;
+                </div>
+
+                <div class="row" id="divslider2" style="padding-top: 2%;">
+                    num clusters:    &emsp;
+                </div>
+
+            </div>
+        </div>
+    </div>
 
     
 
-    function * find_disconnected_elems(data){
+</body>
 
-        let visitNode = (node, arr) => {
-            if (node == undefined) return;
-            if (node.visited == true) {return;}
-            
-            arr.push(node.fullname);
-            node.visited = true;
+</html>
 
-            for (let g of node.genealogy_details){
-                let e1 = g[0].split("(")[1].replaceAll(")", "")
-                e1 = data[e1]
-                
-                if (e1 != node) {
-                    visitNode(e1, arr);
-                }
-
-                let e2 = g[2].split("(")[1].replaceAll(")", "")
-                e2 = data[e2]
-                
-                if (e2 != node) {
-                    visitNode(e2, arr);
-                }
-            }
-        }
-
-        for (let el in data){
-            if (data[el].visited) continue;
-            let arr = [];
-            visitNode(data[el], arr);
-
-            yield arr;
-        }
-    }
-
-    function process_collab_group (data, groupnames, firstdate){
-        let graph = new Graph();
-
-        for (let el in data){
-            if (groupnames.includes(data[el].fullname)) {
-                
-                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el].theme}
-                graph.addGroup(newgroup);
-
-                let startdate = parseInt(data[el].period[0].split("/")[2])
-                let enddate = parseInt(data[el].period[1].split("/")[2])
-                let prevnode;
-
-
-                // ONLY ADD FIRST AND LAST NODE:
-                let newnode1 = {
-                    name: data[el].name,
-                    // id: data[el].name.replaceAll("-", ""),
-                    depth: startdate - firstdate,
-                    fullname: data[el].fullname
-                }
-
-                if (graph.nodeIndex[newnode1.depth] != undefined && 
-                    graph.nodeIndex[newnode1.depth].map(n => n.fullname).includes(newnode1.fullname)) newnode1.depth++;
-
-                graph.addNode(newnode1)
-                newgroup.nodes.push(newnode1)
-
-                let newnode2 = {
-                    name: data[el].name,
-                    // id: data[el].name.replaceAll("-", "").replaceAll(" ", ""),
-                    depth: enddate - firstdate,
-                    fullname: data[el].fullname
-                }
-
-                if (newnode1.depth != newnode2.depth){
-                    graph.addNode(newnode2)
-                    newgroup.nodes.push(newnode2)
-                }
-
-                // connect "becomes" and "spins-off"
-                for (let r of data[el].genealogy_details){
-                    if (r[0] == newgroup.fullname) {
-                        // if group hasn't been created yet
-                        if (!graph.groups.find(gr => gr.fullname == r[2])) continue;
-
-                        let gr2 = graph.groups.find(gr => gr.fullname == r[2])
-                        let n2 = gr2.nodes.find(n => n.depth == Math.min.apply(0, gr2.nodes.map(nn => nn.depth)))
-                        let n0 = newgroup.nodes.find(n => n.depth = n2.depth - 1)
-
-                        if (n0 == undefined || n2 == undefined) console.log("BBBBBBBBB")
-
-                        graph.addEdge({nodes: [n0, n2], edgetype: r[1]})
-                        
-                    }
-                    else if (r[2] == newgroup.fullname) {
-                        // if group hasn't been created yet
-                        if (!graph.groups.find(gr => gr.fullname == r[0])) continue;
-
-                        let gr0 = graph.groups.find(gr => gr.fullname == r[0])
-                        let n2 = newgroup.nodes.find(n => n.depth == Math.min.apply(0, newgroup.nodes.map(nn => nn.depth)))
-                        let n0 = gr0.nodes.find(n => n.depth == n2.depth - 1)
-
-                        // if (n0 == undefined || n2 == undefined) console.log(n0, gr0)
-                        if (n0 == undefined){
-                            n0 = {
-                                name: gr0.name,
-                                id: gr0.name.replaceAll("-", ""),
-                                depth: n2.depth - 1,
-                                fullname: gr0.fullname
-                            }
-                            gr0.nodes.push(n0);
-                            graph.addNode(n0)
-                        }
-                        // if (n2 == undefined) console.log(r)
-
-                        if (!graph.edges.find(e => (e.nodes[0] == n0 && e.nodes[1] == n2) || (e.nodes[0] == n2 && e.nodes[1] == n0))) graph.addEdge({nodes: [n0, n2], edgetype: r[1]})
-                    }
-                    
-                }
-            }
-        }
-
-        return graph;
-    }
+<script>
 
     function add_collabdata(data, collabdata){
         if (collabdata != undefined){
@@ -211,21 +154,17 @@
         }
     }
 
-    function addSlider(startdate, enddate){
-        let optionbox = document.createElement("div")
-        document.body.appendChild(optionbox)
+    function changeShape(shape){
+        options.shape = shape;
+        loadAndDoEverything();
+    }
 
-        let btn = document.createElement("button")
-        btn.innerHTML = "Toggle time"
-        btn.style.margin = "50px"
-        btn.onclick = () => {
-            options.split_by_year = !options.split_by_year
-            loadAndDoEverything();
-        }
-        optionbox.appendChild(btn)
+    function addSlider(startdate, enddate){
+
+        let divslider1 = document.getElementById("divslider1")
 
         let slider = document.createElement("div");
-        optionbox.appendChild(slider)
+        divslider1.appendChild(slider)
 
         noUiSlider.create(slider, {
             range: {
@@ -233,21 +172,16 @@
                 'max': enddate
             },
             step: 1,
+            margin: 1,
             start: [window.timerange[0], window.timerange[1]],
             connect: true,
-            direction: 'rtl',
-            orientation: 'vertical',
+            direction: 'ltr',
+            orientation: 'horizontal',
             behaviour: 'tap-drag',
             tooltips: true,
-            pips: {
-                mode: 'steps',
-                stepped: true,
-                density: 10
-            }
         });
 
         slider.noUiSlider.on("set", () => { 
-            // window.firstdate = slider.noUiSlider.get()[0];
             window.timerange = slider.noUiSlider.get();
             options.timerange = window.timerange
             loadAndDoEverything();
@@ -260,31 +194,24 @@
             loadAndDoEverything();
         })
 
-        slider.style.height = window.innerHeight - 200 + "px";
-        slider.style.marginLeft = '100px';
-        slider.style.position = "absolute"
-        slider.style.top = '100px'
+        slider.style.width = "50%"
 
+        let divslider2 = document.getElementById("divslider2")
         let slider2 = document.createElement("div");
-        optionbox.appendChild(slider2)
+        divslider2.appendChild(slider2)
 
         noUiSlider.create(slider2, {
             range: {
-                'min': 5,
-                'max': 15
+                'min': 1,
+                'max': 10
             },
             step: 1,
-            start: 10,
+            start: 5,
             connect: true,
-            direction: 'rtl',
-            orientation: 'vertical',
+            direction: 'ltr',
+            orientation: 'horizontal',
             behaviour: 'tap-drag',
             tooltips: true,
-            pips: {
-                mode: 'steps',
-                stepped: true,
-                density: 10
-            }
         });
 
         slider2.noUiSlider.on("set", () => { 
@@ -292,105 +219,7 @@
             loadAndDoEverything();
         })
 
-        slider2.style.height = window.innerHeight - 200 + "px";
-        slider2.style.marginLeft = '300px';
-        slider2.style.position = "absolute"
-        slider2.style.top = '100px'
-
-        optionbox.style.position = "fixed"
-        optionbox.style.top = "10px"
-        optionbox.style.textAlign = "center"
-    }
-
-    function solve_subproblem(graph){
-        try {
-            let algorithm = new SimpleLp(graph)
-            algorithm.options.crossings_reduction_active = false;
-            algorithm.options.bendiness_reduction_active = true;
-            algorithm.options.simplify_for_groups_enabled = true;
-            algorithm.options.single_line_groups = true;
-            algorithm.arrange();
-            algorithm.apply_solution();
-
-            if (algorithm.solveTime != undefined ) return parseInt(algorithm.solveTime);
-            else return 0;
-        } catch (error) {console.log("error in algorithm application");}
-    }
-
-    function add_collabs_to_plist(plist, collabdata, verbose = false){
-
-        let eqSet = (as, bs) => {
-            if (as.size !== bs.size) return false;
-            for (var a of as) if (!bs.has(a)) return false;
-            return true;
-        }
-
-        // let collab_value_cutoff = 2;
-
-        for (let year in collabdata){
-            for (let collab in collabdata[year]){
-                if (collab.split(":").length < 2) {continue}
-                if (collabdata[year][collab] < options.collab_value_cutoff) {continue}
-
-                if (window.timerange != undefined && (year <= window.timerange[0] || year >= window.timerange[1])) continue;
-                
-                let newedge = {
-                    nodes: [], 
-                    weight: collabdata[year][collab],
-                    year: year,
-                    children: []
-                }
-
-                if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
-                    continue;
-                }
-
-                for (let i=0; i<collab.split(":").length; i++){
-                    let d = parseInt(year) - firstdate;
-                    let pgroup = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
-
-                    if (pgroup == undefined){
-                        continue;
-                    }
-                    
-                    // find closest node in that group:
-                    let mind = Math.min.apply(0, pgroup.nodes.map(n => Math.abs(parseInt(n.depth) - d)))
-                    let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
-                    let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
-                    
-                    let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname, mirrornode: pgroup.nodes[0]}
-                    let problem = plist.getProblemFromNode(p)
-
-                    p = newnode;
-
-                    if (p != undefined) newedge.nodes.push(p);
-                }
-
-                if (newedge.nodes.length <= 1) continue;
-
-                let sameedge = plist.intergraph_edges.find(e => { 
-                    return eqSet(new Set(e.nodes.map(n => n.mirrornode.fullname)), new Set(newedge.nodes.map(n => n.mirrornode.fullname)))
-                })
-
-                if (options.split_by_year){
-                    if (sameedge != undefined && newedge.year == sameedge.year) {
-                        sameedge.weight += newedge.weight;
-                        sameedge.children.push(newedge);
-                    } else {
-                        newedge.children.push(newedge);
-                        plist.intergraph_edges.push(newedge);
-                    }
-                } else {
-                    if (sameedge != undefined) {
-                        sameedge.weight += newedge.weight;
-                        sameedge.children.push(newedge);
-                    } else {
-                        newedge.children.push(newedge);
-                        plist.intergraph_edges.push(newedge);
-                    }
-                }
-            }
-        }
+        slider2.style.width = "50%";
     }
 
     function analyze_and_draw(data, data2){
@@ -404,71 +233,21 @@
         }
         window.firstdate = firstdate;
 
-        let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
+        let collabparser = new CollabParser();
+        let largeplist = collabparser.analyze_and_draw(data, data2)
 
-        let largeplist = new ProblemList();
-        largeplist.options = options;
-
-        for (let theme of themes){
-            let plist = new ProblemList();
-            plist.problemname = theme;
-            plist.problemid = id_cleanup(theme);
-
-            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
-            // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
-
-            let groupsinthisthemedata = {}
-            for (let group of groupsinthistheme){
-                groupsinthisthemedata[group.id] = group
-            }
-
-            let groupnamelist = [];
-            for (let arr of find_disconnected_elems(groupsinthisthemedata, data2)) groupnamelist.push(arr);
-
-            for (let i=0; i<groupnamelist.length; i++){
-                let newproblem = process_collab_group(data, groupnamelist[i], firstdate)
-                plist.graphlist.push(newproblem)
-                newproblem.parent = plist;
-            }
-
-            add_collabs_to_plist(plist, data2);
-
-            plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
-
-            largeplist.graphlist.push(plist)
-            plist.parent = largeplist;
-
-            if (themes.indexOf(theme) == options.numthemes) break;
+        if (options.readFromFile){
+            sortFromFile(largeplist, collabparser);
+        } else {
+            largeplist.painter.svg = svg;
+            largeplist.painter.addListener();
+            largeplist.painter.setup();
+            largeplist.painter.draw(svg)
         }
-
-        add_collabs_to_plist(largeplist, data2);
-
-        largeplist.assignNodeY();
-
-        largeplist.sort_problemlist_round()
-
-        for (let problem of largeplist.graphlist){
-            problem.sort_problemlist_round()
-
-            for (let graph of problem.graphlist){
-                solve_subproblem(graph);
-            }
-        }
-
-        largeplist.assignNodeY();
-
-        // largeplist.totalnodes = Math.max.apply(0, largeplist.getAllNodes().map(n => n.list_y));
-        // console.log(largeplist.totalnodes)
-
-        largeplist.draw(svg)
-        largeplist.draw_intergraph_edges(svg);
-
-        svg.selectAll("path").filter(e => e != undefined && e.edgetype == "spins-off").attr("stroke-dasharray", "2 2")
-        svg.selectAll("text").style("font-size", "0.5em")
+        
     }
 
     loadAndDoEverything = () => {
-        svg.selectAll("*").remove();
         d3.json("data/inria-teams.json").then((data) =>{
             d3.json("data/inria-collab.json").then((data2) => {
                 analyze_and_draw(data, data2);
@@ -476,21 +255,75 @@
         })
     }
 
+    sortFromFile = (largeplist, collabparser) => {
+        let sortfilename = "./sorted_layouts/" + parseInt(options.timerange[0]) + '-' + parseInt(options.timerange[1]) + '-' + parseInt(options.numthemes) + '.json'
+
+        fetch(sortfilename)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("HTTP error " + response.status);
+                }
+                return response.json();
+            })
+            .then(json => {
+                largeplist.graphlist.sort((a, b) => {
+                    let indexA = json.find(el => el.id == id_cleanup(a.getAllNodes()[0].fullname))
+                    let indexB = json.find(el => el.id == id_cleanup(b.getAllNodes()[0].fullname))
+                    // if (indexA == undefined) console.log(a)
+                    // if (indexB == undefined) console.log(b)
+                    indexA = json.indexOf(indexA)
+                    indexB = json.indexOf(indexB)
+                    return indexA > indexB;
+                })
+
+                for (let problem of largeplist.graphlist){
+                    let json2 = json.find(el => el.id == id_cleanup(problem.getAllNodes()[0].fullname)).subproblems
+                    problem.graphlist.sort((a, b) => {
+                        let indexA = json2.find(el => el == id_cleanup(a.getAllNodes()[0].fullname))
+                        let indexB = json2.find(el => el == id_cleanup(b.getAllNodes()[0].fullname))
+                        if (indexA == undefined) return 0;
+                        if (indexB == undefined) return 0;
+                        indexA = json2.indexOf(indexA)
+                        indexB = json2.indexOf(indexB)
+                        return indexA > indexB;
+                    })
+
+                    for (let graph of problem.graphlist){
+                        collabparser.solve_subproblem(graph);
+                    }
+                }
+
+                largeplist.assignNodeY();
+
+                largeplist.painter.svg = svg;
+                largeplist.painter.addListener();
+                largeplist.painter.setup();
+                largeplist.painter.draw(svg)
+
+            })
+            .catch(function (e) {
+                console.log(e, "file read error")
+            })
+    }
+
     let svg = d3.select('body')
         .append('svg')
         .attr("width", 3000)
         .attr("height", 50000)
+        .attr("easypz", "")
 
     window.timerange = [2000, 2004]
 
     addSlider(2000, 2020);
 
     let options = {
-        split_by_year: true,
+        split_by_year: false,
         timerange: window.timerange,
         collab_value_cutoff: 2,
-        numthemes: 10,
-        split_hyperedges: true,    
+        numthemes: 5,
+        split_hyperedges: true, 
+        shape: "cylinder-vertical",
+        readFromFile: true   
     }
 
     loadAndDoEverything();
