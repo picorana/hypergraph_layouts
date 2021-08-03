@@ -1,0 +1,350 @@
+{
+  "U0": {
+    "id": "U0",
+    "name": "University of Utah,USA",
+    "period": [
+      1990,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "University of Utah,USA (U0)",
+    "genealogy_details": [],
+    "genealogy": "University of Utah,USA"
+  },
+  "U1": {
+    "id": "U1",
+    "name": "University of Stuttgart, Germany",
+    "period": [
+      1991,
+      2019
+    ],
+    "country": "Germany",
+    "fullname": "University of Stuttgart, Germany (U1)",
+    "genealogy_details": [],
+    "genealogy": "University of Stuttgart, Germany"
+  },
+  "U2": {
+    "id": "U2",
+    "name": "University of Konstanz,Germany",
+    "period": [
+      2002,
+      2019
+    ],
+    "country": "Germany",
+    "fullname": "University of Konstanz,Germany (U2)",
+    "genealogy_details": [],
+    "genealogy": "University of Konstanz,Germany"
+  },
+  "U3": {
+    "id": "U3",
+    "name": "University of California, Davis, USA",
+    "period": [
+      1991,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "University of California, Davis, USA (U3)",
+    "genealogy_details": [],
+    "genealogy": "University of California, Davis, USA"
+  },
+  "U4": {
+    "id": "U4",
+    "name": "Stony Brook University, USA",
+    "period": [
+      1990,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Stony Brook University, USA (U4)",
+    "genealogy_details": [],
+    "genealogy": "Stony Brook University, USA"
+  },
+  "U5": {
+    "id": "U5",
+    "name": "Purdue University, USA",
+    "period": [
+      1994,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Purdue University, USA (U5)",
+    "genealogy_details": [],
+    "genealogy": "Purdue University, USA"
+  },
+  "U6": {
+    "id": "U6",
+    "name": "Georgia Institute of Technology, USA",
+    "period": [
+      1995,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Georgia Institute of Technology, USA (U6)",
+    "genealogy_details": [],
+    "genealogy": "Georgia Institute of Technology, USA"
+  },
+  "U7": {
+    "id": "U7",
+    "name": "Hong Kong University of Science and Technology, China",
+    "period": [
+      2006,
+      2019
+    ],
+    "country": "China",
+    "fullname": "Hong Kong University of Science and Technology, China (U7)",
+    "genealogy_details": [],
+    "genealogy": "Hong Kong University of Science and Technology, China"
+  },
+  "U8": {
+    "id": "U8",
+    "name": "Vienna University of Technology, Austria",
+    "period": [
+      1997,
+      2018
+    ],
+    "country": "Austria",
+    "fullname": "Vienna University of Technology, Austria (U8)",
+    "genealogy_details": [],
+    "genealogy": "Vienna University of Technology, Austria"
+  },
+  "U9": {
+    "id": "U9",
+    "name": "IBM Research, USA",
+    "period": [
+      1990,
+      2018
+    ],
+    "country": "USA",
+    "fullname": "IBM Research, USA (U9)",
+    "genealogy_details": [],
+    "genealogy": "IBM Research, USA"
+  },
+  "U10": {
+    "id": "U10",
+    "name": "Ohio State University, Columbus, USA",
+    "period": [
+      1990,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Ohio State University, Columbus, USA (U10)",
+    "genealogy_details": [],
+    "genealogy": "Ohio State University, Columbus, USA"
+  },
+  "U11": {
+    "id": "U11",
+    "name": "Zhejiang University,China",
+    "period": [
+      2004,
+      2019
+    ],
+    "country": "China",
+    "fullname": "Zhejiang University,China (U11)",
+    "genealogy_details": [],
+    "genealogy": "Zhejiang University,China"
+  },
+  "U12": {
+    "id": "U12",
+    "name": "Stanford University, USA",
+    "period": [
+      1990,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Stanford University, USA (U12)",
+    "genealogy_details": [],
+    "genealogy": "Stanford University, USA"
+  },
+  "U13": {
+    "id": "U13",
+    "name": "University of North Carolina, Charlotte, USA",
+    "period": [
+      2004,
+      2017
+    ],
+    "country": "USA",
+    "fullname": "University of North Carolina, Charlotte, USA (U13)",
+    "genealogy_details": [],
+    "genealogy": "University of North Carolina, Charlotte, USA"
+  },
+  "U14": {
+    "id": "U14",
+    "name": "Harvard University,USA",
+    "period": [
+      1991,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Harvard University,USA (U14)",
+    "genealogy_details": [],
+    "genealogy": "Harvard University,USA"
+  },
+  "U15": {
+    "id": "U15",
+    "name": "Pacific Northwest National Laboratory, USA",
+    "period": [
+      1995,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Pacific Northwest National Laboratory, USA (U15)",
+    "genealogy_details": [],
+    "genealogy": "Pacific Northwest National Laboratory, USA"
+  },
+  "U16": {
+    "id": "U16",
+    "name": "University of Maryland, College Park, USA",
+    "period": [
+      1990,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "University of Maryland, College Park, USA (U16)",
+    "genealogy_details": [],
+    "genealogy": "University of Maryland, College Park, USA"
+  },
+  "U17": {
+    "id": "U17",
+    "name": "VRVis Research Center, Austria",
+    "period": [
+      2001,
+      2019
+    ],
+    "country": "Austria",
+    "fullname": "VRVis Research Center, Austria (U17)",
+    "genealogy_details": [],
+    "genealogy": "VRVis Research Center, Austria"
+  },
+  "U18": {
+    "id": "U18",
+    "name": "Lawrence Livermore National Laboratory, USA",
+    "period": [
+      1991,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Lawrence Livermore National Laboratory, USA (U18)",
+    "genealogy_details": [],
+    "genealogy": "Lawrence Livermore National Laboratory, USA"
+  },
+  "U19": {
+    "id": "U19",
+    "name": "University of North Carolina, Chapel Hill, USA",
+    "period": [
+      1991,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "University of North Carolina, Chapel Hill, USA (U19)",
+    "genealogy_details": [],
+    "genealogy": "University of North Carolina, Chapel Hill, USA"
+  },
+  "U20": {
+    "id": "U20",
+    "name": "Virginia Tech, USA",
+    "period": [
+      1998,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "Virginia Tech, USA (U20)",
+    "genealogy_details": [],
+    "genealogy": "Virginia Tech, USA"
+  },
+  "U21": {
+    "id": "U21",
+    "name": "Linkoping University,Sweden",
+    "period": [
+      2000,
+      2018
+    ],
+    "country": "Sweden",
+    "fullname": "Linkoping University,Sweden (U21)",
+    "genealogy_details": [],
+    "genealogy": "Linkoping University,Sweden"
+  },
+  "U22": {
+    "id": "U22",
+    "name": "Eindhoven University of Technology, The Netherlands",
+    "period": [
+      1999,
+      2019
+    ],
+    "country": "The Netherlands",
+    "fullname": "Eindhoven University of Technology, The Netherlands (U22)",
+    "genealogy_details": [],
+    "genealogy": "Eindhoven University of Technology, The Netherlands"
+  },
+  "U23": {
+    "id": "U23",
+    "name": "Inria, France",
+    "period": [
+      1993,
+      2019
+    ],
+    "country": "France",
+    "fullname": "Inria, France (U23)",
+    "genealogy_details": [],
+    "genealogy": "Inria, France"
+  },
+  "U24": {
+    "id": "U24",
+    "name": "New York University, USA",
+    "period": [
+      2001,
+      2019
+    ],
+    "country": "USA",
+    "fullname": "New York University, USA (U24)",
+    "genealogy_details": [],
+    "genealogy": "New York University, USA"
+  },
+  "U25": {
+    "id": "U25",
+    "name": "Microsoft Research, USA",
+    "period": [
+      1998,
+      2018
+    ],
+    "country": "USA",
+    "fullname": "Microsoft Research, USA (U25)",
+    "genealogy_details": [],
+    "genealogy": "Microsoft Research, USA"
+  },
+  "U26": {
+    "id": "U26",
+    "name": "Simon Fraser University, Canada",
+    "period": [
+      1994,
+      2019
+    ],
+    "country": "Canada",
+    "fullname": "Simon Fraser University, Canada (U26)",
+    "genealogy_details": [],
+    "genealogy": "Simon Fraser University, Canada"
+  },
+  "U27": {
+    "id": "U27",
+    "name": "ETH Zurich, Switzerland",
+    "period": [
+      1995,
+      2019
+    ],
+    "country": "Switzerland",
+    "fullname": "ETH Zurich, Switzerland (U27)",
+    "genealogy_details": [],
+    "genealogy": "ETH Zurich, Switzerland"
+  },
+  "U28": {
+    "id": "U28",
+    "name": "Fraunhofer Institute, Germany",
+    "period": [
+      1994,
+      2019
+    ],
+    "country": "Germany",
+    "fullname": "Fraunhofer Institute, Germany (U28)",
+    "genealogy_details": [],
+    "genealogy": "Fraunhofer Institute, Germany"
+  }
+}

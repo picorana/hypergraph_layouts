@@ -19,7 +19,9 @@ class CollabParser {
     }
 
     analyze_and_draw(data, data2){
-        let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
+        // let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
+        let themes = [ ... new Set(Object.keys(data).map(d => data[d][window.cluster_key]))]
+        console.log(themes);
 
         let largeplist = new ProblemList();
         largeplist.options = options;
@@ -30,7 +32,7 @@ class CollabParser {
             plist.problemname = theme;
             plist.problemid = id_cleanup(theme);
 
-            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
+            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[window.cluster_key] == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
 
             let groupsinthisthemedata = {}
@@ -64,7 +66,7 @@ class CollabParser {
         largeplist.assignNodeY();
 
         if (options.readFromFile) {
-            
+
         } else {
             largeplist.sorter.sort()
 
@@ -77,14 +79,14 @@ class CollabParser {
             }
 
             largeplist.assignNodeY();
-            
+
         }
-        
+
         return largeplist;
     }
 
     sort_from_file () {
-        
+
     }
 
     add_collabs_to_plist(plist, collabdata, verbose = false){
@@ -109,7 +111,7 @@ class CollabParser {
                 }
 
                 let newedge = {
-                    nodes: [], 
+                    nodes: [],
                     weight: collabdata[year][collab],
                     year: year,
                     children: []
@@ -122,14 +124,14 @@ class CollabParser {
                     if (pgroup == undefined){
                         continue;
                     }
-                    
+
                     // find closest node in that group:
                     let mind = Math.min.apply(0, pgroup.nodes.map(n => Math.abs(parseInt(n.depth) - d)))
                     let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
-                    let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
-                    
+                    // let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
+
                     let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname, mirrornode: pgroup.nodes[0]}
-                    let problem = plist.getProblemFromNode(p)
+                    // let problem = plist.getProblemFromNode(p)
 
                     p = newnode;
 
@@ -138,7 +140,7 @@ class CollabParser {
 
                 if (newedge.nodes.length <= 1) continue;
 
-                let sameedge = plist.intergraph_edges.find(e => { 
+                let sameedge = plist.intergraph_edges.find(e => {
                     return eqSet(new Set(e.nodes.map(n => n.mirrornode.fullname)), new Set(newedge.nodes.map(n => n.mirrornode.fullname)))
                 })
 
@@ -163,17 +165,25 @@ class CollabParser {
         }
     }
 
+    process_date(date_item) {
+        if (isNaN(date_item)) {
+            return parseInt(date_item.split("/")[2]);
+        } else {
+            return date_item;
+        }
+    }
+
     process_collab_group (data, groupnames, firstdate){
         let graph = new Graph();
 
         for (let el in data){
             if (groupnames.includes(data[el].fullname)) {
-                
-                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el].theme}
+
+                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el][window.cluster_key]}
                 graph.addGroup(newgroup);
 
-                let startdate = parseInt(data[el].period[0].split("/")[2])
-                let enddate = parseInt(data[el].period[1].split("/")[2])
+                let startdate = this.process_date(data[el].period[0]);
+                let enddate = this.process_date(data[el].period[1]);
                 let prevnode;
 
 
@@ -185,7 +195,7 @@ class CollabParser {
                     fullname: data[el].fullname
                 }
 
-                if (graph.nodeIndex[newnode1.depth] != undefined && 
+                if (graph.nodeIndex[newnode1.depth] != undefined &&
                     graph.nodeIndex[newnode1.depth].map(n => n.fullname).includes(newnode1.fullname)) newnode1.depth++;
 
                 graph.addNode(newnode1)
@@ -216,7 +226,7 @@ class CollabParser {
                         if (n0 == undefined || n2 == undefined) console.log("BBBBBBBBB")
 
                         graph.addEdge({nodes: [n0, n2], edgetype: r[1]})
-                        
+
                     }
                     else if (r[2] == newgroup.fullname) {
                         // if group hasn't been created yet
@@ -241,7 +251,7 @@ class CollabParser {
 
                         if (!graph.edges.find(e => (e.nodes[0] == n0 && e.nodes[1] == n2) || (e.nodes[0] == n2 && e.nodes[1] == n0))) graph.addEdge({nodes: [n0, n2], edgetype: r[1]})
                     }
-                    
+
                 }
             }
         }
@@ -254,21 +264,21 @@ class CollabParser {
         let visitNode = (node, arr) => {
             if (node == undefined) return;
             if (node.visited == true) {return;}
-            
+
             arr.push(node.fullname);
             node.visited = true;
 
             for (let g of node.genealogy_details){
                 let e1 = g[0].split("(")[1].replaceAll(")", "")
                 e1 = data[e1]
-                
+
                 if (e1 != node) {
                     visitNode(e1, arr);
                 }
 
                 let e2 = g[2].split("(")[1].replaceAll(")", "")
                 e2 = data[e2]
-                
+
                 if (e2 != node) {
                     visitNode(e2, arr);
                 }

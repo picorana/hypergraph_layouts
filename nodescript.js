@@ -26,7 +26,8 @@ class CollabParser {
     }
 
     analyze_and_draw(data, data2){
-        let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
+        let themes = [ ... new Set(Object.keys(data).map(d => data[d][window.cluster_key]))]
+        console.log("themes ", themes)
 
         let largeplist = new ProblemList();
         largeplist.options = options;
@@ -37,7 +38,7 @@ class CollabParser {
             plist.problemname = theme;
             plist.problemid = id_cleanup(theme);
 
-            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry.theme == theme)
+            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[window.cluster_key] == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
 
             let groupsinthisthemedata = {}
@@ -167,7 +168,7 @@ class CollabParser {
         for (let el in data){
             if (groupnames.includes(data[el].fullname)) {
                 
-                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el].theme}
+                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el][window.cluster_key]}
                 graph.addGroup(newgroup);
 
                 let startdate = parseInt(data[el].period[0].split("/")[2])
@@ -619,6 +620,7 @@ class ProblemList {
             init_y = gHeight + 1;
         }
 
+        console.log("all nodes ", this.getAllNodes());
         this.totalnodes = Math.max.apply(0, this.getAllNodes().map(n => n.list_y)) + 1
     }
 

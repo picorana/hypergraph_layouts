@@ -65,7 +65,6 @@ class ProblemListPainter {
         
         this.draw_round(svg);
         this.draw_round_intergraph_edges(svg);
-
     }
 
     toRadial (x, y, r = 10, p = 0) {
@@ -81,6 +80,7 @@ class ProblemListPainter {
     }
 
     getAbsoluteY (node) {
+        // console.log("nY ", node, this.options.padding_y, this.nodeydist, node.list_y, this.scrollOffsetY, this.plist.totalnodes);
         return this.options.padding_y + this.nodeydist * ((node.list_y + this.scrollOffsetY) % this.plist.totalnodes);
     }
 
@@ -243,11 +243,11 @@ class ProblemListPainter {
                     let depthspan = [... new Set(group.nodes.map(n => n.depth))].sort()
     
                     let p;
-    
+
                     if (this.drawtype == "round") p = this.make_group_path_round(group, depthspan);
                     else if (this.drawtype == "cylinder-horizontal") p =this.make_group_path_linear_vertical(group, depthspan);
                     else p = this.make_group_path_linear_horizontal(group, depthspan);
-    
+
                     let f = svg.select("#g-" + id_cleanup(group.fullname))
     
                     if (f.empty()){
@@ -284,7 +284,7 @@ class ProblemListPainter {
         // }
 
         if (this.options.draw_group_bounds && this.drawtype != "cylinder-horizontal"){
-            this.draw_group_bounds();
+            // this.draw_group_bounds();
         }
     }
 
@@ -311,7 +311,8 @@ class ProblemListPainter {
             
             let topl = Math.min.apply(0, subproblem.getAllNodes().map(n => n.list_y));
             let bottoml = Math.max.apply(0, subproblem.getAllNodes().map(n => n.list_y));
-    
+            console.log("TB ", topl, bottoml);
+
             let problemid = subproblem.problemid;
     
             let tmpid = "path-group-indicator-" + problemid;
@@ -321,11 +322,14 @@ class ProblemListPainter {
                 .attr("id", "g-group-indicator-" + problemid)
     
             let r = []
-            for (let i = topl + 1; i<bottoml - 1; i++){
+            console.log("draw ", this.drawtype)
+            // for (let i = topl + 1; i<bottoml - 1; i++){
+            for (let i = topl; i<bottoml; i++){
                 if (this.drawtype == "round") r.push(this.toRadial(15, i));
                 if (this.drawtype == "cylinder-vertical") r.push([400, this.getNodeCoordY({list_y: i, depth: 0})])
             }
 
+            console.log(r);
             if (this.drawtype == "cylinder-vertical" && Math.abs(r[0][1] - r[r.length - 1][1]) > this.plist.totalnodes * this.nodeydist * .5) continue;
     
             g.append("path")
