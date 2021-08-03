@@ -228,7 +228,13 @@
 
         let firstdate = Infinity
         for (let el in data){
-            let startdate = parseInt(data[el].period[0].split("/")[2])
+            let startdate;
+            if (isNaN(data[el].period[0])) {
+                startdate = parseInt(data[el].period[0].split("/")[2])
+            } else {
+                startdate = data[el].period[0]
+            }
+
             if (startdate < firstdate) firstdate = startdate;
         }
         window.firstdate = firstdate;
@@ -248,8 +254,16 @@
     }
 
     loadAndDoEverything = () => {
-        d3.json("data/inria-teams.json").then((data) =>{
-            d3.json("data/inria-collab.json").then((data2) => {
+        // d3.json("data/inria-teams.json").then((data) =>{
+        //     d3.json("data/inria-collab.json").then((data2) => {
+        //         window.cluster_key = "theme"
+        //         analyze_and_draw(data, data2);
+        //     })
+        // })
+
+        d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
+            d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
+                window.cluster_key = "country";
                 analyze_and_draw(data, data2);
             })
         })
@@ -323,7 +337,8 @@
         numthemes: 5,
         split_hyperedges: true, 
         shape: "cylinder-vertical",
-        readFromFile: true   
+        // readFromFile: true
+        readFromFile: false
     }
 
     loadAndDoEverything();
