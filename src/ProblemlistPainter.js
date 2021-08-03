@@ -269,7 +269,7 @@ class ProblemListPainter {
         // }
 
         if (this.options.draw_group_bounds && this.drawtype != "cylinder-horizontal"){
-            this.draw_group_bounds();
+            // this.draw_group_bounds();
         }
     }
 

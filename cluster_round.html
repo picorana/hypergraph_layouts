@@ -203,7 +203,8 @@
         noUiSlider.create(slider2, {
             range: {
                 'min': 1,
-                'max': 10
+                // 'max': 10
+                'max': 30
             },
             step: 1,
             start: 5,
@@ -254,19 +255,19 @@
     }
 
     loadAndDoEverything = () => {
-        // d3.json("data/inria-teams.json").then((data) =>{
-        //     d3.json("data/inria-collab.json").then((data2) => {
-        //         window.cluster_key = "theme"
-        //         analyze_and_draw(data, data2);
-        //     })
-        // })
-
-        d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
-            d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
-                window.cluster_key = "country";
+        d3.json("data/inria-teams.json").then((data) =>{
+            d3.json("data/inria-collab.json").then((data2) => {
+                window.cluster_key = "theme"
                 analyze_and_draw(data, data2);
             })
         })
+
+        // d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
+        //     d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
+        //         window.cluster_key = "country";
+        //         analyze_and_draw(data, data2);
+        //     })
+        // })
     }
 
     sortFromFile = (largeplist, collabparser) => {
@@ -333,7 +334,8 @@
     let options = {
         split_by_year: false,
         timerange: window.timerange,
-        collab_value_cutoff: 2,
+        // collab_value_cutoff: 2,
+        collab_value_cutoff: 1,
         numthemes: 5,
         split_hyperedges: true, 
         shape: "cylinder-vertical",

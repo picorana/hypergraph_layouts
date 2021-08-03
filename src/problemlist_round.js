@@ -43,7 +43,6 @@ class ProblemList {
             }
         } 
         this.nodelist = res.flat();
-        console.log("NL ", this.nodelist);
 
         return this.nodelist;
     }
@@ -64,6 +63,7 @@ class ProblemList {
         for (let g of glist){
             for (let group of g.groups){
                 for (let node of group.nodes){
+                    // if (node.y) node.list_y = node.y;
                     if (node.y) node.list_y = node.y;
                     else {
                         node.list_y = g.groups.indexOf(group);
@@ -78,7 +78,6 @@ class ProblemList {
         }
 
         this.totalnodes = Math.max.apply(0, this.getAllNodes().map(n => n.list_y)) + 1
-        console.log("tot ", this.getAllNodes(), this.totalnodes)
     }
 
     getProblemFromNode (node, getGraph = true) {

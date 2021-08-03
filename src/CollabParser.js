@@ -31,11 +31,9 @@ class CollabParser {
             let plist = new ProblemList();
             plist.problemname = theme;
             plist.problemid = id_cleanup(theme);
-            console.log(plist.problemid);
 
             let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[window.cluster_key] == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
-            console.log("groups in theme ", groupsinthistheme);
 
             let groupsinthisthemedata = {}
             for (let group of groupsinthistheme){
@@ -130,10 +128,10 @@ class CollabParser {
                     // find closest node in that group:
                     let mind = Math.min.apply(0, pgroup.nodes.map(n => Math.abs(parseInt(n.depth) - d)))
                     let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
-                    let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
+                    // let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
 
                     let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname, mirrornode: pgroup.nodes[0]}
-                    let problem = plist.getProblemFromNode(p)
+                    // let problem = plist.getProblemFromNode(p)
 
                     p = newnode;
 
