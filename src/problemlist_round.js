@@ -63,8 +63,7 @@ class ProblemList {
         for (let g of glist){
             for (let group of g.groups){
                 for (let node of group.nodes){
-                    // if (node.y) node.list_y = node.y;
-                    if (node.y) node.list_y = node.y;
+                    if (node.y != undefined) node.list_y = node.y;
                     else {
                         node.list_y = g.groups.indexOf(group);
                     }

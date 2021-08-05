@@ -256,7 +256,8 @@ class ProblemListPainter {
                         .attr("fill", this.plist.graphlist[i].color)
                         .attr('class', 'grouprect grouprect-' + id_cleanup(this.plist.problemid))
                         .attr("id", "g-" + id_cleanup(group.fullname))
-                        .attr("d", this.line(p));
+                        .attr("d", this.line(p))
+                        .on("mouseover", () => console.log(group.nodes.map(n => n.list_y)))
                     } else {
                         f.transition().duration(100).attr("d", this.line(p))
                     }

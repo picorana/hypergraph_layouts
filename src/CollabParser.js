@@ -20,8 +20,8 @@ class CollabParser {
 
     analyze_and_draw(data, data2){
         // let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
-        let themes = [ ... new Set(Object.keys(data).map(d => data[d][window.cluster_key]))]
-        console.log(themes);
+        let themes = [ ... new Set(Object.keys(data).map(d => data[d][options.cluster_key]))]
+        // console.log(themes);
 
         let largeplist = new ProblemList();
         largeplist.options = options;
@@ -32,7 +32,7 @@ class CollabParser {
             plist.problemname = theme;
             plist.problemid = id_cleanup(theme);
 
-            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[window.cluster_key] == theme)
+            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[options.cluster_key] == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
 
             let groupsinthisthemedata = {}
@@ -63,7 +63,7 @@ class CollabParser {
 
         this.add_collabs_to_plist(largeplist, data2);
 
-        largeplist.assignNodeY();
+        // largeplist.assignNodeY();
 
         if (options.readFromFile) {
 
@@ -74,9 +74,9 @@ class CollabParser {
                 problem.sorter.sort()
             }
 
-            largeplist.assignNodeY();
+            // largeplist.assignNodeY();
 
-            this.assignHints(largeplist);
+            // this.assignHints(largeplist);
 
             for (let problem of largeplist.graphlist){
                 for (let graph of problem.graphlist){
@@ -101,17 +101,17 @@ class CollabParser {
             let graph2 = n2.graph;
             let group2 = graph2.groups.find(gr => gr.nodes.includes(n2))
 
-            if (group1.hints == undefined) group1.hints = {top: 0, bottom: 0}
-            if (group2.hints == undefined) group2.hints = {top: 0, bottom: 0}
+            // if (group1.hints == undefined) group1.hints = {top: 0, bottom: 0}
+            // if (group2.hints == undefined) group2.hints = {top: 0, bottom: 0}
 
-            if (n1.list_y < n2.list_y) {
-                group1.hints.bottom += 100;
-                group2.hints.top += 100;
-            }
-            else {
-                // group1.hints.bottom += 1;
-                // group2.hints.bottom += 1;
-            }
+            // if (n1.list_y < n2.list_y) {
+            //     group1.hints.bottom += 100;
+            //     group2.hints.top += 100;
+            // }
+            // else {
+            //     // group1.hints.bottom += 1;
+            //     // group2.hints.bottom += 1;
+            // }
             
         }
     }
@@ -217,6 +217,8 @@ class CollabParser {
                 newedge.children.push(newedge);
                 plist.intergraph_edges.push(newedge);
             }
+        }
+    }
 
     process_date(date_item) {
         if (isNaN(date_item)) {
