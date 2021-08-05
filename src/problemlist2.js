@@ -138,7 +138,7 @@ class ProblemList {
         let line = d3.line().curve(d3.curveBasis);
         let colors = ['#303E3F', '#A3B9B6'];
 
-        let themes = [...new Set(this.getAllGroups().map(gr => gr.theme))]
+        let themes = [...new Set(this.getAllGroups().map(gr => gr[window.cluster_key]))]
 
         let getNodeCoordX = (node) => (leftpadding + nodexdist * (node.depth));
 
@@ -229,7 +229,7 @@ class ProblemList {
                 let left = Math.min.apply(0, group.nodes.map(n => getNodeCoordX(n)));
                 let right = Math.max.apply(0, group.nodes.map(n => getNodeCoordX(n)));
 
-                this.color = d3.schemeTableau10[themes.indexOf(group.theme)%10];
+                this.color = d3.schemeTableau10[themes.indexOf(group[window.cluster_key])%10];
 
                 svg.append("text")
                     .attr("font-family", "Arial")
