@@ -266,9 +266,9 @@ class ProblemListPainter {
                     }
 
                     if (this.drawtype == "cylinder-vertical") {
-                        if (d3.select("#gname-text-" + p[0][1]).empty())
+                        if (d3.select("#gname-text-" + parseInt(p[0][1])).empty())
                         svg.append("text")
-                            .attr("id", "gname-text-" + p[0][1])
+                            .attr("id", "gname-text-" + parseInt(p[0][1]))
                             .attr("x", 1000)
                             .attr("y", p[0][1])
                             .attr("fill", "gray")

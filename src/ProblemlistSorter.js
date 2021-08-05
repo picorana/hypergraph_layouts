@@ -58,41 +58,23 @@ class ProblemListSorter {
             return r;
         }
 
-        let leftIncidentEdges = (problem) => {
-            // console.log(problem.parent)
-            if (problem.parent == undefined) return 0;
-            if (problem.parent.parent == undefined) return 0;
-            else {
-                // let edges = this.parent.intergraph_edges.filter(e => 
-                //     // !e.nodes.map(e => e.mirrornode).every(n => this.getAllNodes().includes(n)) &&
-                //     e.nodes.map(e => e.mirrornode).some(n => this.getAllNodes().includes(n)) &&
-                //     e.nodes.map(e => e.mirrornode).some(n => !this.getAllNodes().includes(n))
-                // )
-                // console.log(edges)
+        let countIncidentEdges = (problem) => {
+            problem.left_incident_edges = 0
+            problem.right_incident_edges = 0
 
-                let edgeset = problem.incident_edges;
-                edgeset = edgeset.filter(e => !e.nodes.map(n => n.mirrornode).every(n => problem.getAllNodes().includes(n)));
-                let thisIndex = problem.parent.parent.graphlist.indexOf(problem.parent); 
+            if (this.plist.parent == undefined) return;
 
-                let count = 0;
+            let edgeSet = this.plist.intergraph_edges.filter(e => e.nodes.some(n => problem.getAllNodes().includes(n.mirrornode)) && !e.nodes.every(n => problem.getAllNodes().includes(n.mirrornode)))
 
-                // console.log(thisIndex)
+            if (edgeSet.length == 0) return;
 
-                for (let edge of edgeset){
-                    for (let node of edge.nodes){
-                        if (problem.getAllNodes().includes(node)) continue;
-                        else {
-                            let otherproblem = problem.parent.parent.graphlist.find(p => p.getAllNodes().includes(node))
-                            let otherproblemIndex = problem.parent.parent.graphlist.indexOf(otherproblem);
-                            if (otherproblemIndex < thisIndex) count++;
-                        }
-                    }
-                }
+            let thisIndex = this.plist.graphlist.indexOf(problem);
 
-                // console.log(count);
-
-                // return problem.incident_edges.filter(e => this.parent.find());
-                return count;
+            for (let edge of edgeSet){
+                let otherproblem = this.plist.graphlist.find(p => p != problem && edge.nodes.some(n => p.getAllNodes().includes(n.mirrornode)))
+                let otherproblemIndex = this.plist.graphlist.indexOf(otherproblem)
+                if (otherproblemIndex < thisIndex) problem.left_incident_edges += 1;
+                else if (otherproblemIndex > thisIndex) problem.right_incident_edges += 1;
             }
         }
 
@@ -107,9 +89,13 @@ class ProblemListSorter {
                 if (edge.nodes.map(n => n.mirrornode).every(n => problem.getAllNodes().includes(n))) continue;
                 else problem.incident_edges.push(edge)
             }
-
-            // leftIncidentEdges(problem)
         }
+
+        // if (this.plist.parent != undefined) {
+            for (let problem of this.plist.graphlist){
+                countIncidentEdges(problem)
+            }
+        // }
 
         let tableOfEdges = []
         for (let i = 0; i < this.plist.graphlist.length; i++){
@@ -144,10 +130,11 @@ class ProblemListSorter {
             let vnotS = this.plist.graphlist.filter(p => !S.includes(p))
             for (let j of vnotS){
                 let jus = S.concat(j);
+
                 if (table[sname(jus)].cost > new_cost){
                     table[sname(jus)].cost = new_cost;
                     table[sname(jus)].right_vtx = j;
-                    table[sname(jus)].cut = cutS - cut(j, S) + cut(j, vnotS)
+                    table[sname(jus)].cut = cutS - cut(j, S) + cut(j, vnotS) - j.left_incident_edges + j.right_incident_edges
                 }
             }
         }

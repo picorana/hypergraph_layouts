@@ -312,18 +312,18 @@
         .attr("height", 50000)
         .attr("easypz", "")
 
-    window.timerange = [2000, 2010]
+    window.timerange = [2013, 2016]
 
     addSlider(2000, 2020);
 
     let options = {
         split_by_year: false,
         timerange: window.timerange,
-        collab_value_cutoff: 2,
-        numthemes: 5,
+        collab_value_cutoff: 3,
+        numthemes: 2,
         split_hyperedges: true, 
         shape: "cylinder-vertical",
-        readFromFile: true   
+        readFromFile: false   
     }
 
     loadAndDoEverything();
