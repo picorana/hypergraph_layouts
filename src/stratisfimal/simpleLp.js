@@ -171,7 +171,7 @@ class SimpleLp {
                 this.model.minimize += (group.hints.top/hintdivisionvar) + " ybottom_" + group.id + " + ";  
             }
             else if (group.hints.bottom != 0){
-                this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 3) 
+                if (this.model.minimize.length > 10) this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 3) 
                 this.model.minimize += " - " + (group.hints.bottom/hintdivisionvar) + " ytop_" + group.id;
                 this.model.minimize += " - " + (group.hints.bottom/hintdivisionvar) + " ybottom_" + group.id + " + ";  
                 this.model.subjectTo += "ybottom_" + group.id + " <= " + maxYBottom+ "\n";

@@ -4,7 +4,7 @@ class CollabParser {
     }
 
     solve_subproblem(graph){
-        try {
+        // try {
             let algorithm = new SimpleLp(graph)
             algorithm.options.crossings_reduction_active = false;
             algorithm.options.bendiness_reduction_active = true;
@@ -15,7 +15,7 @@ class CollabParser {
 
             if (algorithm.solveTime != undefined ) return parseInt(algorithm.solveTime);
             else return 0;
-        } catch (error) {console.log("error in algorithm application");}
+        // } catch (error) {console.log("error in algorithm application");}
     }
 
     analyze_and_draw(data, data2){
@@ -72,32 +72,51 @@ class CollabParser {
 
             for (let problem of largeplist.graphlist){
                 problem.sorter.sort()
+            }
 
+            largeplist.assignNodeY();
+
+            this.assignHints(largeplist);
+
+            for (let problem of largeplist.graphlist){
                 for (let graph of problem.graphlist){
                     this.solve_subproblem(graph);
                 }
             }
 
             largeplist.assignNodeY();
-
         }
 
         return largeplist;
     }
 
-    sort_from_file () {
+    assignHints(largeplist){
+        for (let edge of largeplist.intergraph_edges){
+            let n1 = edge.nodes[0].mirrornode;
+            let n2 = edge.nodes[1].mirrornode;
 
+            let graph1 = n1.graph;
+            let group1 = graph1.groups.find(gr => gr.nodes.includes(n1))
+
+            let graph2 = n2.graph;
+            let group2 = graph2.groups.find(gr => gr.nodes.includes(n2))
+
+            if (group1.hints == undefined) group1.hints = {top: 0, bottom: 0}
+            if (group2.hints == undefined) group2.hints = {top: 0, bottom: 0}
+
+            if (n1.list_y < n2.list_y) {
+                group1.hints.bottom += 100;
+                group2.hints.top += 100;
+            }
+            else {
+                // group1.hints.bottom += 1;
+                // group2.hints.bottom += 1;
+            }
+            
+        }
     }
 
     add_collabs_to_plist(plist, collabdata, verbose = false){
-
-        let eqSet = (as, bs) => {
-            if (as.size !== bs.size) return false;
-            for (var a of as) if (!bs.has(a)) return false;
-            return true;
-        }
-
-        // let collab_value_cutoff = 2;
 
         for (let year in collabdata){
             for (let collab in collabdata[year]){
@@ -110,60 +129,94 @@ class CollabParser {
                     continue;
                 }
 
-                let newedge = {
-                    nodes: [],
-                    weight: collabdata[year][collab],
-                    year: year,
-                    children: []
-                }
+                let d = parseInt(year) - firstdate;
 
-                for (let i=0; i<collab.split(":").length; i++){
-                    let d = parseInt(year) - firstdate;
-                    let pgroup = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
+                if (options.split_hyperedges){
+                    for (let i=0; i<collab.split(":").length; i++){
+                        for (let j=i+1; j<collab.split(":").length; j++){
 
-                    if (pgroup == undefined){
-                        continue;
-                    }
+                            let newedge = {
+                                nodes: [], 
+                                weight: collabdata[year][collab],
+                                year: year,
+                                children: []
+                            }
 
-                    // find closest node in that group:
-                    let mind = Math.min.apply(0, pgroup.nodes.map(n => Math.abs(parseInt(n.depth) - d)))
-                    let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
-                    // let groupPeriod = data[collab.split(":")[i].split("(")[1].replaceAll(")", "")].period.map(p => p.split("/")[2])
+                            let pgroup1 = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
+                            let pgroup2 = plist.getAllGroups().find(n => n.fullname == collab.split(":")[j]);
 
-                    let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname, mirrornode: pgroup.nodes[0]}
-                    // let problem = plist.getProblemFromNode(p)
+                            if (pgroup1 == undefined || pgroup2 == undefined) continue;
+                            
+                            let newnode1 = {depth: d, name: pgroup1.name, fullname: pgroup1.fullname, mirrornode: pgroup1.nodes[0]}
+                            let newnode2 = {depth: d, name: pgroup2.name, fullname: pgroup2.fullname, mirrornode: pgroup2.nodes[0]}
+                            if (newnode1 != undefined) newedge.nodes.push(newnode1);
+                            if (newnode2 != undefined) newedge.nodes.push(newnode2);
 
-                    p = newnode;
-
-                    if (p != undefined) newedge.nodes.push(p);
-                }
-
-                if (newedge.nodes.length <= 1) continue;
-
-                let sameedge = plist.intergraph_edges.find(e => {
-                    return eqSet(new Set(e.nodes.map(n => n.mirrornode.fullname)), new Set(newedge.nodes.map(n => n.mirrornode.fullname)))
-                })
-
-                if (options.split_by_year){
-                    if (sameedge != undefined && newedge.year == sameedge.year) {
-                        sameedge.weight += newedge.weight;
-                        sameedge.children.push(newedge);
-                    } else {
-                        newedge.children.push(newedge);
-                        plist.intergraph_edges.push(newedge);
+                            if (newedge.nodes.length > 1) this.add_collab_edge(newedge, plist);
+                        }
                     }
                 } else {
-                    if (sameedge != undefined) {
-                        sameedge.weight += newedge.weight;
-                        sameedge.children.push(newedge);
-                    } else {
-                        newedge.children.push(newedge);
-                        plist.intergraph_edges.push(newedge);
+                    let newedge = {
+                        nodes: [], 
+                        weight: collabdata[year][collab],
+                        year: year,
+                        children: []
                     }
+
+                    for (let i=0; i<collab.split(":").length; i++){
+                        let d = parseInt(year) - firstdate;
+                        let pgroup = plist.getAllGroups().find(n => n.fullname == collab.split(":")[i]);
+
+                        if (pgroup == undefined){
+                            continue;
+                        }
+                        
+                        // find closest node in that group:
+                        let mind = Math.min.apply(0, pgroup.nodes.map(n => Math.abs(parseInt(n.depth) - d)))
+                        let p = pgroup.nodes.find(n => Math.abs(n.depth - d) == mind)
+                        
+                        let newnode = {depth: d, name: pgroup.name, fullname: pgroup.fullname, mirrornode: pgroup.nodes[0]}
+
+                        p = newnode;
+
+                        if (newnode != undefined) newedge.nodes.push(p);
+                    }
+
+                    if (newedge.nodes.length <= 1) continue;
+
+                    this.add_collab_edge(newedge, plist);
                 }
             }
         }
     }
+
+    add_collab_edge (newedge, plist) {
+        let eqSet = (as, bs) => {
+            if (as.size !== bs.size) return false;
+            for (var a of as) if (!bs.has(a)) return false;
+            return true;
+        }
+
+        let sameedge = plist.intergraph_edges.find(e => { 
+            return eqSet(new Set(e.nodes.map(n => n.mirrornode.fullname)), new Set(newedge.nodes.map(n => n.mirrornode.fullname)))
+        })
+
+        if (options.split_by_year){
+            if (sameedge != undefined && newedge.year == sameedge.year) {
+                sameedge.weight += newedge.weight;
+                sameedge.children.push(newedge);
+            } else {
+                newedge.children.push(newedge);
+                plist.intergraph_edges.push(newedge);
+            }
+        } else {
+            if (sameedge != undefined) {
+                sameedge.weight += newedge.weight;
+                sameedge.children.push(newedge);
+            } else {
+                newedge.children.push(newedge);
+                plist.intergraph_edges.push(newedge);
+            }
 
     process_date(date_item) {
         if (isNaN(date_item)) {
