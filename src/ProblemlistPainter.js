@@ -668,6 +668,6 @@ class ProblemListPainter {
     }
 }
 
-try {
-    module.exports = exports = ProblemListPainter;
- } catch (e) {}
+// try {
+//     module.exports = exports = ProblemListPainter;
+//  } catch (e) {}

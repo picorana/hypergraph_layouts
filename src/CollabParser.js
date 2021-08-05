@@ -1,6 +1,7 @@
 class CollabParser {
-    constructor(){
-
+    
+    constructor(options){
+        this.options = options;
     }
 
     solve_subproblem(graph){
@@ -20,7 +21,7 @@ class CollabParser {
 
     analyze_and_draw(data, data2){
         // let themes = [ ... new Set(Object.keys(data).map(d => data[d].theme))]
-        let themes = [ ... new Set(Object.keys(data).map(d => data[d][options.cluster_key]))]
+        let themes = [ ... new Set(Object.keys(data).map(d => data[d][this.options.cluster_key]))]
         // console.log(themes);
 
         let largeplist = new ProblemList();
@@ -32,7 +33,7 @@ class CollabParser {
             plist.problemname = theme;
             plist.problemid = id_cleanup(theme);
 
-            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[options.cluster_key] == theme)
+            let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[this.options.cluster_key] == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
 
             let groupsinthisthemedata = {}
@@ -51,7 +52,7 @@ class CollabParser {
 
             this.add_collabs_to_plist(plist, data2);
 
-            plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
+            if (!typeof d3 === undefined) plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
 
             largeplist.graphlist.push(plist)
             plist.parent = largeplist;
@@ -123,7 +124,7 @@ class CollabParser {
                 if (collab.split(":").length < 2) {continue}
                 if (collabdata[year][collab] < options.collab_value_cutoff) {continue}
 
-                if (window.timerange != undefined && (year <= window.timerange[0] || year >= window.timerange[1])) continue;
+                if (options.timerange != undefined && (year <= options.timerange[0] || year >= options.timerange[1])) continue;
 
                 if (collab.split(":").filter(c => plist.getAllGroups().find(n => n.fullname == c)).length < 2) {
                     continue;
@@ -234,7 +235,7 @@ class CollabParser {
         for (let el in data){
             if (groupnames.includes(data[el].fullname)) {
 
-                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el][window.cluster_key]}
+                let newgroup = {nodes:[], fullname: data[el].fullname, name: data[el].name, theme: data[el][options.cluster_key]}
                 graph.addGroup(newgroup);
 
                 let startdate = this.process_date(data[el].period[0]);
@@ -351,6 +352,8 @@ class CollabParser {
 }
 
 
-try {
-    module.exports = exports = CollabParser;
- } catch (e) {}
+// try {
+//     if (typeof exports != undefined) {
+//         module.exports = exports = CollabParser;
+//     }
+//  } catch (e) {}

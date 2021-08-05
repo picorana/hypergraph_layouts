@@ -2,6 +2,9 @@
   "dependencies": {
     "d3-interpolate": "^3.0.1",
     "gradient-path": "^2.1.0",
+    "gulp": "^4.0.2",
+    "gulp-concat": "^2.6.1",
+    "gulp-sourcemaps": "^3.0.0",
     "nouislider": "^15.2.0"
   }
 }

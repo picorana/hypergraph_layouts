@@ -834,6 +834,6 @@ class SimpleLp {
     }
 }
 
-try {
-    module.exports = exports = SimpleLp;
- } catch (e) {}
+// try {
+//     module.exports = exports = SimpleLp;
+//  } catch (e) {}

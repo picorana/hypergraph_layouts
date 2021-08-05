@@ -16,7 +16,8 @@ class ProblemList {
         }
 
         this.sorter = new ProblemListSorter(this, "round");
-        this.painter = new ProblemListPainter(this, "cylinder-horizontal", this.options);
+        if (typeof window === 'undefined') this.painter = {};
+        else this.painter = new ProblemListPainter(this, "cylinder-horizontal", this.options);
     }
 
     getAllGroups(){
@@ -85,6 +86,6 @@ class ProblemList {
     }
 }
 
-try {
-    module.exports = exports = ProblemList;
- } catch (e) {}
+// try {
+//     module.exports = exports = ProblemList;
+//  } catch (e) {}

@@ -17,7 +17,6 @@
 
   <script src="src/stratisfimal/simplegraph.js"></script>
   <script src="src/stratisfimal/simpleLp.js"></script>
-  <script src="src/drawgraph.js"></script>
   <script src="src/utils.js"></script>
   <script src="src/problemlist_round.js"></script>
   <script src="src/ProblemlistSorter.js"></script>
@@ -240,7 +239,7 @@
         }
         window.firstdate = firstdate;
 
-        let collabparser = new CollabParser();
+        let collabparser = new CollabParser(options);
         let largeplist = collabparser.analyze_and_draw(data, data2)
 
         if (options.readFromFile){

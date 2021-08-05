@@ -244,6 +244,6 @@ class ProblemListSorter {
     }
 }
 
-try {
-    module.exports = exports = ProblemListSorter;
- } catch (e) {}
+// try {
+//     module.exports = exports = ProblemListSorter;
+//  } catch (e) {}

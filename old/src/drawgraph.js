@@ -222,9 +222,9 @@ function draw_collaborations(collab_data){
 
 // ********* AUX **********
 
-function id_cleanup(groupfullname){
-    let charsToReplace = [" ", "(", ")", ",", "'"]
-    let tmp = groupfullname;
-    for (let char of charsToReplace) tmp = tmp.replaceAll(char, "")
-    return tmp;
-}
+// function id_cleanup(groupfullname){
+//     let charsToReplace = [" ", "(", ")", ",", "'"]
+//     let tmp = groupfullname;
+//     for (let char of charsToReplace) tmp = tmp.replaceAll(char, "")
+//     return tmp;
+// }
