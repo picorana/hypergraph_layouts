@@ -25,6 +25,8 @@ class ProblemListPainter {
         
         this.intergraph_edge_linear_p = 650;
         this.intergraph_edge_linear_distance = 6;
+
+        this.gradientcount = 0;
     }
 
     setup(){
@@ -465,23 +467,65 @@ class ProblemListPainter {
             return interpolate(i);
         } 
 
-        var path = d3.select('#' + id).remove();
+        if (this.drawtype == "round"){
+            var path = d3.select('#' + id).remove();
 
-        this.svg.selectAll("aaa")
-            .data(quads(samples(path.node(), 50)))
-        .enter().append("path")
-            .attr('id', id + "2")
-            .attr('class', 'intergraph_edge_path ' + edgeproblemstring)
-            .attr('pointer-events', 'visibleStroke')
-            .style("fill", function(d) { return color(d.t); })
-            .style("stroke", function(d) { return color(d.t); })
-            .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], .5*Math.log(edge.weight)); })
-            .on("mouseover", () => {
-                for (let node of edge.nodes) d3.select("#g-" + id_cleanup(node.fullname)).attr("stroke", "black")
-            })
-            .on("mouseout", () => {
-                for (let node of edge.nodes) d3.select("#g-" + id_cleanup(node.fullname)).attr("stroke", "none")
-            })
+            if (path.empty()) return;
+
+            this.svg.selectAll("aaa")
+                .data(quads(samples(path.node(), 50)))
+            .enter().append("path")
+                .attr('id', id + "2")
+                .attr('class', 'intergraph_edge_path ' + edgeproblemstring)
+                .attr('pointer-events', 'visibleStroke')
+                .style("fill", function(d) { return color(d.t); })
+                .style("stroke", function(d) { return color(d.t); })
+                .attr("d", function(d) { return lineJoin(d[0], d[1], d[2], d[3], .5*Math.log(edge.weight)); })
+                .on("mouseover", () => {
+                    for (let node of edge.nodes) d3.select("#g-" + id_cleanup(node.fullname)).attr("stroke", "black")
+                })
+                .on("mouseout", () => {
+                    for (let node of edge.nodes) d3.select("#g-" + id_cleanup(node.fullname)).attr("stroke", "none")
+                })
+        } else {
+            var path = d3.select('#' + id)
+
+            let defs;
+            if (this.svg.select("defs").empty()) defs = this.svg.append("defs")
+            else defs = this.svg.select("defs")
+
+            let ymax = this.getNodeCoordY(edge.nodes.sort((a, b) => a.mirrornode.list_y < b.mirrornode.list_y)[0].mirrornode)
+            let ymin = this.getNodeCoordY(edge.nodes.sort((a, b) => a.mirrornode.list_y < b.mirrornode.list_y)[1].mirrornode)
+
+            let gradient = defs
+                .append("linearGradient")
+                .attr("id", "linear-gradient" + this.gradientcount)
+                .attr('gradientUnits', "userSpaceOnUse")
+                .attr("x1", "0%")
+                .attr("x2", "0%")
+                .attr("y1", ymin + "px")
+                .attr("y2", ymax + "px")//since its a vertical linear gradient 
+                ;
+                gradient.append("stop")
+                .attr("offset", "0%")
+                .style("stop-color", color1)//end in red
+                .style("stop-opacity", 1)
+
+                gradient.append("stop")
+                .attr("offset", "100%")
+                .style("stop-color", color2)//start in blue
+                .style("stop-opacity", 1)
+
+
+            path
+                .style("stroke", "url(#linear-gradient" + this.gradientcount + ")")
+                .attr("stroke-width", .7*Math.log(edge.weight))
+                .attr('id', id + "2")
+                .attr('class', 'intergraph_edge_path ' + edgeproblemstring)
+                .attr('pointer-events', 'visibleStroke')
+
+            this.gradientcount++;
+        }
     }
 
     make_round_intergraph_edge (edge, ni1, ni2, edgeproblemstring) {
@@ -552,7 +596,7 @@ class ProblemListPainter {
                 return this.line(r);
             })
 
-            this.assign_edge_gradient(edge.nodes[ni1].mirrornode.color, edge.nodes[ni2].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id, edge, edgeproblemstring)
+            this.assign_edge_gradient(edge.nodes[ni2].mirrornode.color, edge.nodes[ni1].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id, edge, edgeproblemstring)
 
         } else { // edge must be broken in two
 

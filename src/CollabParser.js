@@ -27,11 +27,17 @@ class CollabParser {
         let largeplist = new ProblemList();
         largeplist.options = options;
         largeplist.painter.drawtype = options.shape;
+        largeplist.id = 'p0';
 
         for (let theme of themes){
             let plist = new ProblemList();
             plist.problemname = theme;
             plist.problemid = id_cleanup(theme);
+            largeplist.graphlist.push(plist)
+            plist.parent = largeplist;
+            plist.id = largeplist.id + 'p' + largeplist.graphlist.length;
+
+            plist.painter.svg = svg;
 
             let groupsinthistheme = Object.keys(data).map(d => data[d]).filter(entry => entry[this.options.cluster_key] == theme)
             // let groupsinthistheme = Object.keys(data).map(d => data[d]).slice(0, 200);
@@ -48,23 +54,19 @@ class CollabParser {
                 let newproblem = this.process_collab_group(data, groupnamelist[i], firstdate)
                 plist.graphlist.push(newproblem)
                 newproblem.parent = plist;
+                newproblem.id = plist.id + "g" + plist.graphlist.length;
             }
 
             this.add_collabs_to_plist(plist, data2);
 
-            if (!typeof d3 === undefined) plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
-
-            largeplist.graphlist.push(plist)
-            plist.parent = largeplist;
-
-            plist.painter.svg = svg;
+            if (!this.options.executing_from_node) plist.color = d3.schemeTableau10[themes.indexOf(theme)%10]
 
             if (themes.indexOf(theme) == options.numthemes) break;
         }
 
         this.add_collabs_to_plist(largeplist, data2);
 
-        // largeplist.assignNodeY();
+        largeplist.assignNodeY();
 
         if (options.readFromFile) {
 
@@ -75,9 +77,9 @@ class CollabParser {
                 problem.sorter.sort()
             }
 
-            // largeplist.assignNodeY();
+            largeplist.assignNodeY();
 
-            // this.assignHints(largeplist);
+            this.assignHints(largeplist);
 
             for (let problem of largeplist.graphlist){
                 for (let graph of problem.graphlist){
@@ -86,6 +88,8 @@ class CollabParser {
             }
 
             largeplist.assignNodeY();
+
+            console.log("total distance:", largeplist.estimateIntergraphedgeDistance())
         }
 
         return largeplist;
@@ -240,8 +244,6 @@ class CollabParser {
 
                 let startdate = this.process_date(data[el].period[0]);
                 let enddate = this.process_date(data[el].period[1]);
-                let prevnode;
-
 
                 // ONLY ADD FIRST AND LAST NODE:
                 let newnode1 = {
@@ -279,7 +281,7 @@ class CollabParser {
                         let n2 = gr2.nodes.find(n => n.depth == Math.min.apply(0, gr2.nodes.map(nn => nn.depth)))
                         let n0 = newgroup.nodes.find(n => n.depth = n2.depth - 1)
 
-                        if (n0 == undefined || n2 == undefined) console.log("BBBBBBBBB")
+                        // if (n0 == undefined || n2 == undefined) console.log("BBBBBBBBB")
 
                         graph.addEdge({nodes: [n0, n2], edgetype: r[1]})
 

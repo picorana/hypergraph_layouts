@@ -655,7 +655,8 @@ for (let i=2000; i<=2020; i++){
                 numthemes: k,
                 split_hyperedges: true, 
                 shape: "cylinder-vertical",
-                cluster_key: "theme"
+                cluster_key: "theme",
+                executing_from_node: true
             }
 
             let filename = "./sorted_layouts/" + options.timerange[0] + '-' + options.timerange[1] + '-' + options.numthemes + '.json'

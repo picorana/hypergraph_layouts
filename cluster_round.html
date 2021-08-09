@@ -23,6 +23,8 @@
   <script src="src/ProblemlistPainter.js"></script>
   <script src="src/CollabParser.js"></script>
 
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
   <style>
       text {
           font-family: Arial;
@@ -203,7 +205,7 @@
             range: {
                 'min': 1,
                 // 'max': 10
-                'max': 30
+                'max': 46
             },
             step: 1,
             start: 5,
@@ -263,7 +265,7 @@
 
         // d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
         //     d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
-        //         window.cluster_key = "country";
+        //         options.cluster_key = "country";
         //         analyze_and_draw(data, data2);
         //     })
         // })
@@ -335,12 +337,12 @@
         timerange: window.timerange,
         // collab_value_cutoff: 2,
         collab_value_cutoff: 1,
-        numthemes: 0,
+        numthemes: 15,
         split_hyperedges: true, 
         shape: "cylinder-vertical",
-        readFromFile: false
+        readFromFile: false,
+        executing_from_node: false
         // readFromFile: false
-
     }
 
     loadAndDoEverything();

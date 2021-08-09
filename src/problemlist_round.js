@@ -84,6 +84,14 @@ class ProblemList {
         if (getGraph) return node.graph;
         else return this.graphlist.find(graph => graph.getAllNodes().includes(node))
     }
+
+    estimateIntergraphedgeDistance(){
+        let totaldistance = 0;
+        for (let edge of this.intergraph_edges){
+            totaldistance += Math.abs(edge.nodes[0].mirrornode.list_y - edge.nodes[1].mirrornode.list_y)
+        }
+        return totaldistance;
+    }
 }
 
 // try {
