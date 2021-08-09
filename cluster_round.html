@@ -259,26 +259,29 @@
     }
 
     loadAndDoEverything = () => {
-        // d3.json("data/inria-teams.json").then((data) =>{
-        //     d3.json("data/inria-collab.json").then((data2) => {
-        //         options.cluster_key = "theme"
-        //         analyze_and_draw(data, data2);
-
-        //         addSlider(2000, 2020);
-        //     })
-        // })
-
-        d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
-            d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
-                options.cluster_key = "country";
+        d3.json("data/inria-teams.json").then((data) =>{
+            d3.json("data/inria-collab.json").then((data2) => {
+                options.cluster_key = "theme"
                 let plist = analyze_and_draw(data, data2);
 
                 if (options.numthemes > plist.graphlist.length) options.numthemes = plist.graphlist.length;
-                if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
+                // if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
 
                 addSlider(2000, 2020);
             })
         })
+
+        // d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
+        //     d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
+        //         options.cluster_key = "country";
+        //         let plist = analyze_and_draw(data, data2);
+
+        //         if (options.numthemes > plist.graphlist.length) options.numthemes = plist.graphlist.length;
+        //         if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
+
+        //         addSlider(2000, 2020);
+        //     })
+        // })
     }
 
     sortFromFile = (largeplist, collabparser) => {
