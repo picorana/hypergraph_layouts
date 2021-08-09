@@ -162,6 +162,9 @@
 
     function addSlider(startdate, enddate){
 
+        if (options.slider_added) return;
+        else options.slider_added = true;
+
         let divslider1 = document.getElementById("divslider1")
 
         let slider = document.createElement("div");
@@ -204,11 +207,10 @@
         noUiSlider.create(slider2, {
             range: {
                 'min': 1,
-                // 'max': 10
-                'max': 46
+                'max': options.maxthemes
             },
             step: 1,
-            start: 5,
+            start: options.numthemes,
             connect: true,
             direction: 'ltr',
             orientation: 'horizontal',
@@ -252,23 +254,31 @@
             largeplist.painter.setup();
             largeplist.painter.draw(svg)
         }
-        
+
+        return largeplist;
     }
 
     loadAndDoEverything = () => {
-        d3.json("data/inria-teams.json").then((data) =>{
-            d3.json("data/inria-collab.json").then((data2) => {
-                options.cluster_key = "theme"
-                analyze_and_draw(data, data2);
-            })
-        })
-
-        // d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
-        //     d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
-        //         options.cluster_key = "country";
+        // d3.json("data/inria-teams.json").then((data) =>{
+        //     d3.json("data/inria-collab.json").then((data2) => {
+        //         options.cluster_key = "theme"
         //         analyze_and_draw(data, data2);
+
+        //         addSlider(2000, 2020);
         //     })
         // })
+
+        d3.json("data/visPubData/vispubdata30_affiliations.json").then((data) =>{
+            d3.json("data/visPubData/vispubdata30_collab.json").then((data2) => {
+                options.cluster_key = "country";
+                let plist = analyze_and_draw(data, data2);
+
+                if (options.numthemes > plist.graphlist.length) options.numthemes = plist.graphlist.length;
+                if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
+
+                addSlider(2000, 2020);
+            })
+        })
     }
 
     sortFromFile = (largeplist, collabparser) => {
@@ -330,10 +340,9 @@
 
     window.timerange = [2013, 2016]
 
-    addSlider(2000, 2020);
-
     let options = {
         split_by_year: false,
+        slider_added: false,
         timerange: window.timerange,
         // collab_value_cutoff: 2,
         collab_value_cutoff: 1,
@@ -341,7 +350,8 @@
         split_hyperedges: true, 
         shape: "cylinder-vertical",
         readFromFile: false,
-        executing_from_node: false
+        executing_from_node: false,
+        maxthemes: 46
         // readFromFile: false
     }
 
