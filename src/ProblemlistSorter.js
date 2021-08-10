@@ -11,7 +11,7 @@ class ProblemListSorter {
 
         this.sort_problemlist_linear();
 
-        console.log(this.plist.getAllGroups().length, new Date() - starttime + " ms");
+        // console.log(this.plist.getAllGroups().length, new Date() - starttime + " ms");
     }
 
     sort_problemlist_round(verbose = false){
@@ -245,7 +245,7 @@ class ProblemListSorter {
 
             this.plist.assignNodeY();
 
-            console.log("distance at iteration " + i, this.plist.estimateIntergraphedgeDistance())
+            // console.log("distance at iteration " + i, this.plist.estimateIntergraphedgeDistance())
         }
 
         // if (verbose) console.log("initial distance", this.estimate_overall_distance())

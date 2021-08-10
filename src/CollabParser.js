@@ -298,7 +298,7 @@ class CollabParser {
                         if (n0 == undefined){
                             n0 = {
                                 name: gr0.name,
-                                id: gr0.name.replaceAll("-", ""),
+                                id: gr0.name,
                                 depth: n2.depth - 1,
                                 fullname: gr0.fullname
                             }

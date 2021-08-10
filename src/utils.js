@@ -14,7 +14,7 @@ function median(values){
 }
 
 function id_cleanup(groupfullname){
-    let charsToReplace = [" ", "(", ")", ",", "'"]
+    let charsToReplace = [" ", "(", ")", ",", "'", "."]
     let tmp = groupfullname;
     for (let char of charsToReplace) tmp = tmp.replaceAll(char, "")
     return tmp;

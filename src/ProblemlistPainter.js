@@ -23,7 +23,7 @@ class ProblemListPainter {
         this.intergraph_edge_r = this.plist.options.split_by_year? 4 : 5;
         this.intergraph_edge_p = this.plist.options.split_by_year? 120: 95;
         
-        this.intergraph_edge_linear_p = 650;
+        this.intergraph_edge_linear_p = 700;
         this.intergraph_edge_linear_distance = 6;
 
         this.gradientcount = 0;
@@ -67,6 +67,9 @@ class ProblemListPainter {
         
         this.draw_round(svg);
         this.draw_round_intergraph_edges(svg);
+        this.draw_aggregated_intergraph_edges();
+
+        d3.selectAll(".intergraph_edge_path").style("opacity", 0)
     }
 
     toRadial (x, y, r = 10, p = 0) {
@@ -256,7 +259,7 @@ class ProblemListPainter {
                         svg.append("path")
                         .datum(group)
                         .attr("fill", this.plist.graphlist[i].color)
-                        .attr('class', 'grouprect grouprect-' + id_cleanup(this.plist.problemid))
+                        .attr('class', 'grouprect grouprect-' + this.plist.graphlist[i].id)
                         .attr("id", "g-" + id_cleanup(group.fullname))
                         .attr("d", this.line(p))
                         .on("mouseover", () => console.log(group.nodes.map(n => n.list_y)))
@@ -287,7 +290,7 @@ class ProblemListPainter {
         // }
 
         if (this.options.draw_group_bounds && this.drawtype != "cylinder-horizontal"){
-            // this.draw_group_bounds();
+            this.draw_group_bounds();
         }
     }
 
@@ -314,30 +317,29 @@ class ProblemListPainter {
             
             let topl = Math.min.apply(0, subproblem.getAllNodes().map(n => n.list_y));
             let bottoml = Math.max.apply(0, subproblem.getAllNodes().map(n => n.list_y));
-            console.log("TB ", topl, bottoml);
+
+            subproblem.top_bound = topl;
+            subproblem.bottom_bound = bottoml;
 
             let problemid = subproblem.problemid;
     
-            let tmpid = "path-group-indicator-" + problemid;
+            let tmpid = "path-group-indicator-" + subproblem.id;
     
             let g = svg.append("g")
                 .attr("class", "g-group-indicator")
-                .attr("id", "g-group-indicator-" + problemid)
+                .attr("id", "g-group-indicator-" + subproblem.id)
     
             let r = []
-            console.log("draw ", this.drawtype)
-            // for (let i = topl + 1; i<bottoml - 1; i++){
             for (let i = topl; i<bottoml; i++){
                 if (this.drawtype == "round") r.push(this.toRadial(15, i));
-                if (this.drawtype == "cylinder-vertical") r.push([400, this.getNodeCoordY({list_y: i, depth: 0})])
+                if (this.drawtype == "cylinder-vertical") r.push([1050, this.getNodeCoordY({list_y: i, depth: 0})])
             }
 
-            console.log(r);
             if (this.drawtype == "cylinder-vertical" && Math.abs(r[0][1] - r[r.length - 1][1]) > this.plist.totalnodes * this.nodeydist * .5) continue;
     
             g.append("path")
                 .attr('stroke', subproblem.color)
-                .attr('stroke-width', 5)
+                .attr('stroke-width', 10)
                 .attr("fill", "none")
                 .attr("id", tmpid)
                 .attr('pointer-events', 'visibleStroke')
@@ -346,18 +348,30 @@ class ProblemListPainter {
                 })
                 .on("mouseover", () => {
                     d3.selectAll(".g-group-indicator").style("opacity", 0.3)
-                    d3.select("#g-group-indicator-" + problemid).style("opacity", 1)
+                    d3.select("#g-group-indicator-" + subproblem.id).style("opacity", 1)
     
+                    d3.selectAll(".edgepath").style("opacity", 0.3)
                     d3.selectAll(".grouprect").style("opacity", 0.3)
-                    d3.selectAll(".grouprect-" + problemid).style("opacity", 1)
-    
-                    d3.selectAll(".intergraph_edge_path").style("opacity", 0.3)
-                    // d3.selectAll(".intergraph_edge_path_" + problemid).style("opacity", 1)
+                    d3.selectAll(".grouprect-" + subproblem.id).style("opacity", 1)
+
+                    d3.selectAll(".intergraph_edge_path").style("opacity", 0)
+                    d3.selectAll(".aggregated_intergraph_edge").style("opacity", 0)
+
+                    d3.selectAll(".intergraph_edge_path-" + subproblem.id).style("opacity", 1)
+
+                    d3.selectAll(".intergraph_edge_path-" + subproblem.id).each(a => 
+                        a.nodes.map(n => 
+                            d3.select("#g-" + id_cleanup(n.fullname)).style("opacity", 1)
+                        )
+                    )
                 })
                 .on("mouseout", () => {
                     d3.selectAll(".g-group-indicator").style("opacity", 1)
                     d3.selectAll(".grouprect").style("opacity", 1)
-                    d3.selectAll(".intergraph_edge_path").style("opacity", 1)
+                    d3.selectAll(".edgepath").style("opacity", 1)
+                    d3.selectAll(".intergraph_edge_path").style("opacity", 0)
+
+                    d3.selectAll(".aggregated_intergraph_edge").style("opacity", 1)
                 })
     
             if (subproblem.problemname != undefined) g.append('text')
@@ -378,6 +392,104 @@ class ProblemListPainter {
     // intergraph edges
     // **************************
     // **************************
+
+    draw_aggregated_intergraph_edges(){
+
+        const asc = arr => arr.sort((a, b) => a - b);
+
+        const sum = arr => arr.reduce((a, b) => a + b, 0);
+
+        const mean = arr => sum(arr) / arr.length;
+
+        // sample standard deviation
+        const std = (arr) => {
+            const mu = mean(arr);
+            const diffArr = arr.map(a => (a - mu) ** 2);
+            return Math.sqrt(sum(diffArr) / (arr.length - 1));
+        };
+
+        const quantile = (arr, q) => {
+            const sorted = asc(arr);
+            const pos = (sorted.length - 1) * q;
+            const base = Math.floor(pos);
+            const rest = pos - base;
+            if (sorted[base + 1] !== undefined) {
+                return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
+            } else {
+                return sorted[base];
+            }
+        };
+
+        let r = {}
+
+        for (let i = 0; i < this.plist.graphlist.length; i++){
+            let currentproblem = this.plist.graphlist[i];
+            let incidentEdges = this.plist.intergraph_edges.filter(e => e.nodes.some(n => currentproblem.getAllNodes().includes(n.mirrornode)))
+
+            r[currentproblem.id] = {}
+
+            for (let j = i + 1; j < this.plist.graphlist.length; j++){
+                let otherproblem = this.plist.graphlist[j];
+                let incident2 = incidentEdges.filter(e => e.nodes.some(n => otherproblem.getAllNodes().includes(n.mirrornode)))
+
+                if (incident2.length == 0) continue;
+
+                if (r[otherproblem.id] == undefined) r[otherproblem.id] = {}
+
+                let newedge = {weight: incident2.length, colors: [otherproblem.color, currentproblem.color], id: "a"}
+
+                r[currentproblem.id][otherproblem.id] = newedge;
+                r[otherproblem.id][currentproblem.id] = newedge;
+            }
+        }
+
+        for (let i = 0; i < this.plist.graphlist.length; i++){
+            let entry = this.plist.graphlist[i].id;
+            let p1 = this.plist.graphlist.find(p => p.id == entry)
+
+            let topquantilep1 = quantile(Object.entries(r[entry]).map(e => e[1].weight), .75)
+            let maxp1 = Math.max.apply(0, Object.entries(r[entry]).map(e => e[1].weight))
+
+            for (let j = i + 1; j < this.plist.graphlist.length; j++){
+                let entry2 = this.plist.graphlist[j].id;
+
+                if (r[entry][entry2] == undefined) continue;
+
+                let p2 = this.plist.graphlist.find(p => p.id == entry2)
+
+                let topquantilep2 = quantile(Object.entries(r[entry2]).map(e => e[1].weight), .75)
+                let maxp2 = Math.max.apply(0, Object.entries(r[entry2]).map(e => e[1].weight))
+
+                let c1 = this.getNodeCoordY({list_y: (p1.top_bound + (p1.bottom_bound - p1.top_bound)/2)})
+                let c2 = this.getNodeCoordY({list_y: (p2.top_bound + (p2.bottom_bound - p2.top_bound)/2)})
+
+                // let c1 = this.getNodeCoordY({list_y: (p1.top_bound + this.plist.graphlist.indexOf(p2))})
+                // let c2 = this.getNodeCoordY({list_y: (p2.top_bound + this.plist.graphlist.indexOf(p1))})
+
+                // let dist = 5*Math.pow(Math.abs(this.plist.graphlist.indexOf(p1) - this.plist.graphlist.indexOf(p2)), 2);
+                let dist = 0.1*Math.pow(Math.abs(p1.top_bound - p2.top_bound), 1.7)
+
+                let w = r[entry][entry2].weight;
+
+                if (r[entry][entry2].weight < topquantilep1 || r[entry][entry2].weight < topquantilep2) continue;
+
+                this.svg.append("path")
+                    .attr("stroke", "black")
+                    .attr("id", r[entry][entry2].id)
+                    .attr("class", "aggregated-intergraph-edge")
+                    .attr("stroke-width", 2*Math.max(w/maxp1, w/maxp2))
+                    .style("opacity", (100*Math.max(w/maxp1, w/maxp2)) + "%")
+                    .attr("fill", "none")
+                    .attr("d", this.line([
+                        [1100, c1],
+                        [1200 + dist, c1 + (c2-c1)/2],
+                        [1100, c2]]
+                    ))
+
+                this.assign_edge_gradient(r[entry][entry2].colors[0], r[entry][entry2].colors[1], r[entry][entry2].id, r[entry][entry2], "aggregated_intergraph_edge", c1, c2, w*2)
+            }
+        }
+    }
 
     draw_year_bounds (svg) {
         for (let i = this.plist.options.timerange[0]; i < this.plist.options.timerange[1]; i++){
@@ -400,7 +512,7 @@ class ProblemListPainter {
         }
     }
 
-    assign_edge_gradient(color1, color2, id, edge, edgeproblemstring){
+    assign_edge_gradient(color1, color2, id, edge, edgeproblemstring, yymax, yymin, weight){
 
         // Sample the SVG path uniformly with the specified precision.
         function samples(path, precision) {
@@ -494,8 +606,8 @@ class ProblemListPainter {
             if (this.svg.select("defs").empty()) defs = this.svg.append("defs")
             else defs = this.svg.select("defs")
 
-            let ymax = this.getNodeCoordY(edge.nodes.sort((a, b) => a.mirrornode.list_y < b.mirrornode.list_y)[0].mirrornode)
-            let ymin = this.getNodeCoordY(edge.nodes.sort((a, b) => a.mirrornode.list_y < b.mirrornode.list_y)[1].mirrornode)
+            let ymax = yymax == undefined? this.getNodeCoordY(edge.nodes.sort((a, b) => a.mirrornode.list_y < b.mirrornode.list_y)[0].mirrornode) : yymax;
+            let ymin = yymin == undefined? this.getNodeCoordY(edge.nodes.sort((a, b) => a.mirrornode.list_y < b.mirrornode.list_y)[1].mirrornode) : yymin;
 
             let gradient = defs
                 .append("linearGradient")
@@ -516,12 +628,15 @@ class ProblemListPainter {
                 .style("stop-color", color2)//start in blue
                 .style("stop-opacity", 1)
 
-
             path
+                .datum(edge)
                 .style("stroke", "url(#linear-gradient" + this.gradientcount + ")")
-                .attr("stroke-width", .7*Math.log(edge.weight))
+                // .style("stroke", "black")
+                .attr("stroke-width", weight == undefined? 2*Math.log(edge.weight) : weight)
                 .attr('id', id + "2")
-                .attr('class', 'intergraph_edge_path ' + edgeproblemstring)
+                .attr("fill", "none")
+                .attr("stroke-linecap", "round")
+                .attr('class', edgeproblemstring)
                 .attr('pointer-events', 'visibleStroke')
 
             this.gradientcount++;
@@ -555,7 +670,7 @@ class ProblemListPainter {
             return this.line(r);
         })
         
-        this.assign_edge_gradient(edge.nodes[ni1].mirrornode.color, edge.nodes[ni2].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id, edge, edgeproblemstring)
+        this.assign_edge_gradient(edge.nodes[ni1].mirrornode.color, edge.nodes[ni2].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id, edge, "intergraph_edge_path " + edgeproblemstring)
     }
 
     is_edge_broken(edge){
@@ -589,14 +704,22 @@ class ProblemListPainter {
             .attr('id', 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id)
             .attr('d', () => {
                 let r = [];
-                for (let i = n1; i<=n2; i++){
-                    if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p, this.getNodeCoordY({list_y: i})])
-                    else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p])
-                }    
+
+                if (this.drawtype == "cylinder-vertical" && this.plist.options.curved_intergraph_edges){
+                    r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p, this.getNodeCoordY({list_y: n1})])
+                    r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p + 0.1*Math.pow(Math.abs(n1 - n2), 1.7), this.getNodeCoordY({list_y: n1 + Math.abs(n1 - n2)/2})])
+                    r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p, this.getNodeCoordY({list_y: n2})])
+                } else {
+                    for (let i = n1; i<=n2; i++){
+                        if (this.drawtype == "cylinder-vertical") r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p, this.getNodeCoordY({list_y: i})])
+                        else r.push([ this.getNodeCoordX({list_y: i}), this.options.padding_x + edge.x * 6 + + this.intergraph_edge_linear_p])
+                    }  
+                }
+                  
                 return this.line(r);
             })
 
-            this.assign_edge_gradient(edge.nodes[ni2].mirrornode.color, edge.nodes[ni1].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id, edge, edgeproblemstring)
+            this.assign_edge_gradient(edge.nodes[ni1].mirrornode.color, edge.nodes[ni2].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id, edge, "intergraph_edge_path " + edgeproblemstring)
 
         } else { // edge must be broken in two
 
@@ -612,7 +735,7 @@ class ProblemListPainter {
                 return this.line(r);
             })
 
-            this.assign_edge_gradient(edge.nodes[ni1].mirrornode.color, "#fff", 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id + "-a", edge, edgeproblemstring)
+            this.assign_edge_gradient(edge.nodes[ni1].mirrornode.color, "#fff", 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id + "-a", edge, "intergraph_edge_path " + edgeproblemstring)
 
             let tmp2 = this.svg.append('path')
             .datum(edge)
@@ -626,7 +749,7 @@ class ProblemListPainter {
                 return this.line(r);
             })
 
-            this.assign_edge_gradient("#fff", edge.nodes[ni2].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id + "-b", edge, edgeproblemstring)
+            this.assign_edge_gradient("#fff", edge.nodes[ni2].mirrornode.color, 'edge-' + edge.nodes[ni1].mirrornode.id + "-" + edge.nodes[ni2].mirrornode.id + "-b", edge, "intergraph_edge_path " + edgeproblemstring)
         }        
     }
 
@@ -670,6 +793,7 @@ class ProblemListPainter {
             edgeIndex[index].push([this.getEdgeTopNodeY(edge), this.getEdgeBottomNodeY(edge)]);
 
             if (this.plist.options.split_by_year) edge.x += 10*(edge.year - parseInt(this.plist.options.timerange[0]));
+            if (this.plist.options.curved_intergraph_edges) edge.x = 0;
         }
     }
 
@@ -698,7 +822,7 @@ class ProblemListPainter {
                 edgeproblemlist.push(p);
             }
             edgeproblemlist = [... new Set(edgeproblemlist)]
-            let edgeproblemstring = edgeproblemlist.map(e => "intergraph_edge_path_" + e.problemid).join(" ")
+            let edgeproblemstring = edgeproblemlist.map(e => "intergraph_edge_path-" + e.id).join(" ")
 
             for (let ni1 = 0; ni1 < edge.nodes.length - 1; ni1++){
                 for (let ni2 = ni1+1; ni2 < edge.nodes.length; ni2++){
