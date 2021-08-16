@@ -14,7 +14,7 @@ class Graph {
     }
 
     addNode(node){
-        let charsToReplace = [" ", "=", "<", ">", "'", "-", ",", "(", ")", ".", "ö", "ü", "ā", "&", "é", "è", "/", "’", "É", "-"]
+        let charsToReplace = [" ", "=", "<", ">", "'", "-", ",", "(", ")", ".", "ö", "ü", "ā", "&", "é", "è", "/", "’", "É", "-", "ã"]
 
         if (node.id == undefined || charsToReplace.some(c => node.name.includes(c))) {
             let tmpname = node.name

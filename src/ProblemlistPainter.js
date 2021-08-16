@@ -31,6 +31,7 @@ class ProblemListPainter {
 
     setup(){
         this.assignIntergraphEdgeX();
+        this.intergraph_edge_linear_p = Math.max.apply(0, this.plist.getAllNodes().map(n => this.getNodeCoordX(n))) - this.options.padding_x + 50;
     }
 
     addListener(){
@@ -506,7 +507,7 @@ class ProblemListPainter {
                 // let c2 = this.getNodeCoordY({list_y: (p2.top_bound + this.plist.graphlist.indexOf(p1))})
 
                 // let dist = 5*Math.pow(Math.abs(this.plist.graphlist.indexOf(p1) - this.plist.graphlist.indexOf(p2)), 2);
-                let dist = 0.1*Math.pow(Math.abs(p1.top_bound - p2.top_bound), 1.7)
+                let dist = 0.1*Math.pow(Math.abs(p1.top_bound - p2.top_bound), 1.5)
 
                 let w = r[entry][entry2].weight;
 
@@ -749,7 +750,7 @@ class ProblemListPainter {
                 let r = [];
 
                 if (this.drawtype == "cylinder-vertical" && this.plist.options.curved_intergraph_edges){
-                    let s =  0.3*Math.pow(Math.abs(n1 - n2), 1.5)
+                    let s =  0.3*Math.pow(Math.abs(n1 - n2), 1.3)
                     // s = 100;
 
                     r.push([this.options.padding_x + edge.x * 6 + this.intergraph_edge_linear_p, this.getNodeCoordY({list_y: n1})])
