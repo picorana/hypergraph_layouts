@@ -270,31 +270,29 @@
     }
 
     loadAndDoEverything = () => {
-        // d3.json("data/inria-teams.json").then((data) =>{
-        //     d3.json("data/inria-collab.json").then((data2) => {
-        //         options.cluster_key = "theme"
-        //         let plist = analyze_and_draw(data, data2);
-
-        //         if (options.numthemes > plist.graphlist.length) options.numthemes = plist.graphlist.length;
-        //         // if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
-
-        //         addSlider(2000, 2020);
-        //     })
-        // })
-
-        d3.json("data/visPubData/vispubdata500_affiliations.json").then((data) =>{
-            d3.json("data/visPubData/vispubdata500_collab.json").then((data2) => {
-                options.cluster_key = "country";
+        d3.json("data/inria-teams.json").then((data) =>{
+            d3.json("data/inria-collab.json").then((data2) => {
+                options.cluster_key = "theme"
                 let plist = analyze_and_draw(data, data2);
 
-                console.log(plist)
-
                 if (options.numthemes > plist.graphlist.length) options.numthemes = plist.graphlist.length;
-                if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
+                // if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
 
                 addSlider(2000, 2020);
             })
         })
+
+        // d3.json("data/visPubData/vispubdata500_affiliations.json").then((data) =>{
+        //     d3.json("data/visPubData/vispubdata500_collab.json").then((data2) => {
+        //         options.cluster_key = "country";
+        //         let plist = analyze_and_draw(data, data2);
+
+        //         if (options.numthemes > plist.graphlist.length) options.numthemes = plist.graphlist.length;
+        //         if (options.maxthemes > plist.graphlist.length) options.maxthemes = plist.graphlist.length;
+
+        //         addSlider(2000, 2020);
+        //     })
+        // })
     }
 
     sortFromFile = (largeplist, collabparser) => {
@@ -360,15 +358,16 @@
         split_by_year: false,
         slider_added: false,
         timerange: window.timerange,
-        // collab_value_cutoff: 2,
-        collab_value_cutoff: 1,
-        numthemes: 18,
+        collab_value_cutoff: 2,
+        // collab_value_cutoff: 1,
+        numthemes: 3,
         split_hyperedges: true, 
         shape: "cylinder-vertical",
         readFromFile: false,
         executing_from_node: false,
         maxthemes: 55,
-        curved_intergraph_edges: true
+        curved_intergraph_edges: true,
+        maxnodes: 10
         // readFromFile: false
     }
 

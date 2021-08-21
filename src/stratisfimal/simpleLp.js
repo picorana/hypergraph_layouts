@@ -4,14 +4,11 @@ class SimpleLp {
         this.verbose = false;
         this.model = {};
         this.forcedOrderList = [];
+        this.forcedYList = [];
         this.mip = true;
         this.zcount = 0;
         this.zintcount = 0;
         this.m = 50;
-
-        graph.inclusion_graph = graph.build_inclusion_graph()
-        this.inclusion_graph = graph.inclusion_graph;
-        this.inclusion_graph_flat = graph.inclusion_graph_flat;
 
         this.options = {
             crossings_reduction_weight: 1,
@@ -32,6 +29,12 @@ class SimpleLp {
                 if (group.restricted_vertically && group.restricted_height == undefined) group.restricted_height = group.nodes.length;
             }
         }
+    }
+
+    setup(){
+        this.g.inclusion_graph = this.g.build_inclusion_graph()
+        this.inclusion_graph = this.g.inclusion_graph;
+        this.inclusion_graph_flat = this.g.inclusion_graph_flat;
     }
 
     async arrange(){
@@ -106,6 +109,7 @@ class SimpleLp {
         this.definitions = {};
 
         this.addForcedOrders();
+        this.addForcedY();
 
         if (this.verbose) console.log("Adding transitivity..." + (new Date().getTime() - this.startTime))
 
@@ -181,8 +185,8 @@ class SimpleLp {
 
     addBendinessReductionToMinimize(){
         for (let e of this.g.edges){
-            if (this.isSameRankEdge(e)) continue;
-            this.model.minimize +=  this.options.bendiness_reduction_weight + " bend_" + e.nodes[0].id + "_" + e.nodes[1].id + " + "
+            // if (this.isSameRankEdge(e)) continue;
+            if (!this.model.minimize.includes("bend_" + e.nodes[0].id + "_" + e.nodes[1].id)) this.model.minimize +=  this.options.bendiness_reduction_weight + " bend_" + e.nodes[0].id + "_" + e.nodes[1].id + " + "
         }
         // this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 2) 
     }
@@ -340,8 +344,10 @@ class SimpleLp {
     }
 
     addBendinessReductionToSubjectTo(){
+
         for (let e of this.g.edges){
-            if (this.isSameRankEdge(e)) continue;
+            // if (this.isSameRankEdge(e)) continue;
+            if (e.nodes[0].id == e.nodes[1].id) continue;
 
             this.model.subjectTo += 
                 "y_" + e.nodes[0].id + " - " + 
@@ -659,6 +665,13 @@ class SimpleLp {
     addForcedOrders(){
         for (let o of this.forcedOrderList){
             this.model.subjectTo += this.mkxDict(" + ", o[0].id, o[1].id)[0].slice(3) + " = 1\n"
+            if (this.options.bendiness_reduction_active) this.model.subjectTo += "y_" + o[1].id + " - y_" + o[0].id + " > 1\n";
+        }
+    }
+
+    addForcedY(){
+        for (let entry of this.forcedYList){
+            this.model.subjectTo += "y_" + entry.n.id + " = " + entry.y + "\n"
         }
     }
 
@@ -734,6 +747,10 @@ class SimpleLp {
         this.forcedOrderList.push([n1, n2]);
     }
 
+    forceY(n, y){
+        this.forcedYList.push({n: n, y: y})
+    }
+
     // *****
     // *****
     // variable definitions
@@ -769,7 +786,7 @@ class SimpleLp {
                 else u2 = r[1].id
             } catch {
                 // if (u1 == "run_id_2") console.log(u1_inclusion_graph_node, u2_inclusion_graph_node)
-                console.log("something went wrong in mkxDict")
+                // console.log("something went wrong in mkxDict")
             }
 
             // console.log("r:", u1, u2)

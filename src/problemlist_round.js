@@ -20,6 +20,13 @@ class ProblemList {
         else this.painter = new ProblemListPainter(this, "cylinder-horizontal", this.options);
     }
 
+    add_child(child){
+        this.graphlist.push(child);
+        child.id = this.id + "g" + this.graphlist.length;
+        child.fullname = child.id;
+        child.parent = this;
+    }
+
     getAllGroups(){
         let res = [];
         for (let problem of this.graphlist){
@@ -88,7 +95,7 @@ class ProblemList {
     estimateIntergraphedgeDistance(){
         let totaldistance = 0;
         for (let edge of this.intergraph_edges){
-            totaldistance += Math.abs(edge.nodes[0].mirrornode.list_y - edge.nodes[1].mirrornode.list_y)
+            totaldistance += Math.abs(edge.nodes[0].list_y - edge.nodes[1].list_y)
         }
         return totaldistance;
     }

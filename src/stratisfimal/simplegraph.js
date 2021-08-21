@@ -66,6 +66,7 @@ class Graph {
 
     addGroup(group){
         if (group.id == undefined) group.id = this.groupIdCounter++;
+        group.graph = this;
         this.groups.push(group);
     }
 

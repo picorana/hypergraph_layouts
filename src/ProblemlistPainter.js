@@ -13,7 +13,7 @@ class ProblemListPainter {
         this.line = d3.line().curve(d3.curveBasis);
 
         this.options = {
-            draw_group_bounds: true,
+            draw_group_bounds: false,
             padding_x: 400,
             padding_y: 500
         }
@@ -30,7 +30,7 @@ class ProblemListPainter {
     }
 
     setup(){
-        this.assignIntergraphEdgeX();
+        // this.assignIntergraphEdgeX();
         this.intergraph_edge_linear_p = Math.max.apply(0, this.plist.getAllNodes().map(n => this.getNodeCoordX(n))) - this.options.padding_x + 50;
     }
 
@@ -72,9 +72,11 @@ class ProblemListPainter {
             this.draw_year_bounds(svg);
         }
         
-        this.draw_round(svg);
-        this.draw_round_intergraph_edges(svg);
-        this.draw_aggregated_intergraph_edges();
+        this.draw_content(svg);
+        this.draw_bounds();
+
+        // this.draw_round_intergraph_edges(svg);
+        // this.draw_aggregated_intergraph_edges();
 
         d3.selectAll(".intergraph_edge_path").style("opacity", 1)
     }
@@ -110,10 +112,6 @@ class ProblemListPainter {
         else if (this.drawtype == "cylinder-horizontal") return this.getAbsoluteX(node); 
         else return this.getAbsoluteY(node);
     };
-
-    draw_linear(svg){
-
-    }
 
     make_group_path_round(group, depthspan){
         let p = []
@@ -213,15 +211,23 @@ class ProblemListPainter {
         return p;
     }
 
-    draw_round(svg, subproblem = false){
+    draw_content(svg){
+
+        this.draw_edges(this.plist.intergraph_edges)
 
         for (let i in this.plist.graphlist){
+
+            this.drawgroups(this.plist.graphlist)
+
+            this.draw_edges(this.plist.graphlist[i].intergraph_edges)
+
             for (let j in this.plist.graphlist[i].graphlist){
+
                 let graph = this.plist.graphlist[i].graphlist[j];
 
+                this.drawgroups(graph.groups);
+
                 for (let edge of graph.edges){
-                    if (Math.abs(this.getNodeCoordY(edge.nodes[0]) - this.getNodeCoordY(edge.nodes[1])) > this.plist.totalnodes * this.nodeydist * .9 && this.drawtype != "round") continue;
-                    if (Math.abs(this.getNodeCoordX(edge.nodes[0]) - this.getNodeCoordX(edge.nodes[1])) > this.plist.totalnodes * this.nodeydist * .9 && this.drawtype != "round") continue;
 
                     svg.append('path')
                         .datum(edge)
@@ -249,88 +255,122 @@ class ProblemListPainter {
                             ])
                         })
                 }
-
-                for (let group of graph.groups){
-
-                    let depthspan = [... new Set(group.nodes.map(n => n.depth))].sort()
-    
-                    let p;
-
-                    if (this.drawtype == "round") p = this.make_group_path_round(group, depthspan);
-                    else if (this.drawtype == "cylinder-horizontal") p =this.make_group_path_linear_vertical(group, depthspan);
-                    else p = this.make_group_path_linear_horizontal(group, depthspan);
-
-                    let f = svg.select("#g-" + id_cleanup(group.fullname))
-    
-                    if (f.empty()){
-                        svg.append("path")
-                        .datum(group)
-                        .attr("fill", this.plist.graphlist[i].color)
-                        .attr('class', 'grouprect grouprect-' + this.plist.graphlist[i].id)
-                        .attr("id", "g-" + id_cleanup(group.fullname))
-                        .attr("d", this.line(p))
-                        .on("mouseover", () => {
-                            d3.selectAll(".aggregated_intergraph_edge").style("opacity", 0)
-                            d3.selectAll(".grouprect").style("opacity", 0.1)
-                            d3.selectAll(".edgepath").style("opacity", 0.1)
-                            d3.selectAll(".groupname").style("opacity", 0)
-                            
-                            let connected_ids = new Set();
-                            connected_ids.add(id_cleanup(group.fullname))
-                            
-                            for (let node of group.nodes){
-                                console.log(d3.selectAll(".edge-" + node.id))
-                                d3.selectAll(".edge-" + node.id).style("opacity", 1)
-                                d3.selectAll(".edge-" + node.id).each(e => e.nodes.every(n => {connected_ids.add(id_cleanup(n.fullname))}))
-                            }
-
-                            console.log(connected_ids)
-
-                            connected_ids = [...connected_ids]
-
-                            connected_ids.map(id => {
-                                console.log(id, d3.select("#g-" + id))
-                                d3.select("#g-" + id).style("opacity", 1) 
-                                d3.select("#gname-text-" + id).style("opacity", 1)
-                            })
-                        })
-                        .on("mouseout", () => {
-                            d3.selectAll(".edgepath").style("opacity", 1)
-                            d3.selectAll(".groupname").style("opacity", 1)
-                            d3.selectAll(".grouprect").style("opacity", 1)
-                            d3.selectAll(".aggregated_intergraph_edge").style("opacity", 1)
-                            d3.selectAll(".intergraph_edge_path").style("opacity", 0)
-                        })
-                    } else {
-                        f.transition().duration(100).attr("d", this.line(p))
-                    }
-    
-                    for (let node of group.nodes){
-                        node.color = this.plist.graphlist[i].color;
-                    }
-
-                    if (this.drawtype == "cylinder-vertical") {
-                        if (d3.select("#gname-text-" + id_cleanup(group.fullname)))
-                        svg.append("text")
-                            .attr("id", "gname-text-" + id_cleanup(group.fullname))
-                            .attr("class", "groupname groupname-")
-                            .attr("x", Math.min.apply(0, group.nodes.map(n => n.depth)) * this.nodexdist + this.options.padding_x - 30)
-                            .attr("y", p[0][1] + 3)
-                            .style("text-anchor", "end")
-                            .attr("fill", "gray")
-                            .style("font-size", "0.5em")
-                            .text(group.name)
-                    }
-                }
             }
         }
 
-        // if (subproblem && this.options.draw_group_bounds) {
-        //     this.draw_group_bounds();
-        // }
-
         if (this.options.draw_group_bounds && this.drawtype != "cylinder-horizontal"){
             this.draw_group_bounds();
+        }
+    }
+
+    draw_edges(edges){
+        for (let edge of edges){
+            svg.append('path')
+                .datum(edge)
+                .attr('id', 'edge-' + edge.nodes[0].id + "-" + edge.nodes[1].id)
+                .attr('class', 'edgepath')
+                .attr('fill', 'none')
+                .attr('stroke', this.colors[1])
+                .attr('stroke-width', 2)
+                .attr('d', () => {
+                    let m = 0;
+                    let s1 = 0;
+                    let s2 = 0;
+                    
+                    if (edge.nodes[0].depth == edge.nodes[1].depth) m = this.nodexdist*.2 + (Math.abs(this.getNodeCoordY(edge.nodes[0]) - this.getNodeCoordY(edge.nodes[1]))/(this.nodeydist*.4));
+                    else {
+                        s1 = this.nodexdist*.4;
+                        s2 = -this.nodexdist*.4;
+                    }
+
+                    return this.line([
+                        [this.getNodeCoordX(edge.nodes[0]), this.getNodeCoordY(edge.nodes[0])], 
+                        [this.getNodeCoordX(edge.nodes[0]) + m + s1, this.getNodeCoordY(edge.nodes[0])], 
+                        [this.getNodeCoordX(edge.nodes[1]) + m + s2, this.getNodeCoordY(edge.nodes[1])],
+                        [this.getNodeCoordX(edge.nodes[1]), this.getNodeCoordY(edge.nodes[1])]
+                    ])
+                })
+        }
+    }
+
+    drawgroups(groupset){
+
+        for (let group of groupset){
+
+            if (group.nodes == undefined || group.nodes.length == 0) continue;
+
+            let depthspan = [... new Set(group.nodes.map(n => n.depth))].sort()
+
+            let p;
+
+            if (this.drawtype == "round") p = this.make_group_path_round(group, depthspan);
+            else if (this.drawtype == "cylinder-horizontal") p =this.make_group_path_linear_vertical(group, depthspan);
+            else p = this.make_group_path_linear_horizontal(group, depthspan);
+
+            let leftmostnode = group.nodes.find(n => n.depth == depthspan[0])
+            let rightmostnode = group.nodes.find(n => depthspan.length != 1 ? n.depth == depthspan[1] : n.depth == depthspan[0])
+
+            svg.append("path")
+                .attr("class", "grouprect")
+                .attr("d", this.line(p))
+
+                // svg.append("path")
+                // .datum(group)
+                // // .attr("fill", this.plist.graphlist[i].color)
+                // // .attr('class', 'grouprect grouprect-' + this.plist.graphlist[i].id)
+                // .attr("class", "grouprect")
+                // .attr("id", "g-" + id_cleanup(group.fullname))
+                // .attr("d", this.line(p))
+                // .on("mouseover", () => {
+                //     // d3.selectAll(".aggregated_intergraph_edge").style("opacity", 0)
+                //     // d3.selectAll(".grouprect").style("opacity", 0.1)
+                //     // d3.selectAll(".edgepath").style("opacity", 0.1)
+                //     // d3.selectAll(".groupname").style("opacity", 0)
+                    
+                //     // let connected_ids = new Set();
+                //     // connected_ids.add(id_cleanup(group.fullname))
+                    
+                //     // for (let node of group.nodes){
+                //     //     // console.log(d3.selectAll(".edge-" + node.id))
+                //     //     d3.selectAll(".edge-" + node.id).style("opacity", 1)
+                //     //     d3.selectAll(".edge-" + node.id).each(e => e.nodes.every(n => {connected_ids.add(id_cleanup(n.fullname))}))
+                //     // }
+
+                //     // // console.log(connected_ids)
+
+                //     // connected_ids = [...connected_ids]
+
+                //     // connected_ids.map(id => {
+                //     //     // console.log(id, d3.select("#g-" + id))
+                //     //     d3.select("#g-" + id).style("opacity", 1) 
+                //     //     d3.select("#gname-text-" + id).style("opacity", 1)
+                //     // })
+                // })
+                // .on("mouseout", () => {
+                //     d3.selectAll(".edgepath").style("opacity", 1)
+                //     d3.selectAll(".groupname").style("opacity", 1)
+                //     d3.selectAll(".grouprect").style("opacity", 1)
+                //     d3.selectAll(".aggregated_intergraph_edge").style("opacity", 1)
+                //     d3.selectAll(".intergraph_edge_path").style("opacity", 0)
+                // })
+
+
+            // for (let node of group.nodes){
+            //     node.color = this.plist.graphlist[i].color;
+            // }
+
+            // if (this.drawtype == "cylinder-vertical") {
+            //     if (d3.select("#gname-text-" + id_cleanup(group.fullname)))
+            //     svg.append("text")
+            //         .attr("id", "gname-text-" + id_cleanup(group.fullname))
+            //         .attr("class", "groupname groupname-")
+            //         .attr("x", Math.min.apply(0, group.nodes.map(n => n.depth)) * this.nodexdist + this.options.padding_x - 30)
+            //         .attr("y", p[0][1] + 3)
+            //         .style("text-anchor", "end")
+            //         .attr("fill", "gray")
+            //         .style("font-size", "0.5em")
+            //         .text(group.name)
+            // }
         }
     }
 
@@ -433,101 +473,38 @@ class ProblemListPainter {
     // **************************
     // **************************
 
-    draw_aggregated_intergraph_edges(){
+    draw_bounds(){
 
-        const asc = arr => arr.sort((a, b) => a - b);
+        let dist = 30;
 
-        const sum = arr => arr.reduce((a, b) => a + b, 0);
+        let aux = (problem, indent_level) => {
+            let topnodey = Math.min.apply(0, problem.getAllNodes().map(n => n.list_y))
+            let bottomnodey = Math.max.apply(0, problem.getAllNodes().map(n => n.list_y)) 
+            
+            this.svg.append("path")
+                .attr("class", "gbound")
+                .attr("stroke", "black")
+                .attr("stroke-width", 1)
+                .attr("d", this.line([
+                    [this.intergraph_edge_linear_p + this.options.padding_x - indent_level * dist, this.getNodeCoordY({list_y: topnodey})], 
+                    [this.intergraph_edge_linear_p + this.options.padding_x - indent_level * dist, this.getNodeCoordY({list_y: bottomnodey + 0.2})]]))
 
-        const mean = arr => sum(arr) / arr.length;
+            this.svg.append('text')
+                .attr('x', this.intergraph_edge_linear_p + this.options.padding_x - indent_level * dist + 3)
+                .attr('y', this.getNodeCoordY({list_y: topnodey}) + .5*(this.getNodeCoordY({list_y: bottomnodey}) - this.getNodeCoordY({list_y: topnodey})))
+                .style("font-size", '0.3em')
+                .style("text-anchor", "start")
+                .text(problem.id)
 
-        // sample standard deviation
-        const std = (arr) => {
-            const mu = mean(arr);
-            const diffArr = arr.map(a => (a - mu) ** 2);
-            return Math.sqrt(sum(diffArr) / (arr.length - 1));
-        };
-
-        const quantile = (arr, q) => {
-            const sorted = asc(arr);
-            const pos = (sorted.length - 1) * q;
-            const base = Math.floor(pos);
-            const rest = pos - base;
-            if (sorted[base + 1] !== undefined) {
-                return sorted[base] + rest * (sorted[base + 1] - sorted[base]);
-            } else {
-                return sorted[base];
-            }
-        };
-
-        let r = {}
-
-        for (let i = 0; i < this.plist.graphlist.length; i++){
-            let currentproblem = this.plist.graphlist[i];
-            let incidentEdges = this.plist.intergraph_edges.filter(e => e.nodes.some(n => currentproblem.getAllNodes().includes(n.mirrornode)))
-
-            r[currentproblem.id] = {}
-
-            for (let j = i + 1; j < this.plist.graphlist.length; j++){
-                let otherproblem = this.plist.graphlist[j];
-                let incident2 = incidentEdges.filter(e => e.nodes.some(n => otherproblem.getAllNodes().includes(n.mirrornode)))
-
-                if (incident2.length == 0) continue;
-
-                if (r[otherproblem.id] == undefined) r[otherproblem.id] = {}
-
-                let newedge = {weight: incident2.length, colors: [otherproblem.color, currentproblem.color], id: "a"}
-
-                r[currentproblem.id][otherproblem.id] = newedge;
-                r[otherproblem.id][currentproblem.id] = newedge;
+            if (problem.graphlist != undefined) {
+                for (let p2 of problem.graphlist){
+                    aux(p2, indent_level + 1)
+                }
             }
         }
 
-        for (let i = 0; i < this.plist.graphlist.length; i++){
-            let entry = this.plist.graphlist[i].id;
-            let p1 = this.plist.graphlist.find(p => p.id == entry)
-
-            let topquantilep1 = quantile(Object.entries(r[entry]).map(e => e[1].weight), .50)
-            let maxp1 = Math.max.apply(0, Object.entries(r[entry]).map(e => e[1].weight))
-
-            for (let j = i + 1; j < this.plist.graphlist.length; j++){
-                let entry2 = this.plist.graphlist[j].id;
-
-                if (r[entry][entry2] == undefined) continue;
-
-                let p2 = this.plist.graphlist.find(p => p.id == entry2)
-
-                let topquantilep2 = quantile(Object.entries(r[entry2]).map(e => e[1].weight), .50)
-                let maxp2 = Math.max.apply(0, Object.entries(r[entry2]).map(e => e[1].weight))
-
-                let c1 = this.getNodeCoordY({list_y: (p1.top_bound + (p1.bottom_bound - p1.top_bound)/2)})
-                let c2 = this.getNodeCoordY({list_y: (p2.top_bound + (p2.bottom_bound - p2.top_bound)/2)})
-
-                // let c1 = this.getNodeCoordY({list_y: (p1.top_bound + this.plist.graphlist.indexOf(p2))})
-                // let c2 = this.getNodeCoordY({list_y: (p2.top_bound + this.plist.graphlist.indexOf(p1))})
-
-                // let dist = 5*Math.pow(Math.abs(this.plist.graphlist.indexOf(p1) - this.plist.graphlist.indexOf(p2)), 2);
-                let dist = 0.1*Math.pow(Math.abs(p1.top_bound - p2.top_bound), 1.5)
-
-                let w = r[entry][entry2].weight;
-
-                if (r[entry][entry2].weight < topquantilep1 || r[entry][entry2].weight < topquantilep2) continue;
-
-                this.svg.append("path")
-                    .attr("stroke", "black")
-                    .attr("id", r[entry][entry2].id)
-                    .attr("class", "aggregated-intergraph-edge")
-                    .attr("stroke-width", 2*Math.max(w/maxp1, w/maxp2))
-                    .style("opacity", (100*Math.max(w/maxp1, w/maxp2)) + "%")
-                    .attr("fill", "none")
-                    .attr("d", this.line([
-                        [this.options.padding_x + this.intergraph_edge_linear_p, c1],
-                        [this.options.padding_x + this.intergraph_edge_linear_p + 100 + dist, c1 + (c2-c1)/2],
-                        [this.options.padding_x + this.intergraph_edge_linear_p, c2]]
-                    ))
-
-                this.assign_edge_gradient(r[entry][entry2].colors[0], r[entry][entry2].colors[1], r[entry][entry2].id, r[entry][entry2], "aggregated_intergraph_edge", c1, c2, w*2)
-            }
+        for (let problem of this.plist.graphlist){
+            aux(problem, 0);
         }
     }
 
@@ -725,8 +702,6 @@ class ProblemListPainter {
         let d2 = Math.abs(0 - Math.min(n1, n2))
         let d3 = Math.abs(Math.max(n2, n1) - this.plist.totalnodes)
 
-        // console.log(n1, n2, d1, d2, d3, d1 >= d2 + d3)
-
         if (d1 >= d2 + d3) return true;
         else return false;
     }
@@ -869,7 +844,7 @@ class ProblemListPainter {
                 edgeproblemlist.push(p);
             }
             edgeproblemlist = [... new Set(edgeproblemlist)]
-            let edgeproblemstring = edgeproblemlist.map(e => "intergraph_edge_path-" + e.id).join(" ")
+            let edgeproblemstring = "" //edgeproblemlist.map(e => "intergraph_edge_path-" + e.id).join(" ")
 
             for (let ni1 = 0; ni1 < edge.nodes.length - 1; ni1++){
                 for (let ni2 = ni1+1; ni2 < edge.nodes.length; ni2++){
