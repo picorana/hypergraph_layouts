@@ -147,66 +147,83 @@ class CollabParser {
 
         this.add_collabs_to_plist(largeplist, data2);
 
-        this.split_plist(largeplist);
+        if (this.options.algorithm == "Gansner"){
 
-        largeplist.assignNodeY();
+            let startTime = new Date()
 
-        this.solve_sublist(largeplist);
-
-        if (options.readFromFile) {
-
-        } else {
-            // largeplist.sorter.sort()
-
-            // for (let problem of largeplist.graphlist){
-            //     problem.sorter.sort()
-            // }
-
-            // largeplist.assignNodeY();
-
-            // this.assignHints(largeplist);
+            largeplist.assignNodeY();
+            largeplist.sorter.sort();
 
             for (let problem of largeplist.graphlist){
-                
                 this.solve_sublist(problem);
-
-                for (let graph of problem.graphlist){
-                    this.solve_subproblem(graph);
-                }
             }
+
+            console.log(new Date() - startTime, "ms")
+
+        } else {
+            this.split_plist(largeplist);
 
             largeplist.assignNodeY();
 
-            console.log("total distance:", largeplist.estimateIntergraphedgeDistance())
+            let startTime = new Date()
+
+            let auxsolve = (plist) => {
+                if (plist instanceof ProblemList){
+                    this.solve_sublist(plist);
+
+                    for (let problem of plist.graphlist){
+                        auxsolve(problem);
+                    }
+                } else {
+                    this.solve_sublist(plist);
+                }
+            }
+
+            auxsolve(largeplist)
+
+            console.log(new Date() - startTime, "ms")
         }
+
+        largeplist.assignNodeY();
+
+        console.log("total distance:", largeplist.estimateIntergraphedgeDistance())
 
         return largeplist;
     }
 
     solve_sublist(problem){
 
-        console.log(problem.id)
+        let g, algorithm;
 
-        let g = new Graph();
-        let algorithm = new SimpleLp(g);
+        if (problem instanceof ProblemList) {
+            g = new Graph();
+            algorithm = new SimpleLp(g);
 
-        for (let p of problem.graphlist){
-            let newnode = {depth: 0, id: p.id, name: p.id}
-            g.addNode(newnode);
-            newnode.id = p.id;
+            for (let p of problem.graphlist){
+                let newnode = {depth: 0, id: p.id, name: p.id}
+                g.addNode(newnode);
+                newnode.id = p.id;
+            }
+
+            for (let edge of problem.intergraph_edges){
+                let n1id = problem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[0])).id
+                let n1 = g.nodes.find(n => n.id == n1id)
+
+                let n2id = problem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[1])).id
+                let n2 = g.nodes.find(n => n.id == n2id)
+
+                if (g.edges.find(e => e.nodes.includes(n1) && e.nodes.includes(n2))){
+                    g.edges.find(e => e.nodes.includes(n1) && e.nodes.includes(n2)).value += 1;
+                    continue;
+                }
+                g.addEdge({nodes: [n1, n2], value: 0})
+            }
+        } else {
+            g = problem;
+            algorithm = new SimpleLp(g);
         }
 
-        for (let edge of problem.intergraph_edges){
-            let n1id = problem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[0])).id
-            let n1 = g.nodes.find(n => n.id == n1id)
-
-            let n2id = problem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[1])).id
-            let n2 = g.nodes.find(n => n.id == n2id)
-
-            g.addEdge({nodes: [n1, n2]})
-        }
-
-        let getParentEdgeRelationships = (problem) => {
+        let getParentEdgeRelationships = (problem, originalproblem) => {
 
             let r = [];
 
@@ -214,31 +231,37 @@ class CollabParser {
             let thisindex = problem.parent.graphlist.indexOf(problem);
 
             for (let edge of parent_edges){
+
                 let otherproblem = problem.parent.graphlist.find(p => p != problem && (p.getAllNodes().includes(edge.nodes[0]) || p.getAllNodes().includes(edge.nodes[1])))
+                if (otherproblem == undefined) continue;
                 let otherindex = problem.parent.graphlist.indexOf(otherproblem);
 
-                let n1id = problem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[0]) || p.getAllNodes().includes(edge.nodes[1])).id
-                // let n1 = g.nodes.find(n => n.id == n1id)
+                let n1;
+
+                if (originalproblem instanceof ProblemList) n1 = originalproblem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[0]) || p.getAllNodes().includes(edge.nodes[1]))
+                else {
+                    n1 = originalproblem.nodes.find(n => edge.nodes.includes(n))
+                }
+                
+                if (n1 == undefined) continue;
+                let n1id = n1.id;
                 
                 if (otherindex < thisindex){    
-                    // if (g.edges.find(e => e.nodes.includes(newtopnode) && e.nodes.includes(n1))) continue;
-                    // g.addEdge({nodes: [newtopnode, n1]})
-                    r.push({type: 'top', nodeid: n1id})
+                    r.push({type: 'top', nodeid: n1id, source: otherproblem.id})
                 } else {
-                    // if (g.edges.find(e => e.nodes.includes(newbottomnode) && e.nodes.includes(n1))) continue;
-                    // g.addEdge({nodes: [n1, newbottomnode]})
-                    r.push({type: 'bottom', nodeid: n1id})
+                    r.push({type: 'bottom', nodeid: n1id, source: otherproblem.id})
                 }
             }
 
-            console.log(r)
+            if (problem.parent != undefined && problem.parent.parent != undefined) return r.concat(getParentEdgeRelationships(problem.parent, originalproblem))
+            else {return r;}
         }
 
         // add external edges
         // note: does not do many layers yet, only searches in the parent layer
         if (problem.parent != undefined){
 
-            getParentEdgeRelationships(problem)
+            let edgelist = getParentEdgeRelationships(problem, problem);
 
             let parent_edges = problem.parent.intergraph_edges.filter(e => problem.getAllNodes().includes(e.nodes[0]) || problem.getAllNodes().includes(e.nodes[1]));
             let thisindex = problem.parent.graphlist.indexOf(problem);
@@ -255,21 +278,23 @@ class CollabParser {
             }
 
             algorithm.forceY(newtopnode, 0);
-            // algorithm.forceY(newbottomnode, problem.graphlist.length + 1);
 
-            for (let edge of parent_edges){
-                let otherproblem = problem.parent.graphlist.find(p => p != problem && (p.getAllNodes().includes(edge.nodes[0]) || p.getAllNodes().includes(edge.nodes[1])))
-                let otherindex = problem.parent.graphlist.indexOf(otherproblem);
-
-                let n1id = problem.graphlist.find(p => p.getAllNodes().includes(edge.nodes[0]) || p.getAllNodes().includes(edge.nodes[1])).id
+            for (let edge of edgelist){
+                let n1id = edge.nodeid;
                 let n1 = g.nodes.find(n => n.id == n1id)
-                
-                if (otherindex < thisindex){    
-                    if (g.edges.find(e => e.nodes.includes(newtopnode) && e.nodes.includes(n1))) continue;
-                    g.addEdge({nodes: [newtopnode, n1]})
+
+                if (edge.type == "top"){
+                    if (g.edges.find(e => e.nodes.includes(newtopnode) && e.nodes.includes(n1))) {
+                        g.edges.find(e => e.nodes.includes(newtopnode) && e.nodes.includes(n1)).value += 1;
+                        continue;
+                    }
+                    g.addEdge({nodes: [newtopnode, n1], value: 1})
                 } else {
-                    if (g.edges.find(e => e.nodes.includes(newbottomnode) && e.nodes.includes(n1))) continue;
-                    g.addEdge({nodes: [n1, newbottomnode]})
+                    if (g.edges.find(e => e.nodes.includes(newbottomnode) && e.nodes.includes(n1))) {
+                        g.edges.find(e => e.nodes.includes(newbottomnode) && e.nodes.includes(n1)).value += 1;
+                        continue;
+                    }
+                    g.addEdge({nodes: [n1, newbottomnode], value: 1})
                 }
             }
         }
@@ -281,27 +306,44 @@ class CollabParser {
         algorithm.options.bendiness_reduction_active = true;
         algorithm.options.simplify_for_groups_enabled = true;
         algorithm.options.single_line_groups = true;
-        // algorithm.setup();
-        // algorithm.arrange();
-        // algorithm.apply_solution();
+        algorithm.setup();
+        algorithm.arrange();
+        algorithm.apply_solution();
 
-        // problem.graphlist.sort((a, b) => {
-        //     let ay = g.nodes.find(n => n.id == a.id).y;
-        //     let by = g.nodes.find(n => n.id == b.id).y;
+        if (problem instanceof Graph) {
+            let newtopnode = problem.nodes.find(n => n.name == "t")
+            let newbottomnode = problem.nodes.find(n => n.name == "b")
 
-        //     if (ay > by) return 1;
-        //     else if (ay < by) return -1;
-        //     else return 0;
-        // })
+            problem.nodes.splice(problem.nodes.indexOf(newtopnode), 1)
+            problem.nodeIndex[newtopnode.depth].splice(problem.nodeIndex[newtopnode.depth], 1)
+            problem.nodes.splice(problem.nodes.indexOf(newbottomnode), 1)
+            problem.nodeIndex[newbottomnode.depth].splice(problem.nodeIndex[newbottomnode.depth], 1)
+
+            problem.nodes.map(n => n.y -= 1)
+
+            let edgeset = problem.edges.filter(e => e.nodes.includes(newbottomnode) || e.nodes.includes(newtopnode))
+            for (let edge of edgeset){
+                problem.edges.splice(problem.edges.indexOf(edge), 1)
+            }
+        }
+
+        if (problem instanceof ProblemList) problem.graphlist.sort((a, b) => {
+            let ay = g.nodes.find(n => n.id == a.id).y;
+            let by = g.nodes.find(n => n.id == b.id).y;
+
+            if (ay > by) return 1;
+            else if (ay < by) return -1;
+            else return 0;
+        })
     }
 
     split_plist(plist){
-
         let maxbucketsperlist = 3;
-
         let maxchildreninbucket = Math.ceil(plist.graphlist.length/maxbucketsperlist);
-
         let tmpgraphlist = [];
+
+        plist.all_child_intergraph_edges = []
+        for (let edge of plist.intergraph_edges) plist.all_child_intergraph_edges.push(edge)
 
         for (let i = 0; i < plist.graphlist.length; i += maxchildreninbucket){
             
@@ -327,7 +369,7 @@ class CollabParser {
 
             plist.intergraph_edges = plist.intergraph_edges.filter(e => !edgeset.includes(e))
 
-            // if (childplist.graphlist.length > maxbucketsperlist) this.split_plist(childplist)
+            if (childplist.graphlist.length > maxbucketsperlist) this.split_plist(childplist)
         }
 
         plist.graphlist = tmpgraphlist;

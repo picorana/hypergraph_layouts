@@ -96,20 +96,6 @@ class ProblemListSorter {
             countIncidentEdges(problem)
         }
 
-        // let tableOfEdges = []
-        // for (let i = 0; i < this.plist.graphlist.length; i++){
-        //     let problem = this.plist.graphlist[i];
-        //     tableOfEdges[i] = []
-        //     for (let j = 0; j < this.plist.graphlist.length; j++){
-        //         tableOfEdges[i][j] = 0;
-        //         if (i == j) continue;
-        //         let p2 = this.plist.graphlist[j];
-        //         for (let edge of problem.incident_edges){
-        //             if (p2.incident_edges.includes(edge)) tableOfEdges[i][j] += 1;
-        //         }
-        //     }
-        // }
-
         let tableOfEdges = {}
         for (let i = 0; i < this.plist.graphlist.length; i++){
             let p1 = this.plist.graphlist[i].id;
@@ -163,49 +149,152 @@ class ProblemListSorter {
             }
         }
 
-        // console.log(table)
-        // console.log(new Date() - startdate)
-
-        // let S = Array.from(Array(this.plist.graphlist.length).keys());
-        // // let S = v;
-
-        // let v_dict = {}
-        // for (let i in this.plist.graphlist){
-        //     v_dict[id(this.plist.graphlist[i])] = i;
-        // }
-
-        // let order = [];
-        // for (let i = this.plist.graphlist.length-1; i >= 0; i--){
-        //     console.log(v[i])
-        //     let sn = S.sort().join("_")
-        //     // let sn = sname(S)
-        //     // console.log(sn);
-        //     // if (table[sn] == undefined) console.log(sn)
-        //     order[i] = table[sn].right_vtx;
-        //     S.splice(S.indexOf(parseInt(v_dict[id(table[sn].right_vtx)])), 1)
-        // }
-
-        // this.plist.graphlist = order;
-
         let order = [];
         let S = this.plist.graphlist.map(g => id(g));
         // console.log(S)
 
         for (let i = this.plist.graphlist.length; i>0; i--){
             let sn = S.sort().join("_")
-
-            // console.log(sn)
             
             order[i] = table[sn].right_vtx;
-            // console.log(sn)
-            // console.log(S.indexOf(table[sn].right_vtx.id), order[i].id)
             S.splice(S.indexOf(table[sn].right_vtx.id), 1)
         }
 
         order = order.filter(el => el != {})
-        // console.log(order)
-        // this.plist.graphlist = order;
+
         this.plist.graphlist.sort((a, b) => order.indexOf(a.id) > order.indexOf(b.id)? 1 : -1)
+    }
+
+    dp(sublist){
+        var combinations = function(a, min) {
+            var fn = function(n, src, got, all) {
+                if (n == 0) {
+                    if (got.length > 0) {
+                        all[all.length] = got;
+                    }
+                    return;
+                }
+                for (var j = 0; j < src.length; j++) {
+                    fn(n - 1, src.slice(j + 1), got.concat([src[j]]), all);
+                }
+                return;
+            }
+            var all = [];
+            for (var i = min; i < a.length; i++) {
+                fn(i, a, [], all);
+            }
+            all.push(a);
+            return all;
+        }
+
+        let id = (p) => {
+            if (p.id != undefined) return p.id;
+            else {
+                p.id = this.plist.graphlist.indexOf(p)
+                return p.id;
+            }
+        }
+
+        let sname = (S) => S != [] ? S.join("_") : "";
+
+        let cut = (j, S) => {
+            let r = 0;
+            for (let p2 of S){
+                r += tableOfEdges[j][p2];
+            }
+            return r;
+        }
+
+        let leftedgedict = {};
+        let rightedgedict = {};
+
+        for (let problem of sublist){
+            leftedgedict[problem.id] = 0;
+            rightedgedict[problem.id] = 0;
+
+            problem.incident_edges = [];
+            for (let edge of this.plist.intergraph_edges){
+                if (!edge.nodes.some(n => problem.getAllNodes().includes(n))) {continue;}
+                if (edge.nodes.every(n => problem.getAllNodes().includes(n))) continue;
+                else {
+                    problem.incident_edges.push(edge);
+
+                    let othernode = edge.nodes.find(n => !problem.getAllNodes().includes(n));
+                    let otherproblem = this.plist.graphlist.find(p => p.getAllNodes().includes(othernode))
+
+                    if (!sublist.includes(otherproblem)){
+                        let otherproblemIndex = this.plist.graphlist.indexOf(otherproblem);
+                        let thisindex = this.plist.graphlist.indexOf(problem);
+
+                        if (otherproblemIndex < thisindex) leftedgedict[problem.id] += 1
+                        else rightedgedict[problem.id] += 1
+                    }
+                }
+            }
+        }
+
+        let tableOfEdges = {}
+        for (let i = 0; i < sublist.length; i++){
+            let p1 = sublist[i].id;
+            tableOfEdges[p1] = {}
+            for (let j = 0; j < sublist.length; j++){
+                let p2 = sublist[j].id
+                tableOfEdges[p1][p2] = 0;
+                if (i == j) continue;
+                for (let edge of sublist[i].incident_edges){
+                    if (sublist[j].incident_edges.includes(edge)) tableOfEdges[p1][p2] += 1;
+                }
+            }
+        }        
+
+        let v = combinations(sublist.map(g => id(g)), 1).sort()
+        v = [[]].concat(v)
+
+        let table = {}
+
+        for (let S of v){
+            S = S.sort()
+            table[sname(S)] = {};
+            table[sname(S)].cost = Infinity;
+        }
+
+        table[""] = {cost: 0, cut: 0}
+
+        for (let S of v){
+            let sn = sname(S)
+
+            let cutS = table[sn].cut
+            let new_cost = table[sn].cost + cutS
+
+            let vnotS = sublist.filter(p => !S.includes(p.id)).map(g => g.id)
+
+            for (let j of vnotS){
+                let jus = S.concat(j);
+                let jusname = sname(jus.sort());
+
+                if (table[jusname].cost > new_cost){
+                    table[jusname].cost = new_cost;
+                    table[jusname].right_vtx = j;
+                    table[jusname].cut = cutS - cut(j, S) + cut(j, vnotS) - leftedgedict[j] + rightedgedict[j]
+                }
+            }
+        }
+
+        let order = [];
+        let S = sublist.map(g => id(g));
+
+        for (let i = sublist.length; i>0; i--){
+            let sn = S.sort().join("_")
+            
+            order[i] = table[sn].right_vtx;
+            S.splice(S.indexOf(table[sn].right_vtx), 1)
+        }
+
+        order = order.filter(el => el != {})
+
+        // console.log(sublist.map(p => p.id), order)
+
+        return order;
     }
 
     sort_problemlist_linear(verbose = false){
@@ -217,62 +306,38 @@ class ProblemListSorter {
 
             for (let problem of this.plist.graphlist){
                 let edges = intergraph_edge_list.filter(e => 
-                    !e.nodes.map(n => n.mirrornode).every(n => problem.getAllNodes().includes(n)) && 
-                    e.nodes.map(n => n.mirrornode).some(n => problem.getAllNodes().includes(n)))
+                    !e.nodes.map(n => n).every(n => problem.getAllNodes().includes(n)) && 
+                    e.nodes.map(n => n).some(n => problem.getAllNodes().includes(n)))
 
-                let othernodes = edges.map(e => e.nodes.find(n => !problem.getAllNodes().includes(n.mirrornode)).mirrornode)
+                let othernodes = edges.map(e => e.nodes.find(n => !problem.getAllNodes().includes(n)))
                 
                 let r = [];
 
                 for (let othernode of othernodes){
                     let otherproblem = this.plist.graphlist.find(p => p.getAllNodes().includes(othernode))
-                    
-                    if (otherproblem == undefined) {
-                        let thisproblemindex = this.plist.parent.graphlist.indexOf(problem);
-                        otherproblem = this.plist.parent.graphlist.find(p => p.getAllNodes().includes(othernode));
-                        let otherproblemIndex = this.plist.parent.graphlist.indexOf(otherproblem);
-                        if (otherproblem < thisproblemindex) r.push(-1)
-                        else r.push(this.plist.graphlist.length + 1)
-                    } else {
-                        r.push(this.plist.graphlist.indexOf(otherproblem))
-                    }
+
+                    r.push(this.plist.graphlist.indexOf(otherproblem))
                 }
 
                 problem.wmedian = median(r)
             }
 
-            this.plist.graphlist.sort((a, b) => a.wmedian < b.wmedian ? 1 : -1)
+            this.plist.graphlist.sort((a, b) => a.wmedian > b.wmedian ? 1 : -1)
 
             this.plist.assignNodeY();
 
-            // console.log("distance at iteration " + i, this.plist.estimateIntergraphedgeDistance())
+            if (verbose) console.log("distance at iteration " + i, this.plist.estimateIntergraphedgeDistance())
         }
 
-        // if (verbose) console.log("initial distance", this.estimate_overall_distance())
+        for (let i = 0; i<this.plist.graphlist.length - 5; i+= 1){
+            let order = this.dp(this.plist.graphlist.slice(i, i+6));
 
-        // for (let problem of this.plist.graphlist){
-        //     problem.edgelist = this.getEdgesIncidentToProblem(problem) 
-        //     problem.connectedProblems = this.getConnectedProblems(problem);
-        // }
-
-        // for (let i=0; i<max_iterations; i++){
-        //     for (let problem of this.plist.graphlist){
-        //         let connectedProblems = this.getIndexOfOtherConnectedProblems(problem);
-
-        //         let avg = 0;
-        //         if (connectedProblems.length != 0) {
-        //             for (let p of connectedProblems){
-        //                 avg += p.index;
-        //             }
-        //             avg = avg/connectedProblems.length;
-        //         }
-        //         problem.wAvg = avg;
-        //     }
-
-        //     this.plist.graphlist.sort((a, b) => a.wAvg > b.wAvg? 1 : -1)
-
-        //     if (verbose) console.log("distance at iteration", i, this.estimate_overall_distance())
-        // }
+            this.plist.graphlist.sort((a, b) => {
+                if (!order.includes(a.id) || !order.includes(b.id)) return 0;
+                else if (order.indexOf(a.id) < order.indexOf(b.id)) return -1;
+                else return 1;
+            })
+        }
     }
 
     getProblemFromNode (node, getGraph = true) {

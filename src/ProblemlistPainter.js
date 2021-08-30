@@ -23,46 +23,17 @@ class ProblemListPainter {
         this.intergraph_edge_r = this.plist.options.split_by_year? 4 : 5;
         this.intergraph_edge_p = this.plist.options.split_by_year? 120: 95;
         
-        this.intergraph_edge_linear_p = 400;
+        this.intergraph_edge_linear_p = 500;
         this.intergraph_edge_linear_distance = 6;
 
         this.gradientcount = 0;
     }
 
     setup(){
-        // this.assignIntergraphEdgeX();
-        this.intergraph_edge_linear_p = Math.max.apply(0, this.plist.getAllNodes().map(n => this.getNodeCoordX(n))) - this.options.padding_x + 50;
+        this.intergraph_edge_linear_p = Math.max.apply(0, this.plist.getAllNodes().map(n => this.getNodeCoordX(n))) - this.options.padding_x + 130;
     }
 
     addListener(){
-        document.onkeydown = (e) => {
-            switch (event.keyCode) {
-            case 38:
-                e.stopPropagation();
-                e.preventDefault();
-                this.scrollOffsetY -= 2;
-                this.draw(this.svg);
-                break;
-            case 40:
-                e.stopPropagation();
-                e.preventDefault();
-                this.scrollOffsetY += 2;
-                this.draw(this.svg);
-                break;
-            case 37:
-                e.stopPropagation();
-                e.preventDefault();
-                this.scrollOffsetY -= 2;
-                this.draw(this.svg);
-                break;
-            case 39:
-                e.stopPropagation();
-                e.preventDefault();
-                this.scrollOffsetY += 2;
-                this.draw(this.svg);
-                break;
-            }
-        }
     }
 
     draw(svg){
@@ -74,9 +45,6 @@ class ProblemListPainter {
         
         this.draw_content(svg);
         this.draw_bounds();
-
-        // this.draw_round_intergraph_edges(svg);
-        // this.draw_aggregated_intergraph_edges();
 
         d3.selectAll(".intergraph_edge_path").style("opacity", 1)
     }
@@ -94,7 +62,6 @@ class ProblemListPainter {
     }
 
     getAbsoluteY (node) {
-        // console.log("nY ", node, this.options.padding_y, this.nodeydist, node.list_y, this.scrollOffsetY, this.plist.totalnodes);
         return this.options.padding_y + this.nodeydist * ((node.list_y + this.scrollOffsetY) % this.plist.totalnodes);
     }
 
@@ -213,54 +180,20 @@ class ProblemListPainter {
 
     draw_content(svg){
 
-        this.draw_edges(this.plist.intergraph_edges)
+        let aux = (plist) => {
+            if (plist instanceof ProblemList){
+                this.draw_edges(plist.intergraph_edges)
 
-        for (let i in this.plist.graphlist){
-
-            this.drawgroups(this.plist.graphlist)
-
-            this.draw_edges(this.plist.graphlist[i].intergraph_edges)
-
-            for (let j in this.plist.graphlist[i].graphlist){
-
-                let graph = this.plist.graphlist[i].graphlist[j];
-
-                this.drawgroups(graph.groups);
-
-                for (let edge of graph.edges){
-
-                    svg.append('path')
-                        .datum(edge)
-                        .attr('id', 'edge-' + edge.nodes[0].id + "-" + edge.nodes[1].id)
-                        .attr('class', 'edgepath')
-                        .attr('fill', 'none')
-                        .attr('stroke', this.colors[1])
-                        .attr('stroke-width', 2)
-                        .attr('d', () => {
-                            let m = 0;
-                            let s1 = 0;
-                            let s2 = 0;
-                            
-                            if (edge.nodes[0].depth == edge.nodes[1].depth) m = this.nodexdist*.2 + (Math.abs(this.getNodeCoordY(edge.nodes[0]) - this.getNodeCoordY(edge.nodes[1]))/(this.nodeydist/4));
-                            else {
-                                s1 = this.nodexdist*.4;
-                                s2 = -this.nodexdist*.4;
-                            }
-    
-                            return this.line([
-                                [this.getNodeCoordX(edge.nodes[0]), this.getNodeCoordY(edge.nodes[0])], 
-                                [this.getNodeCoordX(edge.nodes[0]) + m + s1, this.getNodeCoordY(edge.nodes[0])], 
-                                [this.getNodeCoordX(edge.nodes[1]) + m + s2, this.getNodeCoordY(edge.nodes[1])],
-                                [this.getNodeCoordX(edge.nodes[1]), this.getNodeCoordY(edge.nodes[1])]
-                            ])
-                        })
+                for (let problem of plist.graphlist){
+                    aux(problem);
                 }
+            } else {
+                this.draw_edges(plist.edges)
+                this.drawgroups(plist.groups)
             }
         }
 
-        if (this.options.draw_group_bounds && this.drawtype != "cylinder-horizontal"){
-            this.draw_group_bounds();
-        }
+        aux(this.plist);
     }
 
     draw_edges(edges){
@@ -388,82 +321,6 @@ class ProblemListPainter {
                     .attr("fill", colors[1])
                     .on("mouseover", () => console.log(node.name))
             }
-        }
-    }
-
-    draw_group_bounds(){
-
-        for (let subproblem of this.plist.graphlist){
-            
-            let topl = Math.min.apply(0, subproblem.getAllNodes().map(n => n.list_y));
-            let bottoml = Math.max.apply(0, subproblem.getAllNodes().map(n => n.list_y));
-
-            subproblem.top_bound = topl;
-            subproblem.bottom_bound = bottoml;
-    
-            let tmpid = "path-group-indicator-" + subproblem.id;
-    
-            let g = svg.append("g")
-                .attr("class", "g-group-indicator")
-                .attr("id", "g-group-indicator-" + subproblem.id)
-    
-            let r = []
-            for (let i = topl; i<bottoml; i++){
-                if (this.drawtype == "round") r.push(this.toRadial(15, i));
-                if (this.drawtype == "cylinder-vertical") r.push([this.intergraph_edge_linear_p - 30 + this.options.padding_x, this.getNodeCoordY({list_y: i, depth: 0})])
-            }
-
-            // if (this.drawtype == "cylinder-vertical" && r.length > 0 && Math.abs(r[0][1] - r[r.length - 1][1]) > this.plist.totalnodes * this.nodeydist * .5) continue;
-    
-            g.append("path")
-                .attr('stroke', subproblem.color)
-                .attr('stroke-width', 10)
-                .attr("fill", "none")
-                .attr("id", tmpid)
-                .attr('pointer-events', 'visibleStroke')
-                .attr('d', () => {
-                    return this.line(r)
-                })
-                .on("mouseover", () => {
-                    d3.selectAll(".g-group-indicator").style("opacity", 0.3)
-                    d3.select("#g-group-indicator-" + subproblem.id).style("opacity", 1)
-    
-                    d3.selectAll(".edgepath").style("opacity", 0.3)
-                    d3.selectAll(".grouprect").style("opacity", 0.3)
-                    d3.selectAll(".grouprect-" + subproblem.id).style("opacity", 1)
-
-                    d3.selectAll(".intergraph_edge_path").style("opacity", 0)
-                    d3.selectAll(".aggregated_intergraph_edge").style("opacity", 0)
-
-                    d3.selectAll(".intergraph_edge_path-" + subproblem.id).style("opacity", 1)
-
-                    // console.log(d3.selectAll(".intergraph_edge_path-" + subproblem.id))
-
-                    d3.selectAll(".intergraph_edge_path-" + subproblem.id).each(a => 
-                        a.nodes.map(n => 
-                            d3.select("#g-" + id_cleanup(n.fullname)).style("opacity", 1)
-                        )
-                    )
-                })
-                .on("mouseout", () => {
-                    d3.selectAll(".g-group-indicator").style("opacity", 1)
-                    d3.selectAll(".grouprect").style("opacity", 1)
-                    d3.selectAll(".edgepath").style("opacity", 1)
-                    d3.selectAll(".intergraph_edge_path").style("opacity", 0)
-
-                    d3.selectAll(".aggregated_intergraph_edge").style("opacity", 1)
-                })
-    
-            if (subproblem.problemname != undefined) g.append('text')
-                .attr("dy", -10)
-                .append("textPath") //append a textPath to the text element
-                    .attr("xlink:href", '#' + tmpid) //place the ID of the path here
-                    .style("text-anchor","middle") //place the text halfway on the arc
-                    .attr("startOffset", "50%")
-                    .attr("fill", "black")
-                    .attr("font-family", "Arial")
-                    .style("font-size", "0.7em")
-                    .text(subproblem.problemname);
         }
     }
 

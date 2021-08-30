@@ -45,12 +45,11 @@ class Graph {
             if (group.nodes.includes(node)) group.nodes.splice(group.nodes.indexOf(node), 1)
         }
 
-        this.nodeIndex[node.depth].splice(this.nodeIndex[node.depth].indexOf(node), 1)
-        this.nodes.splice(this.nodes.indexOf(node), 1)
+        if (this.nodeIndex[node.depth].indexOf(node) != -1) this.nodeIndex[node.depth].splice(this.nodeIndex[node.depth].indexOf(node), 1)
+        if (this.nodes.indexOf(node) != -1) this.nodes.splice(this.nodes.indexOf(node), 1)
     }
 
     removeNodes(nodes){
-        console.log(nodes)
         for (let node of nodes){this.removeNode(node)}
     }
 
@@ -138,10 +137,10 @@ class Graph {
 
     draw(svg, nodeXDistance = 50, nodeYDistance = 50){
 
-        let getNodeCoordX = (node) => (20 + nodeXDistance * (node.depth));
-        let getNodeCoordY = (node) => {
+        let getNodeCoordY = (node) => (20 + nodeXDistance * (node.depth));
+        let getNodeCoordX = (node) => {
             if (node.y != undefined) return 20 + node.y * nodeYDistance;
-            else return parseFloat(20 + this.nodeIndex[node.depth].indexOf(node) * nodeYDistance)
+            else return parseFloat(30 + this.nodeIndex[node.depth].indexOf(node) * nodeYDistance)
         };
         let line = d3.line().curve(d3.curveBasis);
         let colors = ['#303E3F', '#A3B9B6'];
@@ -231,21 +230,21 @@ class Graph {
                 .datum(edge)
                 .attr('class', 'edgepath')
                 .attr('fill', 'none')
-                .attr('stroke', colors[1])
+                .attr('stroke', edge.color == undefined? colors[1] : edge.color)
                 .attr('stroke-width', 3)
                 .attr('d', () => {
                     let m = 0;
                     let s1 = 0;
                     let s2 = 0;
-                    if (edge.nodes[0].depth == edge.nodes[1].depth) m = nodeXDistance*.2 + (Math.abs(getNodeCoordY(edge.nodes[0]) - getNodeCoordY(edge.nodes[1]))/(nodeYDistance/4));
+                    if (edge.nodes[0].depth == edge.nodes[1].depth) m = nodeXDistance*.2 + (Math.abs(getNodeCoordX(edge.nodes[0]) - getNodeCoordX(edge.nodes[1]))/(nodeYDistance/8));
                     else {
                         s1 = nodeXDistance*.4;
                         s2 = -nodeXDistance*.4;
                     }
                     return line([
                         [getNodeCoordX(edge.nodes[0]), getNodeCoordY(edge.nodes[0])], 
-                        [getNodeCoordX(edge.nodes[0]) + m + s1, getNodeCoordY(edge.nodes[0])], 
-                        [getNodeCoordX(edge.nodes[1]) + m + s2, getNodeCoordY(edge.nodes[1])],
+                        [getNodeCoordX(edge.nodes[0]), getNodeCoordY(edge.nodes[0]) + m + s1], 
+                        [getNodeCoordX(edge.nodes[1]), getNodeCoordY(edge.nodes[1]) + m + s1],
                         [getNodeCoordX(edge.nodes[1]), getNodeCoordY(edge.nodes[1])]
                     ])
                 })
@@ -254,6 +253,7 @@ class Graph {
         for (let depth in this.nodeIndex){
             for (let node of this.nodeIndex[depth]){
                 let g = svg.append('g')
+                    .attr("id", "g-" + node.id)
                     .attr('transform', 'translate(' + (getNodeCoordX(node)) + ',' + getNodeCoordY(node) +')')
                     .attr('opacity', () => {return node.type == "fake"? 0.3 : 1})
 

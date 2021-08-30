@@ -93,11 +93,25 @@ class ProblemList {
     }
 
     estimateIntergraphedgeDistance(){
-        let totaldistance = 0;
-        for (let edge of this.intergraph_edges){
-            totaldistance += Math.abs(edge.nodes[0].list_y - edge.nodes[1].list_y)
+
+        let aux = (p) => {
+            let totaldistance = 0;
+            if (p instanceof ProblemList){
+                for (let edge of p.intergraph_edges){
+                    totaldistance += Math.abs(edge.nodes[0].list_y - edge.nodes[1].list_y)
+                }
+                for (let subp of p.graphlist){
+                    totaldistance += aux(subp);
+                }
+            } else {
+                for (let edge of p.edges){
+                    totaldistance += Math.abs(edge.nodes[0].list_y - edge.nodes[1].list_y)
+                }
+            }
+            return totaldistance;
         }
-        return totaldistance;
+
+        return aux(this)
     }
 }
 

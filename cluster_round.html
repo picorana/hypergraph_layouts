@@ -18,7 +18,7 @@
   <script src="src/stratisfimal/simplegraph.js"></script>
   <script src="src/stratisfimal/simpleLp.js"></script>
   <script src="src/utils.js"></script>
-  <script src="src/problemlist_round.js"></script>
+  <script src="src/ProblemList.js"></script>
   <script src="src/ProblemlistSorter.js"></script>
   <script src="src/ProblemlistPainter.js"></script>
   <script src="src/CollabParser.js"></script>
@@ -295,64 +295,64 @@
         // })
     }
 
-    sortFromFile = (largeplist, collabparser) => {
-        let sortfilename = "./sorted_layouts/" + parseInt(options.timerange[0]) + '-' + parseInt(options.timerange[1]) + '-' + parseInt(options.numthemes) + '.json'
+    // sortFromFile = (largeplist, collabparser) => {
+    //     let sortfilename = "./sorted_layouts/" + parseInt(options.timerange[0]) + '-' + parseInt(options.timerange[1]) + '-' + parseInt(options.numthemes) + '.json'
 
-        fetch(sortfilename)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error("HTTP error " + response.status);
-                }
-                return response.json();
-            })
-            .then(json => {
-                largeplist.graphlist.sort((a, b) => {
-                    let indexA = json.find(el => el.id == id_cleanup(a.getAllNodes()[0].fullname))
-                    let indexB = json.find(el => el.id == id_cleanup(b.getAllNodes()[0].fullname))
-                    // if (indexA == undefined) console.log(a)
-                    // if (indexB == undefined) console.log(b)
-                    indexA = json.indexOf(indexA)
-                    indexB = json.indexOf(indexB)
-                    return indexA > indexB;
-                })
+    //     fetch(sortfilename)
+    //         .then(response => {
+    //             if (!response.ok) {
+    //                 throw new Error("HTTP error " + response.status);
+    //             }
+    //             return response.json();
+    //         })
+    //         .then(json => {
+    //             largeplist.graphlist.sort((a, b) => {
+    //                 let indexA = json.find(el => el.id == id_cleanup(a.getAllNodes()[0].fullname))
+    //                 let indexB = json.find(el => el.id == id_cleanup(b.getAllNodes()[0].fullname))
+    //                 // if (indexA == undefined) console.log(a)
+    //                 // if (indexB == undefined) console.log(b)
+    //                 indexA = json.indexOf(indexA)
+    //                 indexB = json.indexOf(indexB)
+    //                 return indexA > indexB;
+    //             })
 
-                for (let problem of largeplist.graphlist){
-                    let json2 = json.find(el => el.id == id_cleanup(problem.getAllNodes()[0].fullname)).subproblems
-                    problem.graphlist.sort((a, b) => {
-                        let indexA = json2.find(el => el == id_cleanup(a.getAllNodes()[0].fullname))
-                        let indexB = json2.find(el => el == id_cleanup(b.getAllNodes()[0].fullname))
-                        if (indexA == undefined) return 0;
-                        if (indexB == undefined) return 0;
-                        indexA = json2.indexOf(indexA)
-                        indexB = json2.indexOf(indexB)
-                        return indexA > indexB;
-                    })
+    //             for (let problem of largeplist.graphlist){
+    //                 let json2 = json.find(el => el.id == id_cleanup(problem.getAllNodes()[0].fullname)).subproblems
+    //                 problem.graphlist.sort((a, b) => {
+    //                     let indexA = json2.find(el => el == id_cleanup(a.getAllNodes()[0].fullname))
+    //                     let indexB = json2.find(el => el == id_cleanup(b.getAllNodes()[0].fullname))
+    //                     if (indexA == undefined) return 0;
+    //                     if (indexB == undefined) return 0;
+    //                     indexA = json2.indexOf(indexA)
+    //                     indexB = json2.indexOf(indexB)
+    //                     return indexA > indexB;
+    //                 })
 
-                    for (let graph of problem.graphlist){
-                        collabparser.solve_subproblem(graph);
-                    }
-                }
+    //                 for (let graph of problem.graphlist){
+    //                     collabparser.solve_subproblem(graph);
+    //                 }
+    //             }
 
-                largeplist.assignNodeY();
+    //             largeplist.assignNodeY();
 
-                largeplist.painter.svg = svg;
-                largeplist.painter.addListener();
-                largeplist.painter.setup();
-                largeplist.painter.draw(svg)
+    //             largeplist.painter.svg = svg;
+    //             largeplist.painter.addListener();
+    //             largeplist.painter.setup();
+    //             largeplist.painter.draw(svg)
 
-            })
-            .catch(function (e) {
-                console.log(e, "file read error")
-            })
-    }
+    //         })
+    //         .catch(function (e) {
+    //             console.log(e, "file read error")
+    //         })
+    // }
 
     let svg = d3.select('body')
         .append('svg')
-        .attr("width", 3000)
-        .attr("height", 50000)
+        .attr("width", 2000)
+        .attr("height", 2000)
         // .attr("easypz", "")
 
-    window.timerange = [2013, 2016]
+    window.timerange = [2013, 2020]
 
     let options = {
         split_by_year: false,
@@ -367,7 +367,8 @@
         executing_from_node: false,
         maxthemes: 55,
         curved_intergraph_edges: true,
-        maxnodes: 10
+        maxnodes: 10,
+        algorithm: "Gansner"
         // readFromFile: false
     }
 

@@ -1,0 +1,499 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/d3.min.js"></script>
+  <script src="lib/glpk.min.js"></script>
+  <!-- <script src="lib/reorder.min.js"></script> -->
+  <script src="lib/d3-interpolate.min.js"></script>
+  <script src="lib/nouislider.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+
+  <script src="https://code.easypz.io/easypz.latest.min.js"></script>
+
+  <link rel="stylesheet" href="lib/nouislider.min.css">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+
+  <script src="src/stratisfimal/simplegraph.js"></script>
+  <script src="src/stratisfimal/simpleLp.js"></script>
+  <script src="src/utils.js"></script>
+  <script src="src/ProblemList.js"></script>
+  <script src="src/ProblemlistSorter.js"></script>
+  <script src="src/ProblemlistPainter.js"></script>
+  <script src="src/CollabParser.js"></script>
+  <script src="src/hyperedge_split_functions.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
+  <style>
+      text {
+          font-family: Arial;
+          font-size: x-small;
+          color: gray;
+          text-anchor: middle;
+      }
+
+      svg {
+          /* padding: 5%; */
+      }
+
+      .optionbox {
+          position: fixed;
+          top: 0px;
+          background-color: #b2c6d7;
+          padding: 1%;
+          font-size: 0.7em;
+          display: none;
+      }
+
+      .btn {
+          font-size: 0.8em;
+          padding: .175rem .75rem;
+      }
+
+      .noUi-target {
+          scale: 70%;
+      }
+
+      .boxelem {
+          display: block;
+      }
+
+  </style>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+
+let genGraph = (graph_type) => {
+    let graph = new Graph();
+
+    if (graph_type == "simple1"){
+        let A = {name: "A", depth: 0}
+        let B = {name: "B", depth: 0}
+        let C = {name: "C", depth: 0}
+        let D = {name: "D", depth: 0}
+        let E = {name: "E", depth: 0}
+
+        graph.addNodes([A, B, D, C, E])
+
+        graph.hyperedges = [];
+        graph.hyperedges.push({nodes: [A, B, C]})
+        graph.addEdge({nodes: [D, E]})
+        graph.addEdge({nodes: [C, E]})
+
+    } else if (graph_type == "simple2") {
+        let A = {name: "A", depth: 0}
+        let B = {name: "B", depth: 0}
+        let C = {name: "C", depth: 0}
+        let D = {name: "D", depth: 0}
+        let E = {name: "E", depth: 0}
+        let F = {name: "F", depth: 0}
+        let G = {name: "G", depth: 0}
+
+        graph.addNodes([A, B, C, D, E, F, G])
+
+        graph.hyperedges = [];
+        graph.hyperedges.push({nodes: [A, C, D, E]})
+        graph.hyperedges.push({nodes: [B, F, G]})
+    } else if (graph_type == "simple3") {
+        let A = {name: "A", depth: 0}
+        let B = {name: "B", depth: 0}
+        let C = {name: "C", depth: 0}
+        let D = {name: "D", depth: 0}
+        let E = {name: "E", depth: 0}
+        let F = {name: "F", depth: 0}
+        let G = {name: "G", depth: 0}
+
+        graph.addNodes([A, B, C, D, E, F, G])
+
+        graph.hyperedges = [];
+        graph.hyperedges.push({nodes: [A, C, D, E]})
+        graph.hyperedges.push({nodes: [B, F, G]})
+
+        graph.addEdge({nodes: [A, B]})
+        graph.addEdge({nodes: [A, C]})
+        graph.addEdge({nodes: [E, F]})
+    }  else if (graph_type == "simple4") {
+        let A = {name: "A", depth: 0}
+        let B = {name: "B", depth: 0}
+        let C = {name: "C", depth: 0}
+        let D = {name: "D", depth: 0}
+        let E = {name: "E", depth: 0}
+        let F = {name: "F", depth: 0}
+        let G = {name: "G", depth: 0}
+        let H = {name: "H", depth: 0}
+        let I = {name: "I", depth: 0}
+        let J = {name: "J", depth: 0}
+        let K = {name: "K", depth: 0}
+
+        graph.addNodes([A, B, C, D, E, F, G, H, I, J, K])
+
+        graph.hyperedges = [];
+        graph.hyperedges.push({nodes: [A, C, D, E]})
+        graph.hyperedges.push({nodes: [B, F, G]})
+        graph.hyperedges.push({nodes: [A, J, K]})
+
+        graph.addEdge({nodes: [A, B]})
+        graph.addEdge({nodes: [A, C]})
+        graph.addEdge({nodes: [E, F]})
+        graph.addEdge({nodes: [H, I]})
+    }
+
+    return graph;
+}
+
+let count_crossings_at_depth = (graph, depth) => {
+    let edgeset = graph.edges.filter(e => e.nodes.every(n => n.depth == depth));
+    let r = 0;
+
+    for (let i=0; i<edgeset.length - 1; i++){
+        let e1bounds = edgeset[i].nodes.map(n => graph.nodeIndex[depth].indexOf(n))
+
+        let mine1 = Math.min.apply(0, e1bounds)
+        let maxe1 = Math.max.apply(0, e1bounds)
+        
+        for (let j=i+1; j<edgeset.length; j++){
+
+            if (edgeset[j].nodes.some(n => edgeset[i].nodes.includes(n))) continue;
+
+            let e2bounds = edgeset[j].nodes.map(n => graph.nodeIndex[depth].indexOf(n))
+
+            let mine2 = Math.min.apply(0, e2bounds)
+            let maxe2 = Math.max.apply(0, e2bounds)
+
+            if (maxe2 < mine1) {
+            }
+            else if (mine1 < mine2 && maxe1 < maxe2) {
+                r += 1; 
+            }
+            else if (mine1 > mine2 && maxe1 > maxe2) {
+                r += 1;
+            }
+        }
+    }
+
+    return r;
+}
+
+let count_edge_length_at_depth = (graph, depth) => {
+    let r = 0;
+    
+    for (let edge of graph.edges){
+        let n1 = graph.nodeIndex[0].indexOf(edge.nodes[0])
+        let n2 = graph.nodeIndex[0].indexOf(edge.nodes[1])
+        r += Math.abs(n1 - n2)
+    }
+
+    return r;
+}
+
+let sortAndDraw = (svg, graph) => {
+    let max_iterations = 5;
+
+    let bestcrossings = Infinity;
+    let bestlength = Infinity;
+
+    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " 600")
+
+    for (let i = 0; i < max_iterations; i++){
+
+        let g = svg.append("g")
+            // .attr("transform-origin", "center")
+            // .attr("transform", "translate(220, " + (-400 + iteration_distance * i) + ")rotate(-90)")
+            .attr("transform", "translate(0, " + (iteration_distance * i) + ")")
+
+        let maxdepth = Math.max.apply(0, graph.nodes.map(d => d.depth))
+        for (let depth = 0; depth <= maxdepth; depth ++){
+
+            let originalSorting = graph.nodeIndex[depth].map(n => n.id)
+
+            for (let node of graph.nodeIndex[depth]){
+                let incidentEdges = graph.edges.filter(e => e.nodes.some(n => n == node))
+                let otherindices = [];
+
+                for (let edge of incidentEdges){
+                    let othernode = edge.nodes.find(n => n != node)
+                    otherindices.push(graph.nodeIndex[othernode.depth].indexOf(othernode))
+                }
+
+                if (otherindices.length == 0) node.w = 0;
+                else node.w = otherindices.reduce((a, b) => a + b)/otherindices.length;
+            }
+
+            graph.nodeIndex[depth].sort((a, b) => a.w > b.w)
+            if (count_crossings_at_depth(graph, depth) < bestcrossings){
+                bestcrossings = count_crossings_at_depth(graph, depth);
+                bestlength = count_edge_length_at_depth(graph, depth)
+            } else if (count_crossings_at_depth(graph, depth) <= bestcrossings && count_edge_length_at_depth(graph, depth) < bestlength) {
+                bestcrossings = count_crossings_at_depth(graph, depth);
+                bestlength = count_edge_length_at_depth(graph, depth)
+            } else {
+                graph.nodeIndex[depth].sort((a, b) => originalSorting.indexOf(a.id) > originalSorting.indexOf(b.id))
+            }
+        }
+
+        graph.draw(g, 100, 40)
+
+        // g.selectAll("text").remove();
+
+        svg.append("text").attr("text-anchor", "start").attr("x", 100).attr("y",(iteration_distance - 20 + iteration_distance * i)).text("crossings: " + count_crossings_at_depth(graph, 0))
+        svg.append("text").attr("text-anchor", "start").attr("x", 100).attr("y",(iteration_distance - 10 + iteration_distance * i)).text("edge length: " + count_edge_length_at_depth(graph, 0))
+
+        // for (let node of graph.nodes){
+        //     let n = g.select("#g-" + node.id).node().getBoundingClientRect()
+
+        //     svg.append("text")
+        //         .attr("x", n.x - svg.node().getBoundingClientRect().x)
+        //         .attr("y", n.y - svg.node().getBoundingClientRect().y + 20)
+        //         .text(node.name)
+
+        //     svg.append("text")
+        //         .attr("x", n.x - svg.node().getBoundingClientRect().x)
+        //         .attr("y", n.y - svg.node().getBoundingClientRect().y + 30)
+        //         .text(Math.round(node.w * 100)/100)
+        // }
+    }
+}
+
+let drawHypergraph = (svg, graph) => {
+
+    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+
+    let g = svg.append("g")
+        // .attr("transform-origin", "center")
+        // .attr("transform", "translate(-50, " + (-100) + ")rotate(-90)")
+        // .attr("transform", "translate(" + (0) + ")")
+
+    let line = d3.line().curve(d3.curveBasis);
+
+    graph.draw(g, 100, 40)
+
+    for (let hyperedge of graph.hyperedges){
+        let center = hyperedge.nodes.map(n => graph.nodeIndex[0].indexOf(n)).reduce((a, b) => a + b)/hyperedge.nodes.length;
+
+        g.append("circle")
+            .attr("cy", 60)
+            .attr("cx", 30 + center * 40)
+            .attr("r", 3)
+            .attr("fill", "red")
+
+        for (let node of hyperedge.nodes){
+            g.append("path")
+                .attr("fill", "none")
+                .attr("stroke", "red")
+                .attr("stroke-width", 3)
+                .attr("d", () => {
+                    return line([
+                        [graph.nodeIndex[0].indexOf(node) * 40 + 30, node.depth*50 + 20],
+                        [graph.nodeIndex[0].indexOf(node) * 40 + 30, node.depth*50 + 30],
+                        [30 + center * 40, 60]
+                    ])
+                })
+        }
+    }
+
+    // g.selectAll("text").remove();
+
+    // for (let node of graph.nodes){
+    //     let n = svg.select("#g-" + node.id).node().getBBox()
+    //     let gn = g.node().getBBox()
+    //     let gnn = g.select("#g-" + node.id).node().getBBox()
+    //     console.log(gn, n, gnn)
+
+    //     svg.append("text")
+    //         .attr("x", gn.x)
+    //         .attr("y", gn.y + 20)
+    //         .text(node.name)
+    // }
+}
+
+let drawBox = (box, split_type, graph_type = "simple1") => {
+
+    newbox = originalrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").text("original:")
+
+    let svg = newbox.append("svg")
+        .attr("class", "boxelem")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    let graph = genGraph(graph_type);
+
+    drawHypergraph(svg, graph);
+
+    switch(split_type){ 
+        case "split1": split1(graph); break;
+        case "split2": split2(graph); break;
+        case "aggregate1": aggregate1(graph); break;
+        case "addnode": addnode1(graph); break;
+    }
+
+    newbox = transformrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").text("transform:")
+
+    svg = newbox.append("svg")
+        .attr("class", "boxelem")
+    
+    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+
+    g = svg.append("g")
+    graph.draw(g, 100, 40)
+
+    newbox = iterationrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").text("iterations:")
+
+    svg = newbox.append("svg")
+        .attr("class", "boxelem")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + svgwidth + " " + svgheight)
+
+    sortAndDraw(svg, graph);
+
+    newbox = finalrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").text("final:")
+
+    switch(split_type){
+        case "split1": desplit1(graph); break;
+        case "split2": desplit1(graph); break;
+        case "aggregate1": disaggregate(graph); break;
+        case "addnode": disnode(graph); break;
+    }
+
+    svg = newbox.append("svg")
+        .attr("class", "boxelem")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    drawHypergraph(svg, graph);
+}
+
+let svgheight = 700
+let svgwidth = 320
+let singlesvgheight = 150
+let iteration_distance = 120
+
+let row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+// split 1
+
+let box = row.append("div").attr("class", "col-sm")
+
+box.append("div").attr("class", "boxelem").html("<h3>Split 1:</h3><br>Every hyperedge is split into all the combinations of edges between its nodes. <br><br>")
+
+drawBox(box, "split1");
+
+// // split 2:
+
+box = row.append("div").attr("class", "col-sm")
+
+box.append("div").attr("class", "boxelem").html("<h3>Split 2:</h3><br>Every hyperedge is split into N - 1 edges (N = nodes involved in a hyperedge) <br><br>")
+
+drawBox(box, "split2")
+
+// // aggregate:
+
+box = row.append("div").attr("class", "col-sm")
+
+box.append("div").attr("class", "boxelem").html(`<h3>Aggregate 1:</h3><br>Every edge (or hyperedge) e is transformed into a metanode, which aggregates all nodes involved in e. 
+     Nodes are allowed to exist as children of more than one metanode.<br><br>
+     <b>Doubt:</b> how do we handle going back to the original representation?<br><br>`)
+
+drawBox(box, "aggregate1")
+
+// // addnodes
+
+box = row.append("div").attr("class", "col-sm")
+
+box.append("div").attr("class", "boxelem").html("<h3>Add centroid:</h3><br> Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge. <br><br>")
+
+drawBox(box, "addnode")
+
+// // ROW 2
+
+d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+
+row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "split1", "simple2");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "split2", "simple2");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "aggregate1", "simple2");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "addnode", "simple2");
+
+// ROW 3
+
+d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "split1", "simple3");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "split2", "simple3");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "aggregate1", "simple3");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "addnode", "simple3");
+
+// ROW 4
+
+d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "split1", "simple4");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "split2", "simple4");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "aggregate1", "simple4");
+
+box = row.append("div").attr("class", "col-sm")
+
+drawBox(box, "addnode", "simple4");
+
+</script>

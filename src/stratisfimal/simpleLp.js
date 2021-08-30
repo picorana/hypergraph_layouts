@@ -185,8 +185,11 @@ class SimpleLp {
 
     addBendinessReductionToMinimize(){
         for (let e of this.g.edges){
+            if (e.value == undefined) e.value = 1;
             // if (this.isSameRankEdge(e)) continue;
-            if (!this.model.minimize.includes("bend_" + e.nodes[0].id + "_" + e.nodes[1].id)) this.model.minimize +=  this.options.bendiness_reduction_weight + " bend_" + e.nodes[0].id + "_" + e.nodes[1].id + " + "
+            if (!this.model.minimize.includes("bend_" + e.nodes[0].id + "_" + e.nodes[1].id)) 
+                
+                this.model.minimize +=  (this.options.bendiness_reduction_weight * e.value) + " bend_" + e.nodes[0].id + "_" + e.nodes[1].id + " + "
         }
         // this.model.minimize = this.model.minimize.substring(0, this.model.minimize.length - 2) 
     }
