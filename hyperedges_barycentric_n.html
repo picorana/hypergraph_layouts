@@ -99,6 +99,8 @@ let drawBox = (box, split_type, graph_type = "simple1") => {
         case "addnode": addnode1(graph); break;
     }
 
+    graph.addAnchors();
+
     time_to_transform = new Date() - start_time
 
     newbox = transformrow.append("div").attr("class", "col-sm")
@@ -107,10 +109,10 @@ let drawBox = (box, split_type, graph_type = "simple1") => {
     svg = newbox.append("svg")
         .attr("class", "boxelem")
     
-    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+    if (graph.nodes.length > 5) svg.attr("viewBox", "0 0 " + graph.nodes.length * 50 + " " + singlesvgheight)
 
     g = svg.append("g")
-    graph.draw(g, 100, 40)
+    graph.draw(g, 50, 40)
 
     newbox = iterationrow.append("div").attr("class", "col-sm")
     newbox.append("div").attr("class", "boxelem").text("iterations:")
@@ -132,7 +134,7 @@ let drawBox = (box, split_type, graph_type = "simple1") => {
     switch(split_type){
         case "split1": desplit1(graph); break;
         case "split2": desplit1(graph); break;
-        case "aggregate1": disaggregate(graph); break;
+        // case "aggregate1": disaggregate(graph); break;
         case "aggregate2": desplit1(graph); disaggregate(graph); break;
         case "addnode": disnode(graph); break;
     }
@@ -151,10 +153,10 @@ let drawBox = (box, split_type, graph_type = "simple1") => {
     newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
 }
 
-let svgheight = 700
+let svgheight = 1300
 let svgwidth = 320
-let singlesvgheight = 150
-let iteration_distance = 120
+let singlesvgheight = 250
+let iteration_distance = svgheight/5
 
 let time_to_transform = 0
 let time_to_sort = 0
@@ -172,17 +174,17 @@ let box = row.append("div").attr("class", "col-sm")
 
 box.append("div").attr("class", "boxelem").html("<h3>Split 1:</h3><br>Every hyperedge is split into all the combinations of edges between its nodes. <br><br>")
 
-drawBox(box, "split1");
+drawBox(box, "split1", "n2");
 
-// // split 2:
+// split 2:
 
 box = row.append("div").attr("class", "col-sm")
 
 box.append("div").attr("class", "boxelem").html("<h3>Split 2:</h3><br>Every hyperedge is split into N - 1 edges (N = nodes involved in a hyperedge) <br><br>")
 
-drawBox(box, "split2")
+drawBox(box, "split2", "n2")
 
-// // aggregate:
+// aggregate:
 
 box = row.append("div").attr("class", "col-sm")
 
@@ -190,111 +192,111 @@ box.append("div").attr("class", "boxelem").html(`<h3>Aggregate 1:</h3><br>Every 
      Nodes are allowed to exist as children of more than one metanode.<br><br>
      <b>Doubt:</b> how do we handle going back to the original representation?<br><br>`)
 
-drawBox(box, "aggregate1")
+drawBox(box, "aggregate1", "n2")
 
-// aggregate 2:
+// // aggregate 2:
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-box.append("div").attr("class", "boxelem").html(`<h3>Aggregate 2:</h3><br>Uses Navlakha et al.'s graph summarization algorithm (slightly modified to work with hyperedges). Nodes aren't allowed to exist in two metanodes.<br><br>
-     <b>Doubt:</b> how do we handle going back to the original representation?<br><br>`)
+// box.append("div").attr("class", "boxelem").html(`<h3>Aggregate 2:</h3><br>Uses Navlakha et al.'s graph summarization algorithm (slightly modified to work with hyperedges). Nodes aren't allowed to exist in two metanodes.<br><br>
+//      <b>Doubt:</b> how do we handle going back to the original representation?<br><br>`)
 
-drawBox(box, "aggregate2")
+// drawBox(box, "aggregate2", "n1")
 
-// // addnodes
+// // // addnodes
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-box.append("div").attr("class", "boxelem").html("<h3>Add centroid:</h3><br> Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge. <br><br>")
+// box.append("div").attr("class", "boxelem").html("<h3>Add centroid:</h3><br> Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge. <br><br>")
 
-drawBox(box, "addnode")
+// drawBox(box, "addnode", "n1")
 
 // // ROW 2
 
-d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+// d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
 
-row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "split1", "simple2");
+// drawBox(box, "split1", "simple2");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "split2", "simple2");
+// drawBox(box, "split2", "simple2");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "aggregate1", "simple2");
+// drawBox(box, "aggregate1", "simple2");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "aggregate2", "simple2");
+// drawBox(box, "aggregate2", "simple2");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "addnode", "simple2");
+// drawBox(box, "addnode", "simple2");
 
-// ROW 3
+// // ROW 3
 
-d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
-row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+// row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "split1", "simple3");
+// drawBox(box, "split1", "simple3");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "split2", "simple3");
+// drawBox(box, "split2", "simple3");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "aggregate1", "simple3");
+// drawBox(box, "aggregate1", "simple3");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "aggregate2", "simple3");
+// drawBox(box, "aggregate2", "simple3");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "addnode", "simple3");
+// drawBox(box, "addnode", "simple3");
 
-// ROW 4
+// // ROW 4
 
-d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
-row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+// row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "split1", "simple4");
+// drawBox(box, "split1", "simple4");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "split2", "simple4");
+// drawBox(box, "split2", "simple4");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "aggregate1", "simple4");
+// drawBox(box, "aggregate1", "simple4");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "aggregate2", "simple4");
+// drawBox(box, "aggregate2", "simple4");
 
-box = row.append("div").attr("class", "col-sm")
+// box = row.append("div").attr("class", "col-sm")
 
-drawBox(box, "addnode", "simple4");
+// drawBox(box, "addnode", "simple4");
 
 </script>

@@ -244,7 +244,7 @@ class Graph {
                     return line([
                         [getNodeCoordX(edge.nodes[0]), getNodeCoordY(edge.nodes[0])], 
                         [getNodeCoordX(edge.nodes[0]), getNodeCoordY(edge.nodes[0]) + m + s1], 
-                        [getNodeCoordX(edge.nodes[1]), getNodeCoordY(edge.nodes[1]) + m + s1],
+                        [getNodeCoordX(edge.nodes[1]), getNodeCoordY(edge.nodes[1]) + m + s2],
                         [getNodeCoordX(edge.nodes[1]), getNodeCoordY(edge.nodes[1])]
                     ])
                 })

@@ -1,0 +1,359 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/d3.min.js"></script>
+  <script src="lib/glpk.min.js"></script>
+  <!-- <script src="lib/reorder.min.js"></script> -->
+  <script src="lib/d3-interpolate.min.js"></script>
+  <script src="lib/nouislider.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+
+  <script src="https://code.easypz.io/easypz.latest.min.js"></script>
+
+  <link rel="stylesheet" href="lib/nouislider.min.css">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+
+  <script src="src/stratisfimal/simplegraph.js"></script>
+  <script src="src/stratisfimal/simpleLp.js"></script>
+  <script src="src/utils.js"></script>
+  <script src="src/ProblemList.js"></script>
+  <script src="src/ProblemlistSorter.js"></script>
+  <script src="src/ProblemlistPainter.js"></script>
+  <script src="src/CollabParser.js"></script>
+  <script src="src/barycentric/GraphSummarization.js"></script>
+  <script src="src/barycentric/hyperedge_split_functions.js"></script>
+  <script src="src/barycentric/metrics.js"></script>
+  <script src="src/barycentric/sort_and_draw.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
+  <style>
+      text {
+          font-family: Arial;
+          font-size: x-small;
+          color: gray;
+          text-anchor: middle;
+      }
+
+      svg {
+          /* padding: 5%; */
+      }
+
+      .optionbox {
+          position: fixed;
+          top: 0px;
+          background-color: #b2c6d7;
+          padding: 1%;
+          font-size: 0.7em;
+          display: none;
+      }
+
+      .btn {
+          font-size: 0.8em;
+          padding: .175rem .75rem;
+      }
+
+      .noUi-target {
+          scale: 70%;
+      }
+
+      .boxelem {
+          display: block;
+      }
+
+      body {
+          overflow: scroll;
+          width: 300%;
+      }
+
+  </style>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+
+let drawInriaCollabs = (box, split_type, draw_iterations = false) => {
+    d3.json("./data/inria-collab.json").then( data => {
+        newbox = originalrow.append("div").attr("class", "col-sm")
+        newbox.append("div").attr("class", "boxelem").html("<h3>" + split_type + "<h3>")
+        newbox.append("div").attr("class", "boxelem").text("original:")
+
+        let svg = newbox.append("svg")
+            .attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+        let graph = new Graph();
+        graph.hyperedges = [];
+
+        // splits the graph. Note: this merges all nodes with the same name
+        for (let year in data){
+            if (year < 1999) continue;
+
+            for (let collab in data[year]){
+                let collabarr = collab.split(":")
+                if (collabarr.length < 2) continue;
+
+                for (let group of collabarr){
+                    let gname = group.split("(")[0]
+                    if (graph.nodes.find(n => n.name == gname)) continue;
+                    else graph.addNode({depth: 0, name: gname});
+                }
+
+                let involvedNodes = graph.nodes.filter(n => collabarr.map(c => c.split("(")[0]).includes(n.name))
+                if (involvedNodes.length == 2) graph.addEdge({nodes: involvedNodes})
+                else graph.hyperedges.push({nodes: involvedNodes})
+            }
+            break;
+        }
+
+        drawHypergraph(svg, graph);
+
+        let start_time = new Date()
+
+        switch(split_type){ 
+            case "split1": split1(graph); break;
+            case "split2": split2(graph); break;
+            case "aggregate1": aggregate1(graph); break;
+            case "aggregate2": aggregate2(graph); split2(graph); break;
+            case "addnode": addnode1(graph); break;
+        }
+
+        time_to_transform = new Date() - start_time
+
+        newbox = transformrow.append("div").attr("class", "col-sm")
+        newbox.append("div").attr("class", "boxelem").text("transform:")
+
+        svg = newbox.append("svg")
+            .attr("class", "boxelem")
+        
+        if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+
+        g = svg.append("g")
+        graph.draw(g, 100, 40)
+
+        if (draw_iterations) {
+            newbox = iterationrow.append("div").attr("class", "col-sm")
+            newbox.append("div").attr("class", "boxelem").text("iterations:")
+
+            svg = newbox.append("svg")
+                .attr("class", "boxelem")
+                .attr("preserveAspectRatio", "xMinYMin meet")
+                .attr("viewBox", "0 0 " + svgwidth + " " + svgheight)
+        }
+
+        start_time = new Date()
+
+        sortAndDraw(svg, graph, draw_iterations);
+
+        time_to_sort = new Date() - start_time
+
+        newbox = finalrow.append("div").attr("class", "col-sm")
+        newbox.append("div").attr("class", "boxelem").text("final:")
+
+        switch(split_type){
+            case "split1": desplit1(graph); break;
+            case "split2": desplit1(graph); break;
+            case "aggregate1": disaggregate(graph); break;
+            case "aggregate2": desplit1(graph); disaggregate(graph); break;
+            case "addnode": disnode(graph); break;
+        }
+
+        svg = newbox.append("svg")
+            .attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+        drawHypergraph(svg, graph);
+
+        newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_crossings_at_depth(graph, 0, true))
+        newbox.append("div").attr("class", "boxelem").text("edge length 1: " + count_edge_length_at_depth(graph, 0, true))
+        newbox.append("div").attr("class", "boxelem").text("iterations to convergence: " + iterations_to_convergence)
+        newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
+        newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
+    })
+}
+
+let svgheight = 700
+let svgwidth = 500
+let singlesvgheight = 500
+let iteration_distance = 120
+
+let time_to_transform = 0
+let time_to_sort = 0
+let iterations_to_convergence = 0
+
+let row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+// split 1
+
+let box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Split 1</h3>")
+
+drawInriaCollabs(box, "split1");
+
+
+box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Split 2</h3>")
+
+drawInriaCollabs(box, "split2");
+
+
+box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Aggregate 1</h3>")
+
+drawInriaCollabs(box, "aggregate1");
+
+
+box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Aggregate 2</h3>")
+
+drawInriaCollabs(box, "aggregate2");
+
+
+box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Addnode</h3>")
+
+drawInriaCollabs(box, "addnode");
+
+// // split 2:
+
+// box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Split 2:</h3><br>Every hyperedge is split into N - 1 edges (N = nodes involved in a hyperedge) <br><br>")
+
+// drawBox(box, "split2")
+
+// // // aggregate:
+
+// box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html(`<h3>Aggregate 1:</h3><br>Every edge (or hyperedge) e is transformed into a metanode, which aggregates all nodes involved in e. 
+//      Nodes are allowed to exist as children of more than one metanode.<br><br>
+//      <b>Doubt:</b> how do we handle going back to the original representation?<br><br>`)
+
+// drawBox(box, "aggregate1")
+
+// // aggregate 2:
+
+// box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html(`<h3>Aggregate 2:</h3><br>Uses Navlakha et al.'s graph summarization algorithm (slightly modified to work with hyperedges). Nodes aren't allowed to exist in two metanodes.<br><br>
+//      <b>Doubt:</b> how do we handle going back to the original representation?<br><br>`)
+
+// drawBox(box, "aggregate2")
+
+// // // addnodes
+
+// box = row.append("div").attr("class", "col-sm")
+
+// box.append("div").attr("class", "boxelem").html("<h3>Add centroid:</h3><br> Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge. <br><br>")
+
+// drawBox(box, "addnode")
+
+// // // ROW 2
+
+// d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+
+// row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "split1", "simple2");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "split2", "simple2");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "aggregate1", "simple2");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "aggregate2", "simple2");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "addnode", "simple2");
+
+// // ROW 3
+
+// d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+// row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "split1", "simple3");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "split2", "simple3");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "aggregate1", "simple3");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "aggregate2", "simple3");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "addnode", "simple3");
+
+// // ROW 4
+
+// d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+// row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+// finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "split1", "simple4");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "split2", "simple4");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "aggregate1", "simple4");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "aggregate2", "simple4");
+
+// box = row.append("div").attr("class", "col-sm")
+
+// drawBox(box, "addnode", "simple4");
+
+</script>
