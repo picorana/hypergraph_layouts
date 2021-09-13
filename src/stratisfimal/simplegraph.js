@@ -139,7 +139,8 @@ class Graph {
 
         let getNodeCoordY = (node) => (20 + nodeXDistance * (node.depth));
         let getNodeCoordX = (node) => {
-            if (node.y != undefined) return 20 + node.y * nodeYDistance;
+            // if (node.y != undefined) console.log("aaa")
+            if (node.y != undefined) return node.y;
             else return parseFloat(30 + this.nodeIndex[node.depth].indexOf(node) * nodeYDistance)
         };
         let line = d3.line().curve(d3.curveBasis);

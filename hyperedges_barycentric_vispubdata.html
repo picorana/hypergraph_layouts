@@ -66,7 +66,8 @@
       }
 
       body {
-          width: 130%;
+          overflow: scroll;
+          width: 100%;
       }
 
   </style>
@@ -81,13 +82,16 @@
 
 <script>
 
-let drawBox = async function (box, split_type, graph_type = "simple1") {
+var hpccWasm = window["@hpcc-js/wasm"];
 
-    newbox = descriptionrow.append("div").attr("class", "col-sm")
-    newbox.append("div").attr("class", "boxelem").html("<h2>" + split_type + "</h2>")
-    newbox.append("div").attr("class", "boxelem").html(method_descriptions[split_type])
+
+
+let drawInriaCollabs = async function (box, split_type, draw_iterations = false) {
+
+    let data = await d3.json("./data/visPubData/vispubdata500_collab.json")
 
     newbox = originalrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").html("<h3>" + split_type + "<h3>")
     newbox.append("div").attr("class", "boxelem").text("original:")
 
     let svg = newbox.append("svg")
@@ -95,7 +99,42 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
 
-    let graph = genGraph(graph_type);
+    let graph = new Graph();
+    graph.hyperedges = [];
+
+    // splits the graph. Note: this merges all nodes with the same name
+    for (let year in data){
+        if (year < yearsVisualized[0] || year > yearsVisualized[1]) continue;
+
+        for (let d = 0; d < (yearsVisualized[1] - yearsVisualized[0]); d++){
+            graph.nodeIndex.push([])
+        }
+
+        for (let collab in data[year]){
+            let collabarr = collab.split(":")
+            if (collabarr.length < 2) continue;
+            if (data[year][collab] < collabcutoff) continue;
+
+            for (let group of collabarr){
+                let gname = group.split("(")[0]
+                if (graph.nodes.find(n => n.name == gname && n.depth == year - yearsVisualized[0])) continue;
+                else graph.addNode({depth: year - yearsVisualized[0], name: gname});
+            }
+
+            let involvedNodes = graph.nodes.filter(n => n.depth == year - yearsVisualized[0] && collabarr.map(c => c.split("(")[0]).includes(n.name))
+            if (involvedNodes.length == 2) graph.addEdge({nodes: involvedNodes})
+            else graph.hyperedges.push({nodes: involvedNodes})
+        }
+
+        if (year > yearsVisualized[0]){
+            let d = year - yearsVisualized[0]
+            for (let node of graph.nodeIndex[d]){
+                if (graph.nodeIndex[d - 1].find(n => n.name == node.name)) {
+                    graph.addEdge({nodes: [graph.nodeIndex[d - 1].find(n => n.name == node.name), node]})
+                }
+            }
+        }
+    }
 
     drawHypergraph(svg, graph);
 
@@ -107,13 +146,12 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         case "aggregate1": aggregate1(graph); break;
         case "aggregate2": aggregate2(graph); split2(graph); break;
         case "addnode": addnode1(graph); break;
-        case "bipartite": bipartite(graph); break;
     }
 
     time_to_transform = new Date() - start_time
 
     newbox = transformrow.append("div").attr("class", "col-sm")
-    newbox.append("div").attr("class", "boxelem").text("transform: " + graph.edges.length + " edges")
+    newbox.append("div").attr("class", "boxelem").text("transform:")
 
     svg = newbox.append("svg")
         .attr("class", "boxelem")
@@ -121,19 +159,30 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
     if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
 
     g = svg.append("g")
-    graph.draw(g, 100, 40)
+    graph.draw(g, nodeYdist, nodeXdist)
 
-    newbox = iterationrow.append("div").attr("class", "col-sm")
-    newbox.append("div").attr("class", "boxelem").text("iterations:")
+    if (draw_iterations) {
+        newbox = iterationrow.append("div").attr("class", "col-sm")
+        newbox.append("div").attr("class", "boxelem").text("iterations:")
 
-    svg = newbox.append("svg")
-        .attr("class", "boxelem")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 " + svgwidth + " " + svgheight)
+        svg = newbox.append("svg")
+            .attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + svgwidth + " " + svgheight)
+    }
 
     start_time = new Date()
 
-    sortAndDraw(svg, graph);
+    // sortAndDraw(svg, graph, draw_iterations);    
+
+    let gtd = graphToDot(graph);
+
+    let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
+    for (let node of graph.nodes){
+        let t = s.slice(s.search(node.id))
+        let m = t.slice(t.search("cx")).split('"')
+        node.y = parseInt(m[1])/12
+    }
 
     time_to_sort = new Date() - start_time
 
@@ -146,7 +195,6 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         case "aggregate1": disaggregate(graph); break;
         case "aggregate2": desplit1(graph); disaggregate(graph); break;
         case "addnode": disnode(graph); break;
-        case "bipartite": bipartiteback(graph); break;
     }
 
     svg = newbox.append("svg")
@@ -156,152 +204,112 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
 
     drawHypergraph(svg, graph);
 
-    newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_crossings_at_depth(graph, 0, true))
+    newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_all_crossings(graph, true))
     newbox.append("div").attr("class", "boxelem").text("edge length 1: " + count_edge_length_at_depth(graph, 0, true))
     newbox.append("div").attr("class", "boxelem").text("iterations to convergence: " + iterations_to_convergence)
     newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
     newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
-    if (split_type == "aggregate1" || split_type == "aggregate2") newbox.append("div").attr("class", "boxelem").text("time to postprocess: " + time_to_postprocess + " ms")
 
-    // graphviz
-    newbox = graphvizrow.append("div").attr("class", "col-sm")
-    newbox.append("div").attr("class", "boxelem").html("<h3>graphviz: " + split_type + "</h3>")
-    graph = genGraph(graph_type);
-
-    switch(split_type){ 
-        case "split1": split1(graph); break;
-        case "split2": split2(graph); break;
-        case "aggregate1": aggregate1(graph); break;
-        case "aggregate2": aggregate2(graph); split2(graph); break;
-        case "addnode": addnode1(graph); break;
-        case "bipartite": bipartite(graph); break;
-    }
-
-    let gtd = graphToDot(graph);
-
-    start_time = new Date()
-    let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
-    for (let node of graph.nodes){
-        let t = s.slice(s.search(node.id))
-        let m = t.slice(t.search("cx")).split('"')
-        node.y = parseInt(m[1])/2.5
-    }
-    for (let nindex of graph.nodeIndex){
-        nindex.sort((a, b) => a.y > b.y)
-    }
-    for (let n of graph.nodeIndex[0]){
-        n.y = undefined
-    }
-    console.log(graph.nodeIndex[0])
-
-    time_to_sort = new Date() - start_time
-
-    newbox.append("div").attr("class", "boxelem").html("transform: " + graph.edges.length + " edges")
-
-    svg = newbox.append("svg")
-        .attr("class", "boxelem")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
-    
-    graph.draw(svg, nodeYdist, nodeXdist);
-
-    switch(split_type){
-        case "split1": desplit1(graph); break;
-        case "split2": desplit1(graph); break;
-        case "aggregate1": disaggregate(graph); break;
-        case "aggregate2": desplit1(graph); disaggregate(graph); break;
-        case "addnode": disnode(graph); break;
-        case "bipartite": bipartiteback(graph); break;
-    }
-
-    newbox.append("div").attr("class", "boxelem").html("final:")
-
-
-    svg = newbox.append("svg")
-        .attr("class", "boxelem")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
-
-    drawHypergraph(svg, graph)
-
-    newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_crossings_at_depth(graph, 0, true))
-    newbox.append("div").attr("class", "boxelem").text("edge length 1: " + count_edge_length_at_depth(graph, 0, true))
-    newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
-    newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
-    if (split_type == "aggregate1" || split_type == "aggregate2") newbox.append("div").attr("class", "boxelem").text("time to postprocess: " + time_to_postprocess + " ms")
 }
 
-var hpccWasm = window["@hpcc-js/wasm"];
+let svgheight = 1500
+let svgwidth = 3000
+let singlesvgheight = 2000
+let iteration_distance = svgheight/5
 
-let svgheight = 700
-let svgwidth = 320
-let singlesvgheight = 150
-let iteration_distance = 120
-
-let nodeYdist = 70;
+let nodeYdist = 100;
 let nodeXdist = 20;
-let drawNodeLabels = true;
+let drawNodeLabels = false;
+
+let collabcutoff = 1;
+
+let yearsVisualized = [2005, 2015]
 
 let time_to_transform = 0
 let time_to_sort = 0
-let time_to_postprocess = 0
 let iterations_to_convergence = 0
 
-let methods = ["split1", "split2", "aggregate1", "aggregate2", "addnode", "bipartite"]
-let inputgraphs = ["simple1", "simple2", "simple3", "simple4"]
+let row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+let finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
 
-let method_descriptions = {
-    "split1" : "Every hyperedge is split into all the combinations of edges between its nodes.",
-    "split2" : "Every hyperedge is split into N - 1 edges (N = nodes involved in a hyperedge)",
-    "aggregate1" : `Every edge (or hyperedge) e is transformed into a metanode, which aggregates all nodes involved in e. 
-      Nodes are allowed to exist as children of more than one metanode.`,
-    "aggregate2" : `Uses Navlakha et al.'s graph summarization algorithm (slightly modified to work with hyperedges). Nodes aren't allowed to exist in two metanodes.`,
-    "addnode" : "Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge.",
-    "bipartite" : "Just a test to see if the result differs from Aggregate 1."
-}
+// split 1
 
+let box = row.append("div").attr("class", "col-sm")
 
-let runAll = async function() {
+// box.append("div").attr("class", "boxelem").html("<h3>Split 1</h3>")
 
-    for (let inputgraph of inputgraphs){
-
-        d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
-
-        row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        descriptionrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        graphvizrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-
-        for (let method of methods){
-            let box = row.append("div").attr("class", "col-sm")
-
-            await drawBox(box, method, inputgraph);
-        }
-    }
-}
+drawInriaCollabs(box, "split1");
 
 
-// let row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-// let originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-// let transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-// let iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-// let finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-// let graphvizrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+box = row.append("div").attr("class", "col-sm")
 
-runAll()
+// box.append("div").attr("class", "boxelem").html("<h3>Split 2</h3>")
 
-// // split 1
+drawInriaCollabs(box, "split2");
 
-// let box = row.append("div").attr("class", "col-sm")
+// const dot = `
+//             digraph G {
+//                 node [shape=rect];
 
-// box.append("div").attr("class", "boxelem").html("<h3>Split 1:</h3><br>Every hyperedge is split into all the combinations of edges between its nodes. <br><br>")
+//                 subgraph cluster_0 {
+//                     style=filled;
+//                     color=lightgrey;
+//                     node [style=filled,color=white];
+//                     a0 -> a1 -> a2 -> a3;
+//                     label = "Hello";
+//                 }
 
-// drawBox(box, "split1");
+//                 subgraph cluster_1 {
+//                     node [style=filled];
+//                     b0 -> b1 -> b2 -> b3;
+//                     label = "World";
+//                     color=blue
+//                 }
 
-// // // split 2:
+//                 start -> a0;
+//                 start -> b0;
+//                 a1 -> b3;
+//                 b2 -> a3;
+//                 a3 -> a0;
+//                 a3 -> end;
+//                 b3 -> end;
+
+//                 start [shape=Mdiamond];
+//                 end [shape=Msquare];
+//             }
+//         `;
+
+//         hpccWasm.graphviz.layout(dot, "svg", "dot").then(svg => {
+//             const div = document.createElement("div")
+//             document.body.appendChild(div);
+//             div.innerHTML = svg;
+//         });
+
+
+// box = row.append("div").attr("class", "col-sm")
+
+// // box.append("div").attr("class", "boxelem").html("<h3>Aggregate 1</h3>")
+
+// drawInriaCollabs(box, "aggregate1");
+
+
+// box = row.append("div").attr("class", "col-sm")
+
+// // box.append("div").attr("class", "boxelem").html("<h3>Aggregate 2</h3>")
+
+// drawInriaCollabs(box, "aggregate2");
+
+
+// box = row.append("div").attr("class", "col-sm")
+
+// // box.append("div").attr("class", "boxelem").html("<h3>Addnode</h3>")
+
+// drawInriaCollabs(box, "addnode");
+
+// // split 2:
 
 // box = row.append("div").attr("class", "col-sm")
 
@@ -335,16 +343,8 @@ runAll()
 // box.append("div").attr("class", "boxelem").html("<h3>Add centroid:</h3><br> Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge. <br><br>")
 
 // drawBox(box, "addnode")
- 
-// // bipartite
 
-// box = row.append("div").attr("class", "col-sm")
-
-// box.append("div").attr("class", "boxelem").html("<h3>Bipartite:</h3><br> Just a test to see if the result differs from Aggregate 1. <br><br>")
-
-// drawBox(box, "bipartite")
-
-// // ROW 2
+// // // ROW 2
 
 // d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
 
@@ -373,10 +373,6 @@ runAll()
 // box = row.append("div").attr("class", "col-sm")
 
 // drawBox(box, "addnode", "simple2");
-
-// box = row.append("div").attr("class", "col-sm")
-
-// drawBox(box, "bipartite", "simple2")
 
 // // ROW 3
 
@@ -407,10 +403,6 @@ runAll()
 
 // drawBox(box, "addnode", "simple3");
 
-// box = row.append("div").attr("class", "col-sm")
-
-// drawBox(box, "bipartite", "simple3")
-
 // // ROW 4
 
 // d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
@@ -439,9 +431,5 @@ runAll()
 // box = row.append("div").attr("class", "col-sm")
 
 // drawBox(box, "addnode", "simple4");
-
-// box = row.append("div").attr("class", "col-sm")
-
-// drawBox(box, "bipartite", "simple4")
 
 </script>

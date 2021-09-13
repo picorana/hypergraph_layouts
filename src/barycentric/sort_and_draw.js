@@ -306,26 +306,20 @@ let drawHypergraph = (svg, graph) => {
         return new Set(hyperedge.nodes.map(n => n.depth)).size != 1
     }
 
-    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
 
     let g = svg.append("g")
 
     let line = d3.line().curve(d3.curveBasis);
 
-    graph.draw(g, 100, 40)
+    graph.draw(g, nodeYdist, nodeXdist)
 
     if (graph.hyperedges == undefined) return;
 
     for (let hyperedge of graph.hyperedges){
-        let hnodes = hyperedge.nodes.map(n => graph.nodeIndex[n.depth].indexOf(n))
+        let hnodes = hyperedge.nodes.map(n => n.y != undefined ? n.y : graph.nodeIndex[n.depth].indexOf(n))
         let centerx = hnodes.reduce((a, b) => a + b)/hyperedge.nodes.length;
-        let centery = (Math.max.apply(0, hnodes) - Math.min.apply(0, hnodes) + 1) * 10
-
-        // g.append("circle")
-        //     .attr("cy", centery)
-        //     .attr("cx", 30 + centerx * 40)
-        //     .attr("r", 3)
-        //     .attr("fill", "red")
+        let centery = nodeYdist * hyperedge.nodes.map(n => n.depth).reduce((a, b) => a + b)/hyperedge.nodes.length + nodeYdist*.4;
 
         for (let node of hyperedge.nodes){
             g.append("path")
@@ -333,11 +327,15 @@ let drawHypergraph = (svg, graph) => {
                 .attr("stroke", "red")
                 .attr("stroke-width", 3)
                 .attr("d", () => {
+
+                    let ny = node.y != undefined? node.y : graph.nodeIndex[node.depth].indexOf(node) * nodeXdist + 30
+                    let cx = node.y != undefined? centerx : 30 + centerx * nodeXdist
+
                     if (!is_multilevel(hyperedge)){
                         return line([
-                            [graph.nodeIndex[node.depth].indexOf(node) * 40 + 30, node.depth*50 + 20],
-                            [graph.nodeIndex[node.depth].indexOf(node) * 40 + 30, node.depth*50 + 50],
-                            [30 + centerx * 40, centery + 30]
+                            [ny, node.depth*nodeYdist + 20],
+                            [ny, node.depth*nodeYdist + 50],
+                            [cx, centery + 30]
                         ])
                     } else {
                         if (node.depth * 50 < centery){
@@ -354,5 +352,9 @@ let drawHypergraph = (svg, graph) => {
                     }
                 })
         }
+    }
+
+    if (!drawNodeLabels){
+        g.selectAll("text").remove()
     }
 }

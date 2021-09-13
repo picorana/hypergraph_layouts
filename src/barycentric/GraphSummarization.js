@@ -193,11 +193,15 @@ summarize = (graph) => {
     }
 
     graph.edges = [];
+    graph.hyperedges = [];
 
     for (let edge of Es){
         let involvedNodes = graph.nodes.filter(n => edge.nodes.includes(n) || n.childnodes.some(c => edge.nodes.includes(c)))
         if (involvedNodes.length < 2) continue;
-        else if (involvedNodes.length == 2) graph.addEdge({nodes: involvedNodes})
+        else if (involvedNodes.length == 2) {
+            if (graph.edges.find(e => new Set(e.nodes) == new Set(involvedNodes))) continue;
+            graph.addEdge({nodes: involvedNodes})
+        }
         else graph.hyperedges.push({nodes: involvedNodes})
     }
 }

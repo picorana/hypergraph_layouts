@@ -135,7 +135,7 @@ let count_edge_length_at_depth = (graph, depth, include_hyperedges = false) => {
     if (include_hyperedges) edgeset = edgeset.concat(graph.hyperedges)
     
     for (let edge of edgeset){
-        let narray = edge.nodes.map(n => graph.nodeIndex[0].indexOf(n))
+        let narray = edge.nodes.map(n => n.y == undefined? graph.nodeIndex[n.depth].indexOf(n) : n.y)
         let n1 = Math.max.apply(0, narray)
         let n2 = Math.min.apply(0, narray)
         r += Math.abs(n1 - n2)

@@ -20,10 +20,50 @@ let split2 = (graph) => {
     }
 }
 
+
+let bipartite = (graph) => {
+    graph.originalnodes = [];
+    graph.originaledges = [];
+    graph.originalhyperedges = [];
+
+    for (let node of graph.nodeIndex[0]){
+        graph.originalnodes.push(node);
+    }
+
+    for (let edge of graph.edges){
+        graph.originaledges.push(edge)
+    }
+
+    for (let edge of graph.hyperedges){
+        graph.originalhyperedges.push(edge)
+    }
+
+    graph.edges = [];
+    graph.hyperedges = [];
+
+    for (let edge of graph.originaledges){
+        let newnode = {name: edge.nodes.map(n => n.name).join(""), depth: 1, type: "aggregate"}
+        graph.addNode(newnode)
+        graph.addEdge({nodes: [edge.nodes[0], newnode]})
+        graph.addEdge({nodes: [edge.nodes[1], newnode]})
+    }
+
+    for (let h_edge of graph.originalhyperedges){
+        let newnode = {name: h_edge.nodes.map(n => n.name).join(""), depth: 1, type: "aggregate"}
+        graph.addNode(newnode)
+
+        for (let n of h_edge.nodes){
+            graph.addEdge({nodes: [n, newnode], color: "red"})
+        }
+    }
+}
+
+
 let aggregate1 = (graph) => {
 
     graph.originalnodes = [];
     graph.originaledges = [];
+    graph.originalhyperedges = [];
 
     let maxdepth = Math.max.apply(0, graph.nodes.map(n => n.depth));
 
@@ -33,6 +73,7 @@ let aggregate1 = (graph) => {
     }
     
     for (let h_edge of graph.hyperedges){
+        graph.originalhyperedges.push(h_edge);
         let cn = []
     
         for (let i = 0; i < h_edge.nodes.length; i++){
@@ -76,7 +117,6 @@ let aggregate1 = (graph) => {
 
 
     for (let d = 0; d <= maxdepth; d ++){
-        console.log(d)
         let halfnodes = graph.nodes.filter(n => n.truedepth == d + 0.5)
         
         if (halfnodes.length > 0){
@@ -103,21 +143,22 @@ let aggregate1 = (graph) => {
         }
         
     }
-
-    console.log(graph.nodeIndex)
 }
 
 let aggregate2 = (graph) => {
     graph.originalnodes = [];
     graph.originaledges = [];
+    graph.originalhyperedges = [];
 
     for (let node of graph.nodes) graph.originalnodes.push(node)
     for (let edge of graph.edges) graph.originaledges.push(edge)
+    for (let edge of graph.hyperedges) graph.originalhyperedges.push(edge)
 
     summarize(graph)
 }
 
 let disaggregate = (graph) => {
+
     for (let node of graph.originalnodes){
         let metanodes = graph.nodes.filter(n => n.childnodes != undefined).filter(n => n.childnodes.includes(node)).map(n => graph.nodeIndex[n.depth].indexOf(n))
         node.w = metanodes.reduce((a, b) => a + b)/metanodes.length;
@@ -128,12 +169,57 @@ let disaggregate = (graph) => {
     graph.removeNodes(metanodes)
 
     graph.edges = [];
+    graph.hyperedges = [];
 
     for (let edge of graph.originaledges){
         graph.addEdge(edge);
     }
 
+    for (let edge of graph.originalhyperedges){
+        graph.hyperedges.push(edge)
+    }
+
     graph.nodeIndex[0].sort((a, b) => a.w > b.w)
+
+    // postprocessing
+    let start_time = new Date();
+    let wcollection = [...new Set(graph.nodeIndex[0].map(n => n.w))]
+    for (let w of wcollection){
+        let wnodes = graph.nodeIndex[0].filter(n => n.w == w)
+        
+        let bestresult = Infinity;
+        let bestlength = Infinity;
+        let bestpermutation;
+
+        for (let permutation of permutator(wnodes)){
+            
+            graph.nodeIndex[0].sort((a, b) => {
+                if (permutation.indexOf(a) == -1 || permutation.indexOf(b) == -1) return 0;
+                if (permutation.indexOf(a) > permutation.indexOf(b)) return 1;
+                else return -1;
+            })
+
+            let curcrossings = count_all_crossings(graph, true)
+            let curlength = count_edge_length_at_depth(graph, 0)
+
+            if (curcrossings < bestresult){
+                bestresult = curcrossings;
+                bestlength = curlength;
+                bestpermutation = permutation;
+            } else if (curcrossings == bestresult && curlength < bestlength){
+                bestresult = curcrossings;
+                bestlength = curlength;
+                bestpermutation = permutation;
+            }
+        }
+
+        graph.nodeIndex[0].sort((a, b) => {
+            if (bestpermutation.indexOf(a) == -1 || bestpermutation.indexOf(b) == -1) return 0;
+            if (bestpermutation.indexOf(a) > bestpermutation.indexOf(b)) return 1;
+            else return -1;
+        })
+    }
+    time_to_postprocess = new Date() - start_time
 }
 
 let addnode1 = (graph) => {
@@ -159,4 +245,12 @@ let disnode = (graph) => {
         let edgeset = graph.edges.filter(e => e.nodes.includes(node))
         for (let edge of edgeset) graph.edges.splice(graph.edges.indexOf(edge), 1)
     }
+}
+
+let bipartiteback = (graph) => {
+    for (let n of graph.nodes.filter(n => n.type == "aggregate")){
+        graph.removeNode(n);
+    }
+    graph.edges = graph.originaledges;
+    graph.hyperedges = graph.originalhyperedges;
 }
