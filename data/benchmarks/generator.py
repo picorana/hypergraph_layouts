@@ -96,6 +96,8 @@ def export_benchmark(folder):
 
 
 if __name__ == "__main__":
+    rn.seed(0)
+    np.random.seed(0)
     # graphs_preferential_attachment = generate_preferential_attachment()
     # graphs_random = generate_random()
     # graphs_complete = generate_complete()
