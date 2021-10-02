@@ -8,7 +8,7 @@ import numpy as np
 
 def generate_preferential_attachment():
     N_nodes_range = [4, 60]
-    N_graphs_per_size = 4
+    N_graphs_per_size = 25
     p_new_node = 0.2
     graphs = []
 
@@ -27,7 +27,7 @@ def generate_preferential_attachment():
 
 def generate_random():
     N_nodes_range = [4, 60]
-    N_graphs_per_size = 4
+    N_graphs_per_size = 25
     N_hyperedges_factor = 2
     p_edge_creation = 0.2
     mean_hyperedge_size = 3
