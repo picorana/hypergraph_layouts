@@ -1,0 +1,8 @@
+digraph D {
+    Ivan -> Herbert [label="15,16"];
+    Ivan -> Diego [label="23", color="slategray"];
+    Roberto -> Herbert [label="17,18"];
+    Roberto -> Ivan [label="19,20"];
+    Diego -> Roberto [label="21", color="slategray", style=dashed, color=red, constraint=false]
+    {rank=max;}
+}
