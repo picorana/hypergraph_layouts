@@ -1,5 +1,5 @@
 // try {
-    const { count_all_crossings, count_edge_length_at_depth } = require("./metrics")
+    // const { count_all_crossings, count_edge_length_at_depth } = require("./metrics")
 // } catch (e) {}
 
 let split1 = (graph) => {
