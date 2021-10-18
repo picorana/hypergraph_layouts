@@ -105,7 +105,7 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         case "split1": split1(graph); break;
         case "split2": split2(graph); break;
         case "aggregate1": aggregate1(graph); break;
-        case "aggregate2": aggregate2(graph); split2(graph); break;
+        case "aggregate2": aggregate2(graph); split2(graph, false); break;
         case "addnode": addnode1(graph); break;
         case "bipartite": bipartite(graph); break;
     }
@@ -117,11 +117,14 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
 
     svg = newbox.append("svg")
         .attr("class", "boxelem")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
     
-    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+    // if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
 
     g = svg.append("g")
-    graph.draw(g, 100, 40)
+    // graph.draw(g, 100, 40)
+    drawHypergraph(svg, graph);
 
     newbox = iterationrow.append("div").attr("class", "col-sm")
     newbox.append("div").attr("class", "boxelem").text("iterations:")
@@ -144,7 +147,7 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         case "split1": desplit1(graph); break;
         case "split2": desplit1(graph); break;
         case "aggregate1": disaggregate(graph); break;
-        case "aggregate2": desplit1(graph); disaggregate(graph); break;
+        case "aggregate2": desplit1(graph, false); disaggregate(graph); break;
         case "addnode": disnode(graph); break;
         case "bipartite": bipartiteback(graph); break;
     }
@@ -172,7 +175,7 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         case "split1": split1(graph); break;
         case "split2": split2(graph); break;
         case "aggregate1": aggregate1(graph); break;
-        case "aggregate2": aggregate2(graph); split2(graph); break;
+        case "aggregate2": aggregate2(graph); split2(graph, false); break;
         case "addnode": addnode1(graph); break;
         case "bipartite": bipartite(graph); break;
     }
@@ -192,7 +195,6 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
     for (let n of graph.nodeIndex[0]){
         n.y = undefined
     }
-    console.log(graph.nodeIndex[0])
 
     time_to_sort = new Date() - start_time
 
@@ -209,13 +211,14 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         case "split1": desplit1(graph); break;
         case "split2": desplit1(graph); break;
         case "aggregate1": disaggregate(graph); break;
-        case "aggregate2": desplit1(graph); disaggregate(graph); break;
+        case "aggregate2": desplit1(graph, false); disaggregate(graph); break;
         case "addnode": disnode(graph); break;
         case "bipartite": bipartiteback(graph); break;
     }
 
-    newbox.append("div").attr("class", "boxelem").html("final:")
+    // if (split_type == "aggregate2") console.log(graph.originalhyperedges)
 
+    newbox.append("div").attr("class", "boxelem").html("final:")
 
     svg = newbox.append("svg")
         .attr("class", "boxelem")
@@ -248,7 +251,8 @@ let time_to_postprocess = 0
 let iterations_to_convergence = 0
 
 let methods = ["split1", "split2", "aggregate1", "aggregate2", "addnode", "bipartite"]
-let inputgraphs = ["simple1", "simple2", "simple3", "simple4"]
+// let inputgraphs = ["simple1", "simple2", "simple3", "simple4"]
+let inputgraphs = ["simple1"]
 
 let method_descriptions = {
     "split1" : "Every hyperedge is split into all the combinations of edges between its nodes.",

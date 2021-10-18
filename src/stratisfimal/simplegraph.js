@@ -233,6 +233,7 @@ class Graph {
                 .attr('fill', 'none')
                 .attr('stroke', edge.color == undefined? colors[1] : edge.color)
                 .attr('stroke-width', 3)
+                .attr('stroke-dasharray', edge.drawtype == 'dashed'? '3 3' : '')
                 .attr('d', () => {
                     let m = 0;
                     let s1 = 0;
@@ -254,18 +255,21 @@ class Graph {
         for (let depth in this.nodeIndex){
             for (let node of this.nodeIndex[depth]){
                 let g = svg.append('g')
+                    .datum(node)
                     .attr("id", "g-" + node.id)
+                    .attr("class", "gg-" + node.name)
                     .attr('transform', 'translate(' + (getNodeCoordX(node)) + ',' + getNodeCoordY(node) +')')
                     .attr('opacity', () => {return node.type == "fake"? 0.3 : 1})
 
                 g.append('circle')
                     .datum(node)
-                    .attr('class', 'node')
+                    .attr('class', 'node node-' + node.name)
                     .attr('r', 5)
                     .attr('cx', 0)
                     .attr('cy', 0)
                     .attr('stroke-width', 0)
                     .attr('fill', node.color? node.color : colors[0])
+                    .on("mouseover", () => {console.log(node.name)})
 
                 g.append('text')
                     .text(node.name)
@@ -380,6 +384,6 @@ class Graph {
     }
 }
 
-// try {
-//     module.exports = exports = Graph;
-//  } catch (e) {}
+try {
+    module.exports = exports = Graph;
+ } catch (e) {}

@@ -67,7 +67,7 @@
 
       body {
           overflow: scroll;
-          width: 150%;
+          width: 200%;
       }
 
   </style>
@@ -83,8 +83,6 @@
 <script>
 
 var hpccWasm = window["@hpcc-js/wasm"];
-
-
 
 let drawInriaCollabs = async function (box, split_type, draw_iterations = false) {
 
@@ -104,10 +102,10 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
     newbox.append("div").attr("class", "boxelem").html("<h3>" + split_type + "<h3>")
     newbox.append("div").attr("class", "boxelem").text("original:")
 
-    let svg = newbox.append("svg")
-        .attr("class", "boxelem")
-        .attr("preserveAspectRatio", "xMinYMin meet")
-        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+    // let svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    //     .attr("preserveAspectRatio", "xMinYMin meet")
+    //     .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
 
     let graph = new Graph();
     graph.hyperedges = [];
@@ -138,14 +136,29 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
         if (year > yearsVisualized[0]){
             let d = year - yearsVisualized[0]
             for (let node of graph.nodeIndex[d]){
+
                 if (graph.nodeIndex[d - 1].find(n => n.name == node.name)) {
-                    graph.addEdge({nodes: [graph.nodeIndex[d - 1].find(n => n.name == node.name), node]})
-                }
+                    graph.addEdge({weight: 10, nodes: [graph.nodeIndex[d - 1].find(n => n.name == node.name), node]})
+                } 
+                // else {
+                //                     let prevnodes = graph.nodes.filter(n => n.name == node.name && n.depth < d)
+                // if (prevnodes.length < 1) continue;
+                // let maxprevdepth = Math.max.apply(0, prevnodes.map(n => n.depth))
+                // let mprevnode = prevnodes.find(n => n.depth == maxprevdepth)
+                // graph.addEdge({nodes: [mprevnode, node], weight: 1, drawtype: "dashed"})
+                // }
+
             }
         }
     }
 
-    drawHypergraph(svg, graph);
+    // graph.addAnchors()
+
+    // for (let gname of [...new Set(graph.nodes.map(n => n.name))]){
+    //     graph.addGroup({nodes: graph.nodes.filter(n => n.name == gname)})
+    // }
+
+    // drawHypergraph(svg, graph);
 
     let start_time = new Date()
 
@@ -162,13 +175,13 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
     newbox = transformrow.append("div").attr("class", "col-sm")
     newbox.append("div").attr("class", "boxelem").text("transform: (" + graph.edges.length + " edges)")
 
-    svg = newbox.append("svg")
-        .attr("class", "boxelem")
+    // svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
     
-    if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+    // if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
 
-    g = svg.append("g")
-    graph.draw(g, nodeYdist, nodeXdist)
+    // g = svg.append("g")
+    // graph.draw(g, nodeYdist, nodeXdist)
 
     if (draw_iterations) {
         newbox = iterationrow.append("div").attr("class", "col-sm")
@@ -187,6 +200,7 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
     let gtd = graphToDot(graph);
 
     let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
+    newbox.html(s)
     for (let node of graph.nodes){
         let t = s.slice(s.search(node.id))
         let m = t.slice(t.search("cx")).split('"')
@@ -195,6 +209,16 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
     for (let nindex of graph.nodeIndex){
         nindex.sort((a, b) => a.y > b.y)
     }
+
+    // for (let d = 0; d < yearsVisualized[1] - yearsVisualized[0]; d++){
+    //     for (let node of graph.nodeIndex[d]){
+    //         let prevnodes = graph.nodes.filter(n => n.name == node.name && n.depth < d - 1)
+    //         if (prevnodes.length < 1) continue;
+    //         let maxprevdepth = Math.max.apply(0, prevnodes.map(n => n.depth))
+    //         let mprevnode = prevnodes.find(n => n.depth == maxprevdepth)
+    //         graph.addEdge({nodes: [mprevnode, node], weight: 1, drawtype: "dashed"})
+    //     }
+    // }
 
     time_to_sort = new Date() - start_time
 
@@ -218,7 +242,6 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
 
     newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_all_crossings(graph, true))
     newbox.append("div").attr("class", "boxelem").text("edge length 1: " + count_edge_length_at_depth(graph, 0, true))
-    // newbox.append("div").attr("class", "boxelem").text("iterations to convergence: " + iterations_to_convergence)
     newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
     newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
 
@@ -240,24 +263,25 @@ let init = async function () {
     await drawInriaCollabs(box, "split1");
 
 
-    box = row.append("div").attr("class", "col-sm")
+    // box = row.append("div").attr("class", "col-sm")
 
-    // box.append("div").attr("class", "boxelem").html("<h3>Split 2</h3>")
+    // // box.append("div").attr("class", "boxelem").html("<h3>Split 2</h3>")
 
-    await drawInriaCollabs(box, "split2");
+    // await drawInriaCollabs(box, "split2");
 }
 
 let svgheight = 1500
-let svgwidth = 2500
+let svgwidth = 5500
 let singlesvgheight = 1500
 let iteration_distance = svgheight/5
 
 let nodeYdist = 70;
 let nodeXdist = 20;
-let drawNodeLabels = false;
+let drawNodeLabels = true;
 
 let collabcutoff = 3;
 
+// let yearsVisualized = [2000, 2020]
 let yearsVisualized = [2000, 2020]
 
 let time_to_transform = 0

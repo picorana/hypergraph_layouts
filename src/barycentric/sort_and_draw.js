@@ -356,5 +356,19 @@ let drawHypergraph = (svg, graph) => {
 
     if (!drawNodeLabels){
         g.selectAll("text").remove()
+    } else {
+        g.selectAll("text").remove()
+        let gnames = [... new Set(graph.nodes.map(n => n.name))]
+        for (let gname of gnames){
+            let a = g.selectAll(".gg-" + gname)
+            let maxdepth = Math.max.apply(0, a.data().map(d => d.depth))
+            a.filter(b => b.depth == maxdepth).append("text")
+                .attr("y", 5)
+                .attr("x", 10)
+                .style("font-weight", "bold")
+                .style("text-anchor", "start")
+                .attr("transform", "translate(0)rotate(45)")
+                .text(gname)
+        }
     }
 }

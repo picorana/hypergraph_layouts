@@ -117,7 +117,7 @@ summarize = (graph) => {
 
     // console.log(H)
 
-    do {
+    if (H.length > 0) do {
         // console.log("H", H.map(h => h.nodes[0].id + " - " + h.nodes[1].id))
 
         let maxHval = Math.max.apply(0, H.map(el => el.score));
@@ -205,3 +205,7 @@ summarize = (graph) => {
         else graph.hyperedges.push({nodes: involvedNodes})
     }
 }
+
+try {
+    module.exports = exports = summarize;
+ } catch (e) {}

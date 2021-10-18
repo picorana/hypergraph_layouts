@@ -40,3 +40,9 @@ function permutator(inputArr) {
   
     return permute(inputArr);
   }
+
+  try {
+    module.exports = exports = {
+        permutator, median, id_cleanup
+    };
+ } catch (e) {}

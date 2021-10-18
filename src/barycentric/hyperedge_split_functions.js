@@ -1,4 +1,9 @@
+// try {
+    const { count_all_crossings, count_edge_length_at_depth } = require("./metrics")
+// } catch (e) {}
+
 let split1 = (graph) => {
+    graph.originalhyperedges = graph.hyperedges;
     for (let h_edge of graph.hyperedges){
         for (let i = 0; i < h_edge.nodes.length - 1; i++){
             for (let j = i+1; j < h_edge.nodes.length; j++){
@@ -6,18 +11,24 @@ let split1 = (graph) => {
             }
         }
     }
+    graph.hyperedges = [];
 }
 
-let desplit1 = (graph) => {
+let desplit1 = (graph, save_hyperedges = true) => {
     graph.edges = graph.edges.filter(e => e.type != "hyperedge_child")
+    if (save_hyperedges) graph.hyperedges = graph.originalhyperedges;
 }
 
-let split2 = (graph) => {
+let split2 = (graph, save_hyperedges = true) => {
+    if (save_hyperedges) graph.originalhyperedges = graph.hyperedges;
+    
     for (let h_edge of graph.hyperedges){
         for (let i = 0; i < h_edge.nodes.length - 1; i++){
             graph.addEdge({nodes: [h_edge.nodes[i], h_edge.nodes[i+1]], color: "red", type: "hyperedge_child"})
         }
     }
+    
+    graph.hyperedges = [];
 }
 
 
@@ -77,9 +88,9 @@ let aggregate1 = (graph) => {
         let cn = []
     
         for (let i = 0; i < h_edge.nodes.length; i++){
-            let n = graph.nodes.find(n => n == h_edge.nodes[i])
-            cn.push(n);
-            if (graph.nodes.includes(n)) graph.removeNode(n);
+            // let n = graph.nodes.find(n => n == h_edge.nodes[i])
+            cn.push(h_edge.nodes[i]);
+            // if (graph.nodes.includes(n)) graph.removeNode(n);
         }
     
         let d = (Math.max.apply(0, h_edge.nodes.map(n => n.depth)) + Math.min.apply(0, h_edge.nodes.map(n => n.depth)))/2
@@ -92,14 +103,12 @@ let aggregate1 = (graph) => {
         let n2 = edge.nodes[1]
         graph.addNode({name: n1.name + n2.name, depth: n1.depth == n2.depth? n1.depth : 0, childnodes: [n1, n2], type: "aggregate", w: (n1.w + n2.w)/2, truedepth: (edge.nodes[0].depth + edge.nodes[1].depth)/2});
         graph.originaledges.push(edge);
+
+        // if (n1.type != "aggregate") graph.removeNode(n1)
+        // if (n1.type != "aggregate") graph.removeNode(n2)
     }
-    
-    for (let edge of graph.edges){
-        let n1 = edge.nodes[0]
-        let n2 = edge.nodes[1]
-        if (n1.type != "aggregate") graph.removeNode(n1)
-        if (n1.type != "aggregate") graph.removeNode(n2)
-    }
+
+    graph.removeNodes(graph.nodes.filter(n => n.type != "aggregate"));
     
     graph.edges = [];
     
@@ -115,12 +124,11 @@ let aggregate1 = (graph) => {
         }
     }
 
-
     for (let d = 0; d <= maxdepth; d ++){
         let halfnodes = graph.nodes.filter(n => n.truedepth == d + 0.5)
         
         if (halfnodes.length > 0){
-            console.log(d, halfnodes)
+            // console.log(d, halfnodes)
 
             graph.nodes.filter(n => n.truedepth > d + 0.5).map(n => n.truedepth++)
 
@@ -143,6 +151,8 @@ let aggregate1 = (graph) => {
         }
         
     }
+
+    graph.hyperedges = [];
 }
 
 let aggregate2 = (graph) => {
@@ -157,10 +167,32 @@ let aggregate2 = (graph) => {
     summarize(graph)
 }
 
-let disaggregate = (graph) => {
+let disaggregate = (graph, postprocess = true) => {
+
+    let permutator = function (inputArr) {
+        var results = [];
+      
+        function permute(arr, memo) {
+          var cur, memo = memo || [];
+      
+          for (var i = 0; i < arr.length; i++) {
+            cur = arr.splice(i, 1);
+            if (arr.length === 0) {
+              results.push(memo.concat(cur));
+            }
+            permute(arr.slice(), memo.concat(cur));
+            arr.splice(i, 0, cur[0]);
+          }
+      
+          return results;
+        }
+      
+        return permute(inputArr);
+      }
 
     for (let node of graph.originalnodes){
         let metanodes = graph.nodes.filter(n => n.childnodes != undefined).filter(n => n.childnodes.includes(node)).map(n => graph.nodeIndex[n.depth].indexOf(n))
+        if (metanodes.length == 0) continue;
         node.w = metanodes.reduce((a, b) => a + b)/metanodes.length;
         graph.addNode(node);
     }
@@ -169,57 +201,61 @@ let disaggregate = (graph) => {
     graph.removeNodes(metanodes)
 
     graph.edges = [];
-    graph.hyperedges = [];
+    graph.hyperedges = graph.originalhyperedges;
 
     for (let edge of graph.originaledges){
         graph.addEdge(edge);
     }
 
-    for (let edge of graph.originalhyperedges){
-        graph.hyperedges.push(edge)
-    }
+    // for (let edge of graph.originalhyperedges){
+    //     graph.hyperedges.push(edge)
+    // }
 
     graph.nodeIndex[0].sort((a, b) => a.w > b.w)
 
-    // postprocessing
-    let start_time = new Date();
-    let wcollection = [...new Set(graph.nodeIndex[0].map(n => n.w))]
-    for (let w of wcollection){
-        let wnodes = graph.nodeIndex[0].filter(n => n.w == w)
-        
-        let bestresult = Infinity;
-        let bestlength = Infinity;
-        let bestpermutation;
-
-        for (let permutation of permutator(wnodes)){
+    if (postprocess){
+            // postprocessing
+        let start_time = new Date();
+        let wcollection = [...new Set(graph.nodeIndex[0].map(n => n.w))]
+        for (let w of wcollection){
+            let wnodes = graph.nodeIndex[0].filter(n => n.w == w)
             
+            let bestresult = Infinity;
+            let bestlength = Infinity;
+            let bestpermutation;
+
+            for (let permutation of permutator(wnodes)){
+                
+                graph.nodeIndex[0].sort((a, b) => {
+                    if (permutation.indexOf(a) == -1 || permutation.indexOf(b) == -1) return 0;
+                    if (permutation.indexOf(a) > permutation.indexOf(b)) return 1;
+                    else return -1;
+                })
+
+                let curcrossings = count_all_crossings(graph, true)
+                let curlength = count_edge_length_at_depth(graph, 0)
+
+                if (curcrossings < bestresult){
+                    bestresult = curcrossings;
+                    bestlength = curlength;
+                    bestpermutation = permutation;
+                } else if (curcrossings == bestresult && curlength < bestlength){
+                    bestresult = curcrossings;
+                    bestlength = curlength;
+                    bestpermutation = permutation;
+                }
+            }
+
             graph.nodeIndex[0].sort((a, b) => {
-                if (permutation.indexOf(a) == -1 || permutation.indexOf(b) == -1) return 0;
-                if (permutation.indexOf(a) > permutation.indexOf(b)) return 1;
+                if (bestpermutation.indexOf(a) == -1 || bestpermutation.indexOf(b) == -1) return 0;
+                if (bestpermutation.indexOf(a) > bestpermutation.indexOf(b)) return 1;
                 else return -1;
             })
-
-            let curcrossings = count_all_crossings(graph, true)
-            let curlength = count_edge_length_at_depth(graph, 0)
-
-            if (curcrossings < bestresult){
-                bestresult = curcrossings;
-                bestlength = curlength;
-                bestpermutation = permutation;
-            } else if (curcrossings == bestresult && curlength < bestlength){
-                bestresult = curcrossings;
-                bestlength = curlength;
-                bestpermutation = permutation;
-            }
         }
-
-        graph.nodeIndex[0].sort((a, b) => {
-            if (bestpermutation.indexOf(a) == -1 || bestpermutation.indexOf(b) == -1) return 0;
-            if (bestpermutation.indexOf(a) > bestpermutation.indexOf(b)) return 1;
-            else return -1;
-        })
+        time_to_postprocess = new Date() - start_time
     }
-    time_to_postprocess = new Date() - start_time
+
+    return time_to_postprocess
 }
 
 let addnode1 = (graph) => {
@@ -251,6 +287,20 @@ let bipartiteback = (graph) => {
     for (let n of graph.nodes.filter(n => n.type == "aggregate")){
         graph.removeNode(n);
     }
+
     graph.edges = graph.originaledges;
     graph.hyperedges = graph.originalhyperedges;
 }
+
+
+
+try {
+    // let utils = require("./src/utils")
+    // permutator = utils.permutator;
+    // let metrics = require("./src/barycentric/metrics")
+    // count_all_crossings = metrics.count_all_crossings;
+    // count_edge_length_at_depth = metrics.count_edge_length_at_depth;
+    module.exports = exports = {
+        split1, desplit1, split2, bipartite, aggregate1, aggregate2, addnode1, disaggregate, disnode, bipartiteback
+    };
+ } catch (e) {}

@@ -1,0 +1,707 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/d3.min.js"></script>
+  <script src="lib/glpk.min.js"></script>
+  <!-- <script src="lib/reorder.min.js"></script> -->
+  <script src="lib/d3-interpolate.min.js"></script>
+  <script src="lib/nouislider.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+
+  <link rel="stylesheet" href="lib/nouislider.min.css">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+
+  <script src="src/stratisfimal/simplegraph.js"></script>
+  <script src="src/stratisfimal/simpleLp.js"></script>
+  <script src="src/utils.js"></script>
+  <script src="src/ProblemList.js"></script>
+  <script src="src/ProblemlistSorter.js"></script>
+  <script src="src/ProblemlistPainter.js"></script>
+  <script src="src/CollabParser.js"></script>
+  <script src="src/barycentric/GraphSummarization.js"></script>
+  <!-- <script src="src/barycentric/hyperedge_split_functions.js"></script> -->
+  <!-- <script src="src/barycentric/metrics.js"></script> -->
+  <script src="src/barycentric/sort_and_draw.js"></script>
+  <script src="src/barycentric/graphToDot.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/index.min.js"></script>
+
+  <style>
+      text {
+          font-family: Arial;
+          font-size: x-small;
+          color: gray;
+          text-anchor: middle;
+      }
+
+      svg {
+          /* padding: 5%; */
+      }
+
+      .optionbox {
+          position: fixed;
+          top: 0px;
+          background-color: #b2c6d7;
+          /* padding: 1%; */
+          font-size: 0.7em;
+          display: none;
+      }
+
+      .btn {
+          font-size: 0.8em;
+          padding: .175rem .75rem;
+      }
+
+      .noUi-target {
+          scale: 70%;
+      }
+
+      .boxelem {
+          display: block;
+      }
+
+      body {
+          width: 130%;
+      }
+
+  </style>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+
+async function* makeTextFileLineIterator(fileURL) {
+    try {
+        await fetch(fileURL);
+    } catch (e) {console.log(e, fileURL)}
+
+  const utf8Decoder = new TextDecoder('utf-8');
+  const response = await fetch(fileURL);
+  const reader = response.body.getReader();
+  let { value: chunk, done: readerDone } = await reader.read();
+  chunk = chunk ? utf8Decoder.decode(chunk) : '';
+
+  const re = /\n|\r|\r\n/gm;
+  let startIndex = 0;
+  let result;
+
+  for (;;) {
+    let result = re.exec(chunk);
+    if (!result) {
+      if (readerDone) {
+        break;
+      }
+      let remainder = chunk.substr(startIndex);
+      ({ value: chunk, done: readerDone } = await reader.read());
+      chunk = remainder + (chunk ? utf8Decoder.decode(chunk) : '');
+      startIndex = re.lastIndex = 0;
+      continue;
+    }
+    yield chunk.substring(startIndex, result.index);
+    startIndex = re.lastIndex;
+  }
+  if (startIndex < chunk.length) {
+    // last line didn't end in a newline char
+    yield chunk.substr(startIndex);
+  }
+}
+
+let readGraph = async function (filename) {
+
+    let g = new Graph();
+    g.hyperedges = [];
+
+    let edgelist = {};
+    let addedsets = [];
+    let finaledgelist = {};
+
+    for await (let line of makeTextFileLineIterator(filename)) {
+        let n1id = "_" + line.split(" ")[0]
+        if (!g.nodes.find(n => n.name == n1id)) g.addNode({depth: 0, id: n1id, name: n1id})
+
+        if (edgelist[line.split(" ")[1]] == undefined) edgelist[line.split(" ")[1]] = [];
+        edgelist[line.split(" ")[1]].push(n1id)
+        edgelist[line.split(" ")[1]] = edgelist[line.split(" ")[1]].sort()
+    }
+
+    for (let e in edgelist){
+        if (addedsets.find(l => edgelist[e].every(el => l.includes(el)))) continue;
+        else {
+            addedsets.push(edgelist[e]);
+            finaledgelist[e] = edgelist[e];
+        }
+    }
+
+    for (let hyperedge in finaledgelist){
+        let nodelist = g.nodes.filter(n => edgelist[hyperedge].includes(n.name));
+        if (nodelist.length > 2) g.hyperedges.push({nodes: nodelist})
+        if (nodelist.length == 2) g.addEdge({nodes: nodelist})
+    }
+
+    // console.log(g.hyperedges)
+
+    return g;
+}
+
+let drawBox = async function (box, split_type, filename) {
+
+    // newbox = descriptionrow.append("div").attr("class", "col-sm")
+    // newbox.append("div").attr("class", "boxelem").html("<h2>" + split_type + "</h2>")
+    // newbox.append("div").attr("class", "boxelem").html(method_descriptions[split_type])
+
+    // let graph = await readGraph(filename);
+
+    // let edgelist = graph.hyperedges.map(e => e.nodes.map(n => n.name).join(" "))
+
+    // newbox = originalrow.append("div").attr("class", "col-sm")
+    // newbox.append("div").attr("class", "boxelem").html("original: <br> hyperedge list: <br> " + edgelist.join("<br>") + "<br>")
+
+    // let svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    //     .attr("preserveAspectRatio", "xMinYMin meet")
+    //     .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    // drawHypergraph(svg, graph);
+
+    // let start_time = new Date()
+
+    // switch(split_type){ 
+    //     case "split1": split1(graph); break;
+    //     case "split2": split2(graph); break;
+    //     case "aggregate1": aggregate1(graph); break;
+    //     case "aggregate2": aggregate2(graph); split2(graph); break;
+    //     case "addnode": addnode1(graph); break;
+    //     case "bipartite": bipartite(graph); break;
+    // }
+
+    // time_to_transform = new Date() - start_time
+
+    // newbox = transformrow.append("div").attr("class", "col-sm")
+    // newbox.append("div").attr("class", "boxelem").html("transform: " + graph.edges.length + " edges")
+
+    // svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    
+    // if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + graph.nodeIndex[0].length * 50 + " " + singlesvgheight)
+
+    // g = svg.append("g")
+    // graph.draw(g, 100, 40)
+
+    // newbox = iterationrow.append("div").attr("class", "col-sm")
+    // newbox.append("div").attr("class", "boxelem").text("iterations:")
+
+    // // svg = newbox.append("svg")
+    // //     .attr("class", "boxelem")
+    // //     .attr("preserveAspectRatio", "xMinYMin meet")
+    // //     .attr("viewBox", "0 0 " + svgwidth + " " + svgheight)
+
+    // start_time = new Date()
+
+    // // sortAndDraw(svg, graph);
+
+    // time_to_sort = new Date() - start_time
+
+    // newbox = finalrow.append("div").attr("class", "col-sm")
+    // newbox.append("div").attr("class", "boxelem").text("final:")
+
+    // switch(split_type){
+    //     case "split1": desplit1(graph); break;
+    //     case "split2": desplit1(graph); break;
+    //     case "aggregate1": disaggregate(graph); break;
+    //     case "aggregate2": desplit1(graph); disaggregate(graph); break;
+    //     case "addnode": disnode(graph); break;
+    //     case "bipartite": bipartiteback(graph); break;
+    // }
+
+    // svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    //     .attr("preserveAspectRatio", "xMinYMin meet")
+    //     .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    // drawHypergraph(svg, graph);
+
+    // newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_crossings_at_depth(graph, 0, true))
+    // newbox.append("div").attr("class", "boxelem").text("edge length 1: " + count_edge_length_at_depth(graph, 0, true))
+    // newbox.append("div").attr("class", "boxelem").text("iterations to convergence: " + iterations_to_convergence)
+    // newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
+    // newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
+    // if (split_type == "aggregate1" || split_type == "aggregate2") newbox.append("div").attr("class", "boxelem").text("time to postprocess: " + time_to_postprocess + " ms")
+
+    // graphviz
+    // newbox = graphvizrow.append("div").attr("class", "col-sm")
+    // newbox.append("div").attr("class", "boxelem").html("<h3>graphviz: " + split_type + "</h3>")
+    graph = await readGraph(filename);
+
+    start_time = new Date()
+
+    switch(split_type){ 
+        case "split1": split1(graph); break;
+        case "split2": split2(graph); break;
+        case "aggregate1": aggregate1(graph); break;
+        case "aggregate2": aggregate2(graph); split2(graph); break;
+        case "addnode": addnode1(graph); break;
+        case "bipartite": bipartite(graph); break;
+    }
+
+    time_to_transform = new Date() - start_time
+
+    let gtd = graphToDot(graph);
+
+    start_time = new Date()
+
+    let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
+    for (let node of graph.nodes){
+        let t = s.slice(s.search(node.id))
+        let m = t.slice(t.search("cx")).split('"')
+        node.y = parseInt(m[1])/2.5
+    }
+    for (let nindex of graph.nodeIndex){
+        nindex.sort((a, b) => a.y > b.y)
+    }
+    for (let n of graph.nodeIndex[0]){
+        n.y = undefined
+    }
+
+    time_to_sort = new Date() - start_time
+
+    // newbox.append("div").attr("class", "boxelem").html("transform: " + graph.edges.length + " edges")
+
+    // svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    //     .attr("preserveAspectRatio", "xMinYMin meet")
+    //     .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+    
+    // graph.draw(svg, nodeYdist, nodeXdist);
+
+    switch(split_type){
+        case "split1": desplit1(graph); break;
+        case "split2": desplit1(graph); break;
+        case "aggregate1": disaggregate(graph); break;
+        case "aggregate2": desplit1(graph); disaggregate(graph); break;
+        case "addnode": disnode(graph); break;
+        case "bipartite": bipartiteback(graph); break;
+    }
+
+    // newbox.append("div").attr("class", "boxelem").html("final:")
+
+    // svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    //     .attr("preserveAspectRatio", "xMinYMin meet")
+    //     .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    // drawHypergraph(svg, graph)
+
+    let crossings = count_crossings_at_depth(graph, 0, true)
+    let edge_length = count_edge_length_at_depth(graph, 0, true)
+
+    // newbox.append("div").attr("class", "boxelem").text("crossings 1: " + crossings)
+    // newbox.append("div").attr("class", "boxelem").text("edge length 1: " + edge_length)
+    // newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
+    // newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
+    // if (split_type == "aggregate1" || split_type == "aggregate2") newbox.append("div").attr("class", "boxelem").text("time to postprocess: " + time_to_postprocess + " ms")
+
+    return {graph: graph, time_to_sort: time_to_sort, crossings: crossings, edge_length: edge_length};
+}
+
+var hpccWasm = window["@hpcc-js/wasm"];
+
+let svgheight = 700
+let svgwidth = 320
+let singlesvgheight = 150
+let iteration_distance = 120
+
+let nodeYdist = 70;
+let nodeXdist = 40;
+let drawNodeLabels = true;
+
+let time_to_transform = 0
+let time_to_sort = 0
+let time_to_postprocess = 0
+let iterations_to_convergence = 0
+
+let methods = ["split1", "split2", "aggregate1", "aggregate2", "addnode", "bipartite"]
+let inputgraphs = ["simple1", "simple2", "simple3", "simple4"]
+
+let method_descriptions = {
+    "split1" : "Every hyperedge is split into all the combinations of edges between its nodes.",
+    "split2" : "Every hyperedge is split into N - 1 edges (N = nodes involved in a hyperedge)",
+    "aggregate1" : `Every edge (or hyperedge) e is transformed into a metanode, which aggregates all nodes involved in e. 
+      Nodes are allowed to exist as children of more than one metanode.`,
+    "aggregate2" : `Uses Navlakha et al.'s graph summarization algorithm (slightly modified to work with hyperedges). Nodes aren't allowed to exist in two metanodes.`,
+    "addnode" : "Every hyperedge is replaced with a new node, that has an edge with every node involved in the original hyperedge.",
+    "bipartite" : "Just a test to see if the result differs from Aggregate 1."
+}
+
+let firstStartup = async function(){
+    let graph = new Graph();
+    let gtd = graphToDot(graph);
+    let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
+}
+
+let drawResults = function(results){
+
+    results = results.filter(r => r.nodenum != undefined)
+
+    let maxnodenum = Math.max.apply(0, results.map(r => r.nodenum))
+    // maxnodenum = 100
+    let maxtime = Math.max.apply(0, results.map(r => r.time_to_sort + r.time_to_transform + r.time_to_postprocess))
+    let maxcrossings = Math.max.apply(0, results.map(r => r.crossings))
+    maxcrossings = 10000
+
+    for (let method of methods){
+        let rmethod = results.filter(r => r.method == method)
+        let r = [];
+        let rr = [];
+        let c = [];
+        let cc = [];
+        let postr = [];
+        let transformr = [];
+        let sortr = [];
+
+        let drawyaxis = false;
+        if (method == "split1") drawyaxis = true;
+
+        for (let numnodes = 4; numnodes < maxnodenum; numnodes++){
+            let thisvalues = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort + r.time_to_postprocess + r.time_to_transform)
+            // let thisvalues = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort)
+            let thisvaluespostprocess = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_postprocess)
+            let thisvaluestransform = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_transform)
+            let thisvaluessort = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort)
+            let thisvaluesc = rmethod.filter(r => r.nodenum == numnodes).map(r => r.crossings)
+
+            // if (thisvalues.length < 25*.5) continue;
+
+            for (let val of thisvalues){
+                rr.push([numnodes, val])
+            }
+
+            for (let val of thisvaluesc){
+                cc.push([numnodes, val])
+            }
+
+            if (thisvalues.length > 0){
+                let thisvalue = thisvalues.reduce((a, b) => a + b)/thisvalues.length
+                r.push([numnodes, thisvalue])
+            }
+
+            if (thisvaluesc.length > 0){
+                let thisvalue = thisvaluesc.reduce((a, b) => a + b)/thisvaluesc.length
+                c.push([numnodes, thisvalue])
+            }
+
+            if (thisvaluespostprocess.length > 0){
+                let thisvalue = thisvaluespostprocess.reduce((a, b) => a + b)/thisvaluespostprocess.length
+                postr.push([numnodes, thisvalue + 0.01])
+            }
+
+            if (thisvaluestransform.length > 0){
+                let thisvalue = Math.max(10, thisvaluestransform.reduce((a, b) => a + b)/thisvaluestransform.length)
+                transformr.push([numnodes, thisvalue + 0.01])
+            }
+
+            if (thisvaluessort.length > 0){
+                let thisvalue = thisvaluessort.reduce((a, b) => a + b)/thisvaluessort.length
+                sortr.push([numnodes, thisvalue + 0.01])
+            }
+        }
+
+        newbox = resultrow.append("div").attr("class", "col-sm")
+
+        newbox.append("div").html(method)
+
+        let padding = {top: 20, left: 30}
+        let height = 150
+        let width = 150
+
+        let y = d3.scaleLog()
+            .domain([10, 1000])
+            .range([ width, 0 ]);
+
+        let ycross = d3.scaleLinear()
+            .domain([0, maxcrossings])
+            .range([ width, 0 ]);
+
+        let x = d3.scaleLinear()
+            .domain([ 4, maxnodenum ])
+            .range([ 0, height ]);
+
+        let svg = newbox.append("svg").attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + 200 + " " + 200)
+
+        let gridy = [20, 30, 50, 100, 200, 300, 500]
+        for (let i of gridy){
+            svg.append("path")
+                .attr("stroke", "#ccc")
+                .attr("stroke-dasharray", "3 3")
+                .attr("d", () => { return d3.line()([[padding.left, padding.top + y(i)], [width + padding.left, padding.top + y(i)]])})
+        }
+
+        for (let i = 4; i < maxnodenum; i += 50){
+            svg.append("path")
+                .attr("stroke", "#ccc")
+                .attr("stroke-dasharray", "3 3")
+                .attr("d", () => { return d3.line()([[x(i) + padding.left, padding.top + height], [x(i) + padding.left, padding.top]])})
+        }
+
+        if (drawyaxis){
+            svg.append("g")
+            .attr("transform", "translate(" + padding.left + ", " + padding.top + ")")
+            .call(d3.axisLeft(y).tickArguments([3,".0s"]).tickPadding(10));
+        }
+
+        svg.append("g")
+            .attr("transform", "translate(" + padding.left + ", " + (padding.top + height) + ")")
+            .call(d3.axisBottom(x).ticks(5));
+
+        svg.append("path")
+            .attr("fill", linecolors[2][1])
+            .attr("opacity", 0.3)
+            .attr("d", () => {
+                let r1 = [];
+                let r2 = [];
+
+                for (let i of r){
+                    let thisrr = rr.filter(el => el[0] == i[0]).map(el => el[1])
+                    let top = Math.max.apply(0, thisrr)
+                    let bottom = Math.min.apply(0, thisrr)
+                    r1.push([x(i[0]) + padding.left, y(top) + padding.top])
+                    r2.push([x(i[0]) + padding.left, y(bottom) + padding.top])
+                }
+
+                r2 = r2.reverse()
+                r1 = r1.concat(r2)
+                
+                return d3.line()(r1);
+            })
+
+        // svg.selectAll("cirle")
+        //     .data(rr)
+        //     .enter()
+        //     .append("circle")
+        //         .attr("cx", r => padding.left + x(r[0]))
+        //         .attr("cy", r => padding.top + y(r[1]))
+        //         .attr("r", 1)
+        //         .attr("fill", "steelblue")
+        //         .style("opacity", 0.3)
+
+        svg.append("path")
+            .attr("fill", "none")
+            .attr("stroke", linecolors[2][1])
+            .attr("stroke-width", 1.5)
+            .attr("d", () => {
+                let rline = [];
+                for (let entry of r){
+                    rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+                }
+                return d3.line()(rline)
+            })
+
+        // svg.append("path")
+        //     .attr("fill", "none")
+        //     .attr("stroke", d3.schemeTableau10[1])
+        //     .attr("stroke-width", 1.5)
+        //     .attr("d", () => {
+        //         let rline = [];
+        //         for (let entry of postr){
+        //             rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+        //         }
+        //         return d3.line()(rline)
+        //     })
+
+        svg.append("path")
+            .attr("fill", "none")
+            .attr("stroke", linecolors[1][1])
+            .attr("stroke-width", 1.5)
+            .attr("d", () => {
+                let rline = [];
+                for (let entry of transformr){
+                    rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+                }
+                return d3.line()(rline)
+            })
+
+        svg.append("path")
+            .attr("fill", "none")
+            .attr("stroke", linecolors[0][1])
+            .attr("stroke-width", 1.5)
+            .attr("d", () => {
+                let rline = [];
+                for (let entry of sortr){
+                    rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+                }
+                return d3.line()(rline)
+            })
+
+
+        let svgcross = newbox.append("svg").attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + 200 + " " + 200)
+
+        for (let i = 4; i < maxnodenum; i += 50){
+            svgcross.append("path")
+                .attr("stroke", "#ccc")
+                .attr("stroke-dasharray", "3 3")
+                .attr("d", () => { return d3.line()([[x(i) + padding.left, padding.top + height], [x(i) + padding.left, padding.top]])})
+        }
+
+        gridy = [2000, 4000, 6000, 8000]
+        for (let i of gridy){
+            svgcross.append("path")
+                .attr("stroke", "#ccc")
+                .attr("stroke-dasharray", "3 3")
+                .attr("d", () => { return d3.line()([[padding.left, padding.top + ycross(i)], [width + padding.left, padding.top + ycross(i)]])})
+        }
+
+        if (drawyaxis){
+            svgcross.append("g")
+            .attr("transform", "translate(" + (padding.left) + ", " + padding.top + ")")
+            .call(d3.axisLeft(ycross).tickArguments([5, "s"]).tickPadding(6));
+        }
+        
+        svgcross.append("g")
+            .attr("transform", "translate(" + padding.left + ", " + (padding.top + height) + ")")
+            .call(d3.axisBottom(x).ticks(5));
+
+        svgcross.append("path")
+        .attr("fill", d3.schemeTableau10[6])
+        .attr("opacity", 0.3)
+        .attr("d", () => {
+            let r1 = [];
+            let r2 = [];
+
+            for (let i of c){
+                let thisrr = cc.filter(el => el[0] == i[0]).map(el => el[1])
+                let top = Math.max.apply(0, thisrr)
+                let bottom = Math.min.apply(0, thisrr)
+                r1.push([x(i[0]) + padding.left, ycross(top) + padding.top])
+                r2.push([x(i[0]) + padding.left, ycross(bottom) + padding.top])
+            }
+
+            r2 = r2.reverse()
+            r1 = r1.concat(r2)
+            
+            return d3.line()(r1);
+        })
+
+        // svgcross.selectAll("cirle")
+        //     .data(cc)
+        //     .enter()
+        //     .append("circle")
+        //         .attr("cx", r => padding.left + x(r[0]))
+        //         .attr("cy", r => padding.top + ycross(r[1]))
+        //         .attr("r", 1)
+        //         .attr("fill", d3.schemeTableau10[6])
+        //         .style("opacity", 0.3)
+
+        svgcross.append("path")
+        .attr("fill", "none")
+        .attr("stroke", d3.schemeTableau10[6])
+        .attr("stroke-width", 1.5)
+        .attr("d", () => {
+            let rline = [];
+
+            for (let entry of c){
+                rline.push([padding.left + x(entry[0]), padding.top + ycross(entry[1])])
+            }
+
+            return d3.line()(rline)
+        })
+    }
+}
+
+let runAll = async function() {
+
+    await firstStartup();
+
+    let results = [];
+
+    for (let i = 0; i < 10; i++){
+        let fname = "./data/benchmarks/generated/graph_preferential_" + i;
+        // let count = 0;
+        // for await (let j of makeTextFileLineIterator(fname)) count++;
+        // if (count > 300) continue;
+        console.log(fname)
+
+        // d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
+
+        // row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+        // descriptionrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+        // originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+        // transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+        // iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+        // finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+        // graphvizrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+        resultrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+        try {
+            for (let method of methods){
+                let box; //= row.append("div").attr("class", "col-sm")
+                let res = await drawBox(box, method, fname);
+
+                res.method = method;
+                results.push(res);
+            }
+        } catch (e) {console.log(e, i)}
+    }
+
+    console.log(results)
+    drawResults(results);
+
+    console.log("done!")
+}
+
+let readAll = async function () {
+    // let times = await d3.json("./data/benchmark_results/times.json")
+    // let crossings = await d3.json("./data/benchmark_results/crossings.json")
+
+    // let results = [];
+    // for (let method in times){
+    //     for (let nodenum in times[method]){
+    //         // console.log(times[method][nodenum])
+    //     }
+    // }
+
+    resultrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+    let results = await d3.json("./data/benchmark_results/resultscomplete.json")
+    drawResults(results.results)
+
+    let legend = resultrow.append("svg")
+        .attr("width", 400)
+        .attr("height", 400)
+
+    let g = legend.selectAll(".legends")
+        .data(linecolors)
+        .enter()
+        .append("g")
+        .attr("transform", (d, i) => "translate(40, " + (20 + i * 20) + ")")
+
+    g.append("text")
+        .style("text-anchor", "start")
+        .attr("x", 20)
+        .text((d) => d[0])
+
+    g.append("circle")
+        .attr("r", 5)
+        .attr("cx", 0)
+        .attr("cy", 0)
+        .attr("fill", d => d[1])
+}
+
+linecolors = [["sort", d3.schemeTableau10[3]], ["transform", d3.schemeTableau10[2]], ["total", d3.schemeTableau10[0]]]
+
+// runAll()
+readAll()
+
+</script>

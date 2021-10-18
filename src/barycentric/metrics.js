@@ -143,3 +143,9 @@ let count_edge_length_at_depth = (graph, depth, include_hyperedges = false) => {
 
     return r;
 }
+
+try {
+    module.exports = exports = {
+        count_all_crossings, count_crossings_at_depth, count_edge_length_at_depth
+    };
+ } catch (e) {}

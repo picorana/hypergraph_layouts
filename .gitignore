@@ -1,2 +1,6 @@
 node_modules/
 .idea/
+data/benchmark_results/
+data/benchmarks/.ipynb_checkpoints
+data/benchmarks/generated
+data/benchmarks/generated_multilayers
