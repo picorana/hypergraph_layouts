@@ -321,7 +321,7 @@ let drawHypergraph = (svg, graph) => {
             g.append("path")
                 .attr("fill", "none")
                 .attr("stroke", "#797D8199")
-                .attr("stroke-width", 3)
+                .attr("stroke-width", 1)
                 .attr("d", () => {
 
                     let ny = node.y != undefined? node.y : graph.nodeIndex[node.depth].indexOf(node) * nodeXdist + 30

@@ -313,7 +313,7 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
 
     let gtd = graphToDot(graph);
 
-    // console.log(gtd)
+    //console.log(gtd)
 
     let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
     // newbox.html(s)
