@@ -53,14 +53,15 @@ let bipartite = (graph) => {
     graph.hyperedges = [];
 
     for (let edge of graph.originaledges){
-        let newnode = {name: edge.nodes.map(n => n.name).join(""), depth: 1, type: "aggregate"}
+        let newnode = {name: edge.nodes.map(n => n.name).join(""), depth: 1, type: "aggregate", color: "red"}
         graph.addNode(newnode)
         graph.addEdge({nodes: [edge.nodes[0], newnode]})
         graph.addEdge({nodes: [edge.nodes[1], newnode]})
     }
 
     for (let h_edge of graph.originalhyperedges){
-        let newnode = {name: h_edge.nodes.map(n => n.name).join(""), depth: 1, type: "aggregate"}
+        let name = h_edge.name == undefined? h_edge.nodes.map(n => n.name).join("") : h_edge.name;
+        let newnode = {name: h_edge.nodes.map(n => n.name).join(""), depth: 1, type: "aggregate", color: "red"}
         graph.addNode(newnode)
 
         for (let n of h_edge.nodes){
@@ -95,7 +96,8 @@ let aggregate1 = (graph) => {
     
         let d = (Math.max.apply(0, h_edge.nodes.map(n => n.depth)) + Math.min.apply(0, h_edge.nodes.map(n => n.depth)))/2
 
-        graph.addNode({name: h_edge.nodes.map(n => n.name).join(""), depth: 0, type: "aggregate", childnodes: cn, truedepth: d})
+        let name = h_edge.name == undefined ? h_edge.nodes.map(n => n.name).join("") : h_edge.name
+        graph.addNode({name: name, depth: 0, type: "aggregate", childnodes: cn, truedepth: d})
     }
     
     for (let edge of graph.edges){
@@ -264,7 +266,9 @@ let addnode1 = (graph) => {
     }
     
     for (let h_edge of graph.hyperedges){
-        let center = {name: h_edge.nodes.map(n => n.name).join(""), depth: 0, w: h_edge.nodes.map(n => n.w).reduce((a, b) => a + b)/h_edge.nodes.length, type: "aggregated_node"}
+        let name = h_edge.nodes.map(n => n.name).join("")
+        if (h_edge.name != undefined) name = h_edge.name
+        let center = {name: name, color: "red", depth: 0, w: h_edge.nodes.map(n => n.w).reduce((a, b) => a + b)/h_edge.nodes.length, type: "aggregated_node"}
         graph.addNode(center)
         for (let node of h_edge.nodes){
             graph.addEdge({nodes: [center, node], color: "red"})

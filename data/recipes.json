@@ -1,0 +1,440 @@
+{
+    "Italian": [
+        {
+            "recipeName" : "Carbonara",
+            "ingredients" : [
+                "guanciale",
+                "eggs",
+                "pecorino",
+                "black pepper",
+                "garlic",
+                "oil",
+                "pasta",
+                "salt"
+            ]
+        },
+        {
+            "recipeName": "Pizza napoletana",
+            "ingredients": [
+                "flour",
+                "oil",
+                "sugar",
+                "salt",
+                "baking powder"
+            ]
+        },
+        {
+            "recipeName": "Arancini",
+            "ingredients": [
+                "rice",
+                "salami",
+                "peas",
+                "eggs",
+                "butter",
+                "salt",
+                "bread crumbs",
+                "oil",
+                "onion",
+                "mozzarella",
+                "parmesan",
+                "flour",
+                "black pepper",
+                "beef"
+            ]
+        }, {
+            "recipeName": "Parmigiana di melanzane",
+            "ingredients": [
+                "eggplant",
+                "onion",
+                "parmesan",
+                "garlic",
+                "oil",
+                "black pepper",
+                "tomato",
+                "mozzarella",
+                "eggs",
+                "basil",
+                "salt"
+            ]
+        }, {
+            "recipeName": "Polenta e salsiccia",
+            "ingredients": [
+                "flour",
+                "pork",
+                "onion",
+                "basil",
+                "milk",
+                "butter",
+                "black pepper",
+                "salami",
+                "lard",
+                "tomato",
+                "oil",
+                "white wine",
+                "salt"
+            ]
+        }, {
+            "recipeName": "Bollito alla milanese",
+            "ingredients": [
+                "cloves",
+                "carrots",
+                "parsley",
+                "black pepper",
+                "beef",
+                "laurel",
+                "salt",
+                "onion",
+                "celery",
+                "leek"
+            ]
+        }, {
+            "recipeName": "Cotoletta",
+            "ingredients": [
+                "veal",
+                "eggs",
+                "salt",
+                "flour",
+                "bread crumbs",
+                "butter"
+            ]
+        }, {
+            "recipeName": "Pastiera",
+            "ingredients": [
+                "flour",
+                "butter",
+                "honey",
+                "milk",
+                "orange",
+                "lard",
+                "sugar",
+                "eggs",
+                "lemon",
+                "salt",
+                "wheat",
+                "ricotta",
+                "eggs"
+            ]
+        }, {
+            "recipeName": "Cannoli",
+            "ingredients": [
+                "flour",
+                "lard",
+                "salt",
+                "vinegar",
+                "sugar",
+                "cocoa powder",
+                "eggs",
+                "marsala",
+                "ricotta",
+                "chocolate chips",
+                "oil",
+                "pistacchio"
+            ]
+        }, {
+            "recipeName": "Lasagna",
+            "ingredients": [
+                "flour",
+                "eggs",
+                "beef",
+                "pancetta",
+                "carrots",
+                "celery",
+                "onions",
+                "tomato",
+                "oil",
+                "salt",
+                "black pepper",
+                "milk",
+                "butter",
+                "wheat"
+            ]
+        }
+    ],
+    "Italian-american": [
+        {
+            "recipeName": "Chicken parmesan",
+            "ingredients":[
+                "oil",
+                "onion",
+                "garlic",
+                "tomato",
+                "sugar",
+                "salt",
+                "butter",
+                "flour",
+                "eggs",
+                "bread crumbs",
+                "parmesan",
+                "chicken",
+                "mozzarella"
+            ]
+        }, {
+            "recipeName": "Fettuccine Alfredo", 
+            "ingredients": [
+                "heavy cream",
+                "salt",
+                "fettuccine",
+                "parmesan",
+                "butter",
+                "black pepper",
+                "parsley"
+            ]
+        }, {
+            "recipeName": "Pepperoni pizza",
+            "ingredients": [
+                "pizza dough",
+                "pepperoni",
+                "mozzarella",
+                "black pepper",
+                "oregano",
+                "tomato",
+                "salt",
+                "garlic",
+                "onion",
+                "red pepper",
+                "oil"
+            ]
+        }, {
+            "recipeName": "Meatball pasta",
+            "ingredients": [
+                "spaghetti",
+                "beef",
+                "bread crumbs",
+                "parsley",
+                "parmesan",
+                "eggs",
+                "garlic",
+                "salt",
+                "red pepper",
+                "oil",
+                "onion",
+                "tomato",
+                "black pepper"
+            ]
+        }, {
+            "recipeName": "Garlic bread",
+            "ingredients": [
+                "butter",
+                "garlic",
+                "parmesan",
+                "parsley",
+                "salt",
+                "black pepper",
+                "bread",
+                "mozzarella"
+            ]
+        }, {
+            "recipeName": "Caesar salad",
+            "ingredients": [
+                "lettuce",
+                "parmesan",
+                "bread",
+                "ranch"
+            ]
+        }, {
+            "recipeName": "Chicken marsala",
+            "ingredients": [
+                "chicken",
+                "flour",
+                "black pepper",
+                "salt",
+                "oil",
+                "butter",
+                "mushrooms",
+                "shallots",
+                "garlic",
+                "marsala",
+                "heavy cream",
+                "thyme",
+                "parsley"
+            ]
+        }, {
+            "recipeName": "Tuscan chicken",
+            "ingredients": [
+                "oil",
+                "chicken",
+                "salt",
+                "black pepper",
+                "oregano",
+                "butter",
+                "garlic",
+                "tomato",
+                "spinach",
+                "heavy cream",
+                "parmesan",
+                "lemon"
+            ]
+        }, {
+            "recipeName": "Chicken and shrimp carbonara",
+            "ingredients": [
+                "oil",
+                "italian seasoning",
+                "garlic",
+                "chicken",
+                "shrimp",
+                "butter",
+                "flour",
+                "bacon",
+                "parmesan",
+                "heavy cream",
+                "milk",
+                "black pepper",
+                "spaghetti",
+                "salt",
+                "mozzarella",
+                "bread crumbs",
+                "parsley",
+                "red pepper"
+            ]
+        }, {
+            "recipeName": "Caprese chicken",
+            "ingredients": [
+                "oil",
+                "chicken",
+                "salt",
+                "black pepper",
+                "balsamic vinegar",
+                "garlic",
+                "tomato",
+                "basil",
+                "mozzarella"
+            ]
+        }
+    ],
+    "American": [
+        {
+            "recipeName": "Mac and cheese",
+            "ingredients": [
+                "macaroni",
+                "butter",
+                "flour",
+                "milk",
+                "sour cream",
+                "velveeta",
+                "parmesan",
+                "salt",
+                "mustard",
+                "black pepper",
+                "cheddar"
+            ]
+        }, {
+            "recipeName": "Apple pie",
+            "ingredients": [
+                "apples",
+                "apple juice",
+                "sugar",
+                "cinnamon",
+                "cornstarch",
+                "vanilla",
+                "flour",
+                "salt",
+                "butter",
+                "water"
+            ]
+        }, {
+            "recipeName": "BLT",
+            "ingredients": [
+                "tomato",
+                "flour",
+                "cornmeal",
+                "salt",
+                "milk",
+                "oil",
+                "ranch",
+                "dill",
+                "onion",
+                "bacon",
+                "lettuce"
+            ]
+        }, {
+            "recipeName": "Grilled Cheese",
+            "ingredients": [
+                "bread",
+                "butter",
+                "cheddar"
+            ]
+        }, {
+            "recipeName": "Honey-glazed turkey",
+            "ingredients": [
+                "turkey",
+                "honey",
+                "mustard",
+                "rosemary",
+                "onion",
+                "salt",
+                "garlic",
+                "black pepper",
+                "butter",
+                "celery",
+                "bread"
+            ]
+        }, {
+            "recipeName": "Doughnuts",
+            "ingredients": [
+                "apple cider",
+                "flour",
+                "brown sugar",
+                "baking powder",
+                "salt",
+                "baking soda",
+                "cardamom",
+                "nutmeg",
+                "cinnamon",
+                "allspice",
+                "eggs",
+                "butter",
+                "oil",
+                "glaze"
+            ]
+        }, {
+            "recipeName": "Philly cheesesteak",
+            "ingredients": [
+                "beef",
+                "salt",
+                "black pepper",
+                "onion",
+                "provolone",
+                "butter",
+                "mayonnaise",
+                "bread"
+            ]
+        }, {
+            "recipeName": "Meatloaf",
+            "ingredients": [
+                "chicken",
+                "garlic",
+                "onion",
+                "eggs",
+                "bread crumbs",
+                "parmesan",
+                "marinara sauce",
+                "italian seasoning",
+                "salt"
+            ]
+        }, {
+            "recipeName": "Brownies",
+            "ingredients": [
+                "flour",
+                "cocoa powder",
+                "salt",
+                "honey",
+                "eggs",
+                "vanilla",
+                "oil"
+            ]
+        }, {
+            "recipeName": "Chocolate chip cookies",
+            "ingredients": [
+                "oil",
+                "almond milk",
+                "vanilla",
+                "brown sugar",
+                "chocolate chips",
+                "flour",
+                "baking powder",
+                "baking soda",
+                "salt"
+            ]
+        }
+    ]
+}

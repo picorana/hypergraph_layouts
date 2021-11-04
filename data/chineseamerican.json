@@ -1,0 +1,298 @@
+{
+  "Chinese": [
+    {
+      "recipeName": "CHICKEN CHOW MEIN",
+      "ingredients": [
+        "chicken",
+        "tapioca starch",
+        "salt",
+        "water",
+        "sesame oil",
+        "light soy sauce",
+        "dark soy sauce",
+        "oyster sauce",
+        "black pepper",
+        "oil",
+        "scalions",
+        "garlic",
+        "chilli",
+        "bok choy",
+        "bean sprouts",
+        "egg noodles"
+      ]
+    },
+    {
+      "recipeName": "Char Siu Pork",
+      "ingredients": [
+        "pork",
+        "garlic salt",
+        "brown sugar",
+        "oyster sauce",
+        "light soy sauce",
+        "hoisin sauce",
+        "rice wine",
+        "red bean curd",
+        "fice spice",
+        "honey",
+        "water"
+      ]
+    },
+    {
+      "recipeName": "Peking duck",
+      "ingredients": [
+        "duck",
+        "white vinegar",
+        "oyster sauce",
+        "maltose",
+        "hoisin sauce",
+        "rice wine",
+        "bean sauce",
+        "fice spice",
+        "sesame oil",
+        "leek",
+        "cucumber"
+      ]
+    },
+    {
+      "recipeName": "Congee",
+      "ingredients": [
+        "rice",
+        "chicken",
+        "oyster sauce",
+        "water",
+        "ginger",
+        "scalions",
+        "cilantro",
+        "cornstarch",
+        "oil",
+        "salt",
+        "chicken bouillon"
+      ]
+    },
+    {
+      "recipeName": "Mapo Tofu",
+      "ingredients": [
+        "tofu",
+        "chicken",
+        "oyster sauce",
+        "water",
+        "dark soy sauce",
+        "chilli",
+        "garlic",
+        "scalions",
+        "oil",
+        "salt"
+      ]
+    }
+  ],
+  "Chinese American": [
+    {
+      "recipeName": "Beef and Broccoli",
+      "ingredients": [
+        "beef",
+        "broccoli",
+        "carrots",
+        "garlic",
+        "ginger",
+        "scallions",
+        "baking soda",
+        "oyster sauce",
+        "soy sauce",
+        "water",
+        "cornstarch",
+        "white pepper",
+        "sugar",
+        "cooking wine",
+        "oyster sauce",
+        "salt",
+        "oil",
+        "sesame oil"
+      ]
+    },
+    {
+      "recipeName": "General Tso's Chicken",
+      "ingredients": [
+        "chicken",
+        "garlic",
+        "ginger",
+        "chilli",
+        "red bell pepper",
+        "oil",
+        "salt",
+        "egg",
+        "cornstarch",
+        "water",
+        "flour",
+        "baking powder",
+        "olive oil",
+        "soy sauce",
+        "sugar",
+        "vinegar",
+        "ketchup",
+        "white pepper",
+        "sesame oil"
+      ]
+    },
+    {
+      "recipeName": "Mongolian Beef",
+      "ingredients": [
+        "steak",
+        "oil",
+        "soy sauce",
+        "cornstarch",
+        "brown sugar",
+        "water",
+        "soy suace",
+        "ginger",
+        "chilli",
+        "garlic",
+        "scallions"
+      ]
+    }
+  ],
+  "American": [
+    {
+      "recipeName": "Mac and cheese",
+      "ingredients": [
+        "macaroni",
+        "butter",
+        "flour",
+        "milk",
+        "sour cream",
+        "velveeta",
+        "parmesan",
+        "salt",
+        "mustard",
+        "black pepper",
+        "cheddar"
+      ]
+    },
+    {
+      "recipeName": "Apple pie",
+      "ingredients": [
+        "apples",
+        "apple juice",
+        "sugar",
+        "cinnamon",
+        "cornstarch",
+        "vanilla",
+        "flour",
+        "salt",
+        "butter",
+        "water"
+      ]
+    },
+    {
+      "recipeName": "BLT",
+      "ingredients": [
+        "tomato",
+        "flour",
+        "cornmeal",
+        "salt",
+        "milk",
+        "oil",
+        "ranch",
+        "dill",
+        "onion",
+        "bacon",
+        "lettuce"
+      ]
+    },
+    {
+      "recipeName": "Grilled Cheese",
+      "ingredients": [
+        "bread",
+        "butter",
+        "cheddar"
+      ]
+    },
+    {
+      "recipeName": "Honey-glazed turkey",
+      "ingredients": [
+        "turkey",
+        "honey",
+        "mustard",
+        "rosemary",
+        "onion",
+        "salt",
+        "garlic",
+        "black pepper",
+        "butter",
+        "celery",
+        "bread"
+      ]
+    },
+    {
+      "recipeName": "Doughnuts",
+      "ingredients": [
+        "apple cider",
+        "flour",
+        "brown sugar",
+        "baking powder",
+        "salt",
+        "baking soda",
+        "cardamom",
+        "nutmeg",
+        "cinnamon",
+        "allspice",
+        "eggs",
+        "butter",
+        "oil",
+        "glaze"
+      ]
+    },
+    {
+      "recipeName": "Philly cheesesteak",
+      "ingredients": [
+        "beef",
+        "salt",
+        "black pepper",
+        "onion",
+        "provolone",
+        "butter",
+        "mayonnaise",
+        "bread"
+      ]
+    },
+    {
+      "recipeName": "Meatloaf",
+      "ingredients": [
+        "chicken",
+        "garlic",
+        "onion",
+        "eggs",
+        "bread crumbs",
+        "parmesan",
+        "marinara sauce",
+        "italian seasoning",
+        "salt"
+      ]
+    },
+    {
+      "recipeName": "Brownies",
+      "ingredients": [
+        "flour",
+        "cocoa powder",
+        "salt",
+        "honey",
+        "eggs",
+        "vanilla",
+        "oil"
+      ]
+    },
+    {
+      "recipeName": "Chocolate chip cookies",
+      "ingredients": [
+        "oil",
+        "almond milk",
+        "vanilla",
+        "brown sugar",
+        "chocolate chips",
+        "flour",
+        "baking powder",
+        "baking soda",
+        "salt"
+      ]
+    }
+  ]
+}

@@ -312,10 +312,6 @@ let drawHypergraph = (svg, graph) => {
 
     let line = d3.line().curve(d3.curveBasis);
 
-    graph.draw(g, nodeYdist, nodeXdist)
-
-    if (graph.hyperedges == undefined) return;
-
     for (let hyperedge of graph.hyperedges){
         let hnodes = hyperedge.nodes.map(n => n.y != undefined ? n.y : graph.nodeIndex[n.depth].indexOf(n))
         let centerx = hnodes.reduce((a, b) => a + b)/hyperedge.nodes.length;
@@ -324,7 +320,7 @@ let drawHypergraph = (svg, graph) => {
         for (let node of hyperedge.nodes){
             g.append("path")
                 .attr("fill", "none")
-                .attr("stroke", "red")
+                .attr("stroke", "#797D8199")
                 .attr("stroke-width", 3)
                 .attr("d", () => {
 
@@ -332,10 +328,12 @@ let drawHypergraph = (svg, graph) => {
                     let cx = node.y != undefined? centerx : 30 + centerx * nodeXdist
 
                     if (!is_multilevel(hyperedge)){
+                        // let p = 0.3 * (Math.max.apply(0, hyperedge.nodes.map(n => n.y)) - Math.min.apply(0, hyperedge.nodes.map(n => n.y)))
+                        let p = 30;
                         return line([
                             [ny, node.depth*nodeYdist + 20],
-                            [ny, node.depth*nodeYdist + 50],
-                            [cx, centery + 30]
+                            [ny, node.depth*nodeYdist + 30],
+                            [cx, centery + p]
                         ])
                     } else {
                         if (node.depth * 50 < centery){
@@ -354,13 +352,17 @@ let drawHypergraph = (svg, graph) => {
         }
     }
 
+    graph.draw(g, nodeYdist, nodeXdist)
+
+    if (graph.hyperedges == undefined) return;
+
     if (!drawNodeLabels){
         g.selectAll("text").remove()
     } else {
         g.selectAll("text").remove()
         let gnames = [... new Set(graph.nodes.map(n => n.name))]
         for (let gname of gnames){
-            let a = g.selectAll(".gg-" + gname)
+            let a = g.selectAll(".gg-" + id_cleanup(gname))
             let maxdepth = Math.max.apply(0, a.data().map(d => d.depth))
             a.filter(b => b.depth == maxdepth).append("text")
                 .attr("y", 5)

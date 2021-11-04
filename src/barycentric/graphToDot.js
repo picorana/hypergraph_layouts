@@ -31,7 +31,7 @@ let graphToDot = (graph) => {
         `
     
     for (let node of graph.nodes){
-        if (!graph.groups.find(gr => gr.nodes.includes(node))) r += node.id + ' [shape=circle]\n'
+        if (!graph.groups.find(gr => gr.nodes.includes(node))) r += node.id + ' [shape=circle fixedsize=true]\n'
     }
 
     for (let group of graph.groups){
@@ -39,14 +39,16 @@ let graphToDot = (graph) => {
         r += `style=filled;
         color=gray;\n`
         for (let node of group.nodes){
-            r += node.id + ' [shape=circle]\n'
+            r += node.id + ' [shape=circle fixedsize=true]\n'
         }
         r += `}\n`
     }
 
+    console.log(graph.nodes)
+
     for (let edge of graph.edges){
         let w = '';
-        if (edge.weight != undefined) w = '[weight='+edge.weight+']'
+        if (edge.weight != undefined) w = ' [weight='+edge.weight+']'
         // else if (edge.nodes[0].depth == edge.nodes[1].depth)
         // let w = (edge.nodes[0].depth == edge.nodes[1].depth ? '' : '[weight=10]')
         r += edge.nodes[0].id + " -> " + edge.nodes[1].id + w + '\n';

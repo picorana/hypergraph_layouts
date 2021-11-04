@@ -20,6 +20,13 @@ function id_cleanup(groupfullname){
     return tmp;
 }
 
+function id_cleanup_no_space(groupfullname){
+  let charsToReplace = ["'", ".", "ö", "ü", "ā", , "&", "é", "è", "/", "’", "É", "-", "ã"]
+  let tmp = groupfullname;
+  for (let char of charsToReplace) tmp = tmp.replaceAll(char, "")
+  return tmp;
+}
+
 function permutator(inputArr) {
     var results = [];
   
@@ -40,6 +47,10 @@ function permutator(inputArr) {
   
     return permute(inputArr);
   }
+
+function textWrap(text, params) {
+
+}
 
   try {
     module.exports = exports = {
