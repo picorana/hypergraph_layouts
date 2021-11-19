@@ -6,23 +6,43 @@ import networkx.algorithms.bipartite as bp
 import numpy as np
 
 
+def normalize(values, bounds):
+    return np.array([bounds['desired']['lower'] + (x - bounds['actual']['lower']) * (
+                bounds['desired']['upper'] - bounds['desired']['lower']) / (
+                                 bounds['actual']['upper'] - bounds['actual']['lower']) for x in values])
+
+
+# Remove hyperedge with 0 or 1 persons
+def filter_hyperedges(G):
+    to_remove = []
+    for n, attrs in G.nodes.data():
+        if attrs["bipartite"] == 1:
+            if G.degree[n] in [0, 1]:
+                to_remove.append(n)
+    G.remove_nodes_from(to_remove)
+
+
 def generate_preferential_attachment():
     N_nodes_range = [4, 60]
     N_graphs_per_size = 25
     p_new_node = 0.2
-    graphs = []
 
     for n_nodes in range(N_nodes_range[0], N_nodes_range[1]):
         for i in range(N_graphs_per_size):
             power_sample = np.random.power(20, n_nodes)
-            degree_distribution = ((1 - power_sample) * 100).astype(int)
+
+            # Normalize the distribution so person nodes have a degree between 1 and n_nodes
+            bounds = {
+                "desired": {"lower": 1, "upper": n_nodes},
+                "actual": {"lower": 0, "upper": 1}
+            }
+            degree_distribution = normalize((1 - power_sample), bounds).astype(int)
+            # degree_distribution = ((1 - power_sample) * 100).astype(int)
+
             g = bp.preferential_attachment_graph(degree_distribution, p_new_node)
+            filter_hyperedges(g)
 
             yield g
-            # graphs.append(g)
-            # print(g.nodes.data())
-
-    # return graphs
 
 
 def generate_random():
@@ -32,17 +52,15 @@ def generate_random():
     p_edge_creation = 0.2
     mean_hyperedge_size = 3
 
-    graphs = []
-
     for n_nodes in range(N_nodes_range[0], N_nodes_range[1]):
         for i in range(N_graphs_per_size):
             # N_nodes = rn.randint(N_nodes_range[0], N_nodes_range[1])
             N_hyperedge = n_nodes * N_hyperedges_factor
             N_edge = N_hyperedge * mean_hyperedge_size
             g = bp.gnmk_random_graph(n_nodes, N_hyperedge, N_edge)
-            yield g
+            filter_hyperedges(g)
 
-    # return graphs
+            yield g
 
 
 # def generate_complete():
@@ -77,11 +95,6 @@ def generate_complete():
                     g.add_edge(node, hyperedge_node)
 
         yield g
-        # print(g.edges)
-        # graphs.append(g)
-
-    # return graphs
-
 
 
 def export_benchmark(folder):

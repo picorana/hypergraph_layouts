@@ -6,6 +6,7 @@ import networkx as nx
 import networkx.algorithms.bipartite as bp
 import numpy as np
 
+from generator import filter_hyperedges
 
 def give_rank(G):
     G_directed = nx.DiGraph(G)
@@ -47,6 +48,7 @@ def process_ranks_output(gvpr_output):
     return node_to_rank
 
 
+# keep only the ranks for person nodes, and normalize them so they are in the shape 1,2,3,4...
 def process_ranks(G, node_to_rank):
     nodes_ids = [n for n, attrs in G.nodes.data() if attrs["bipartite"] == 0]
     node_to_rank_filter = {n: rank for n, rank in node_to_rank.items() if n in nodes_ids}
@@ -59,6 +61,23 @@ def process_ranks(G, node_to_rank):
     node_to_newRank = {n: ranK_to_newRank[rank] for n, rank in node_to_rank_filter.items()}
 
     return node_to_newRank
+
+
+def filter_multilayered_hyperedge(G):
+    hyperedge_to_remove = []
+    for n, attrs in G.nodes.data():
+        if attrs["bipartite"] == 1:
+            person_nodes = G[n]
+            ranks = [G.nodes[node]["rank"] for node in person_nodes]
+
+            min_rank = min(ranks)
+            max_rank = max(ranks)
+
+            if max_rank - min_rank > 0:
+                hyperedge_to_remove.append(n)
+
+    G.remove_nodes_from(hyperedge_to_remove)
+
 
 
 
@@ -75,8 +94,11 @@ def multilayered_generator(folder):
             N_hyperedge = n_nodes * N_hyperedges_factor
             N_edge = N_hyperedge * mean_hyperedge_size
             g = bp.gnmk_random_graph(n_nodes, N_hyperedge, N_edge)
+            filter_hyperedges(g)
 
             give_rank(g)
+            filter_multilayered_hyperedge(g)
+
 
             nx.write_edgelist(g, f"{folder}graph_{n_nodes}_{i}", data=True)
             with open(f"{folder}graph_{n_nodes}_{i}.json", 'w') as outfile1:
@@ -84,6 +106,9 @@ def multilayered_generator(folder):
 
         #     break
         # break
+
+
+
 
 
 if __name__ == "__main__":
