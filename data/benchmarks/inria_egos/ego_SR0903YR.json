@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "2014", "raw_ts": "2014", "id": "_e_SR0005GR_SR0903YR_3867"}, {"entity_type": "node", "name": "MAKUTU", "id": "SR0903YR"}], "links": [{"ts": "2014", "source": "_e_SR0005GR_SR0903YR_3867", "target": "SR0903YR", "key": 0}]}

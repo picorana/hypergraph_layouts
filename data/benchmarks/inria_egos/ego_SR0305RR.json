@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "SYSDYS", "id": "SR0305RR"}, {"entity_type": "hyperedge", "ts": "2000", "raw_ts": "2000", "id": "_e_SR0768WR_SR0305RR_1009"}], "links": [{"ts": "2000", "source": "SR0305RR", "target": "_e_SR0768WR_SR0305RR_1009", "key": 0}]}

@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "MEIJE", "id": "SR0251CR"}, {"entity_type": "hyperedge", "ts": "1996", "raw_ts": "1996", "id": "_e_SR0251CR_SR0163WR_893"}], "links": [{"ts": "1996", "source": "SR0251CR", "target": "_e_SR0251CR_SR0163WR_893", "key": 0}]}

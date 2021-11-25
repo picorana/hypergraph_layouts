@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "1999", "raw_ts": "1999", "id": "_e_SR0280BR_SR0286AR_1001"}, {"entity_type": "node", "name": "REFLECS", "id": "SR0280BR"}], "links": [{"ts": "1999", "source": "_e_SR0280BR_SR0286AR_1001", "target": "SR0280BR", "key": 0}]}

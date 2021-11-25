@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "2001", "raw_ts": "2001", "id": "_e_SR0147TR_SR0401XR_1075"}, {"entity_type": "node", "name": "MASAIE", "id": "SR0401XR"}], "links": [{"ts": "2001", "source": "_e_SR0147TR_SR0401XR_1075", "target": "SR0401XR", "key": 0}]}

@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "SEQUOIA2", "id": "SR0422XR"}, {"entity_type": "hyperedge", "ts": "2010", "raw_ts": "2010", "id": "_e_SR0032ER_SR0422XR_2680"}], "links": [{"ts": "2010", "source": "SR0422XR", "target": "_e_SR0032ER_SR0422XR_2680", "key": 0}]}

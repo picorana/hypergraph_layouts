@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "DECENTRALISE", "id": "SR0658CR"}, {"entity_type": "hyperedge", "ts": "2016", "raw_ts": "2016", "id": "_e_SR0658CR_SR0825UR_4416"}], "links": [{"ts": "2016", "source": "SR0658CR", "target": "_e_SR0658CR_SR0825UR_4416", "key": 0}]}

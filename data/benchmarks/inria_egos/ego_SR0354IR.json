@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "2015", "raw_ts": "2015", "id": "_e_SR0354IR_SR0868XR_4202"}, {"entity_type": "node", "name": "MAGNOME", "id": "SR0354IR"}], "links": [{"ts": "2015", "source": "_e_SR0354IR_SR0868XR_4202", "target": "SR0354IR", "key": 0}]}

@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "1999", "raw_ts": "1999", "id": "_e_SR0242RR_SR0263NR_986"}, {"entity_type": "node", "name": "NUMOPT", "id": "SR0263NR"}], "links": [{"ts": "1999", "source": "_e_SR0242RR_SR0263NR_986", "target": "SR0263NR", "key": 0}]}

@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "1996", "raw_ts": "1996", "id": "_e_SR0256TR_SR0297ZR_896"}, {"entity_type": "node", "name": "MODEL", "id": "SR0256TR"}], "links": [{"ts": "1996", "source": "_e_SR0256TR_SR0297ZR_896", "target": "SR0256TR", "key": 0}]}

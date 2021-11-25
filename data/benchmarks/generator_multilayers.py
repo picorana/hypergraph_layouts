@@ -79,8 +79,6 @@ def filter_multilayered_hyperedge(G):
     G.remove_nodes_from(hyperedge_to_remove)
 
 
-
-
 def multilayered_generator(folder):
     N_nodes_range = [4, 30]
     N_graphs_per_size = 25
@@ -106,9 +104,6 @@ def multilayered_generator(folder):
 
         #     break
         # break
-
-
-
 
 
 if __name__ == "__main__":

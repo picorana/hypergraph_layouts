@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "ATEAMS", "id": "SR0320WR"}, {"entity_type": "hyperedge", "ts": "2014", "raw_ts": "2014", "id": "_e_SR0320WR_SR0651GR_3686"}], "links": [{"ts": "2014", "source": "SR0320WR", "target": "_e_SR0320WR_SR0651GR_3686", "key": 0}]}

@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "2007", "raw_ts": "2007", "id": "_e_SR0076NR_SR0369ER_1875"}, {"entity_type": "node", "name": "PREVAL", "id": "SR0369ER"}], "links": [{"ts": "2007", "source": "_e_SR0076NR_SR0369ER_1875", "target": "SR0369ER", "key": 0}]}

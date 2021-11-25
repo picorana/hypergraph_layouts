@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "STATIFY", "id": "SR0893AR"}, {"entity_type": "hyperedge", "ts": "2020", "raw_ts": "2020", "id": "_e_SR0010YR_SR0893AR_5710"}], "links": [{"ts": "2020", "source": "SR0893AR", "target": "_e_SR0010YR_SR0893AR_5710", "key": 0}]}

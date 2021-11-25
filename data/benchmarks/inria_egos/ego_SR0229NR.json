@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "2004", "raw_ts": "2004", "id": "_e_SR0229NR_SR0343GR_1369"}, {"entity_type": "node", "name": "EIFFEL", "id": "SR0229NR"}], "links": [{"ts": "2004", "source": "_e_SR0229NR_SR0343GR_1369", "target": "SR0229NR", "key": 0}]}

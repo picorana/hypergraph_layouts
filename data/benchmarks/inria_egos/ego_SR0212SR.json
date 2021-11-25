@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "hyperedge", "ts": "2002", "raw_ts": "2002", "id": "_e_SR0197IR_SR0212SR_1125"}, {"entity_type": "node", "name": "CARAVEL", "id": "SR0212SR"}], "links": [{"ts": "2002", "source": "_e_SR0197IR_SR0212SR_1125", "target": "SR0212SR", "key": 0}]}

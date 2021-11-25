@@ -1,0 +1,1 @@
+{"directed": false, "multigraph": true, "graph": {}, "nodes": [{"entity_type": "node", "name": "PASTA", "id": "SR0900AR"}, {"entity_type": "hyperedge", "ts": "2020", "raw_ts": "2020", "id": "_e_SR0900AR_SR0857FR_5731"}], "links": [{"ts": "2020", "source": "SR0900AR", "target": "_e_SR0900AR_SR0857FR_5731", "key": 0}]}
