@@ -25,7 +25,7 @@ class Graph {
         }
         node.id += this.nodes.length;
 
-        node.graph = this;
+        // node.graph = this;
 
         this.nodes.push(node);
         this.addLevelsToNodeIndex(node.depth);
@@ -239,10 +239,14 @@ class Graph {
                     let s1 = 0;
                     let s2 = 0;
                     if (edge.nodes[0].depth == edge.nodes[1].depth) m = nodeXDistance*.2 + (Math.abs(getNodeCoordX(edge.nodes[0]) - getNodeCoordX(edge.nodes[1]))/(nodeYDistance/8));
-                    else {
+                    else if (getNodeCoordY(edge.nodes[0]) < getNodeCoordY(edge.nodes[1])) {
                         s1 = nodeXDistance*.4;
                         s2 = -nodeXDistance*.4;
+                    } else {
+                        s1 = -nodeXDistance*.4;
+                        s2 = +nodeXDistance*.4;
                     }
+
                     return line([
                         [getNodeCoordX(edge.nodes[0]), getNodeCoordY(edge.nodes[0])], 
                         [getNodeCoordX(edge.nodes[0]), getNodeCoordY(edge.nodes[0]) + m + s1], 

@@ -50,8 +50,20 @@ let readGraph = async function (filename) {
     return g;
 }
 
-let runGraph = async function (split_type, filename) {
-    graph = await readGraph(filename);
+let runGraph = async function (split_type, g) {
+
+    let graph = new Graph();
+    graph.addNodes(g.nodes);
+    graph.hyperedges = [];
+    for (let edge of g.edges){
+        graph.addEdge({nodes: graph.nodes.filter(n => edge.nodes.map(nn => nn.id).includes(n.id))})
+    }
+    for (let hyperedge of g.hyperedges){
+        graph.hyperedges.push({nodes: graph.nodes.filter(n => hyperedge.nodes.map(nn => nn.id).includes(n.id))})
+    }
+    // console.log(graph)
+
+    // graph = await readGraph(filename);
     let originalnodenum = graph.nodes.filter(n => n.depth == 0).length;
 
     let start_time = new Date()
@@ -68,7 +80,7 @@ let runGraph = async function (split_type, filename) {
     let time_to_transform = new Date() - start_time
 
     start_time = new Date()
-
+    
     sortAndDraw.sortAndDraw("", graph, false);
 
     let time_to_sort = new Date() - start_time
@@ -84,77 +96,32 @@ let runGraph = async function (split_type, filename) {
         case "bipartite": hsplit.bipartiteback(graph); break;
     }
 
+    // let prevedgelength = metrics.count_edge_length_at_depth(graph, 0, true)
     sortAndDraw.postprocess_final_layout(graph);
+    // console.log(prevedgelength, metrics.count_edge_length_at_depth(graph, 0, true))
 
     let time_to_postprocess = new Date() - start_time_to_postprocess;
 
-    let crossings = metrics.count_crossings_at_depth(graph, 0, true)
+    let crossings = metrics.count_all_crossings(graph, true)
     let edge_length = metrics.count_edge_length_at_depth(graph, 0, true)
 
-    return {graph: graph, time_to_sort: time_to_sort, method: split_type, crossings: crossings, edge_length: edge_length, nodenum: originalnodenum, time_to_transform: time_to_transform, time_to_postprocess: time_to_postprocess};
-}
-
-let runGraphGraphviz = async function (split_type, filename) {
-    graph = await readGraph(filename);
-    let originalnodenum = graph.nodes.filter(n => n.depth == 0).length;
-
-    let start_time = new Date()
-
-    switch(split_type){ 
-        case "split1": hsplit.split1(graph); break;
-        case "split2": hsplit.split2(graph); break;
-        case "aggregate1": hsplit.aggregate1(graph); break;
-        case "aggregate2": hsplit.aggregate2(graph); hsplit.split2(graph); break;
-        case "addnode": hsplit.addnode1(graph); break;
-        case "bipartite": hsplit.bipartite(graph); break;
-    }
-
-    let time_to_transform = new Date() - start_time
-
-    let gtd = graphToDot(graph);
-
-    start_time = new Date()
-
-    let s = await graphviz.dot(gtd, 'svg')
-
-    let time_to_sort = new Date() - start_time
-
-    for (let node of graph.nodes){
-        let t = s.slice(s.search(node.id))
-        let m = t.slice(t.search("cx")).split('"')
-        node.y = parseInt(m[1])/2.5
-    }
-    for (let nindex of graph.nodeIndex){
-        nindex.sort((a, b) => a.y > b.y)
-    }
-    for (let n of graph.nodeIndex[0]){
-        n.y = undefined
-    }
-
-    let time_to_postprocess = 0;
-
-    switch(split_type){
-        case "split1": hsplit.desplit1(graph); break;
-        case "split2": hsplit.desplit1(graph); break;
-        case "aggregate1": time_to_postprocess += hsplit.disaggregate(graph); break;
-        case "aggregate2": hsplit.desplit1(graph); time_to_postprocess += hsplit.disaggregate(graph); break;
-        case "addnode": hsplit.disnode(graph); break;
-        case "bipartite": hsplit.bipartiteback(graph); break;
-    }
-
-    let crossings = metrics.count_crossings_at_depth(graph, 0, true)
-    let edge_length = metrics.count_edge_length_at_depth(graph, 0, true)
-
-    // console.log(time_to_sort, crossings, split_type, originalnodenum)
-
-    return {graph: graph, time_to_sort: time_to_sort, method: split_type, crossings: crossings, edge_length: edge_length, nodenum: originalnodenum, time_to_transform: time_to_transform, time_to_postprocess: time_to_postprocess};
+    return {graph: graph, 
+        edgenum: graph.edges.length, 
+        time_to_sort: time_to_sort, 
+        method: split_type, 
+        crossings: crossings, 
+        edge_length: edge_length, 
+        nodenum: originalnodenum, 
+        hyperedgenum: graph.hyperedges.length,
+        time_to_transform: time_to_transform, 
+        time_to_postprocess: time_to_postprocess};
 }
 
 let runw = async function () {
-    let res = await runGraph(workerData.method, workerData.fname);
+    let res = await runGraph(workerData.method, workerData.graph);
     res.graph = [];
     let towrite = await JSON.stringify({result: res})
-    fs.writeFileSync('./data/benchmark_results/individual/' + workerData.fname.split("/")[4] + ".json", towrite, 'utf8', () => {});
+    // fs.writeFileSync('./data/benchmark_results/individual/' + workerData.fname.split("/")[4] + ".json", towrite, 'utf8', () => {});
     parentPort.postMessage(res);
 }
 

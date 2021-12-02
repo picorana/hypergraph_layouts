@@ -722,7 +722,6 @@ class SimpleLp {
         // bendiness
         // **********
         if (this.options.bendiness_reduction_active){
-            // console.log(this.result)
             for (let node of this.g.nodes){
                 let val = this.result["y_" + node.id]              
                 node.y = val;

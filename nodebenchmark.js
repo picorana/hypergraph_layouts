@@ -62,59 +62,6 @@ let firstStartup = async function(){
     console.log(new Date() - start_time)
 }
 
-let runGraph = async function (split_type, filename) {
-    graph = await readGraph(filename);
-    let originalnodenum = graph.nodes.length;
-
-    let start_time = new Date()
-
-    switch(split_type){ 
-        case "split1": hsplit.split1(graph); break;
-        case "split2": hsplit.split2(graph); break;
-        case "aggregate1": hsplit.aggregate1(graph); break;
-        case "aggregate2": hsplit.aggregate2(graph); hsplit.split2(graph); break;
-        case "addnode": hsplit.addnode1(graph); break;
-        case "bipartite": hsplit.bipartite(graph); break;
-    }
-
-    time_to_transform = new Date() - start_time
-
-    let gtd = graphToDot(graph);
-
-    start_time = new Date()
-
-    let s = await graphviz.dot(gtd, 'svg')
-    for (let node of graph.nodes){
-        let t = s.slice(s.search(node.id))
-        let m = t.slice(t.search("cx")).split('"')
-        node.y = parseInt(m[1])/2.5
-    }
-    for (let nindex of graph.nodeIndex){
-        nindex.sort((a, b) => a.y > b.y)
-    }
-    for (let n of graph.nodeIndex[0]){
-        n.y = undefined
-    }
-
-    time_to_sort = new Date() - start_time
-
-    switch(split_type){
-        case "split1": hsplit.desplit1(graph); break;
-        case "split2": hsplit.desplit1(graph); break;
-        case "aggregate1": hsplit.disaggregate(graph, false); break;
-        case "aggregate2": hsplit.desplit1(graph); hsplit.disaggregate(graph, false); break;
-        case "addnode": hsplit.disnode(graph); break;
-        case "bipartite": hsplit.bipartiteback(graph); break;
-    }
-
-    let crossings = metrics.count_crossings_at_depth(graph, 0, true)
-    let edge_length = metrics.count_edge_length_at_depth(graph, 0, true)
-
-    return {graph: graph, time_to_sort: time_to_sort, crossings: crossings, edge_length: edge_length, nodenum: originalnodenum, time_to_transform: time_to_transform, time_to_postprocess: time_to_postprocess};
-}
-
-let time_to_postprocess = 0;
-
 let createWorker = async function (workerData){
     return new Promise(function(resolve){
         var worker = new Worker('./src/barycentric/benchmark_worker.js', workerData);
@@ -146,8 +93,8 @@ let runAll = async function(graphtype) {
 
     let results = [];
 
-    for (let i = 4; i < 20; i+=1){
-        for (let j = 0; j<1; j++){
+    for (let i = 4; i < 400; i+=10){
+        for (let j = 0; j<25; j++){
             let fname = "./data/benchmarks/generated/graph_" + graphtype + "_" + i + "_" + j;
             console.log(fname)
     
@@ -156,7 +103,6 @@ let runAll = async function(graphtype) {
                     if (failspermethod[method] > 20) continue;
                     
                     let res = await createWorker({workerData: {method: method, fname: fname}})
-                    // let res = await runGraph(method, fname);
     
                     res.method = method;
                     res.graph = [];
@@ -167,12 +113,7 @@ let runAll = async function(graphtype) {
         }
     }
 
-    // console.log(results)
-
-    fs.writeFile('./data/benchmark_results/results' + graphtype + '.json', JSON.stringify({results: results}), 'utf8', () => {});
-
-    // console.log(results.map(r => r.method + " " + r.time_to_sort))
-    // drawResults(results);
+    fs.writeFile('./data/benchmark_results/results' + graphtype + '2.json', JSON.stringify({results: results}), 'utf8', () => {});
 
     let methodmap = {}
     let crossingmap = {}
@@ -190,14 +131,10 @@ let runAll = async function(graphtype) {
         crossingmap[r.method][r.nodenum].push(r.crossings)
     }
 
-    // fs.writeFile('./data/benchmark_results/times.json', JSON.stringify(methodmap), 'utf8', () => {});
-    // fs.writeFile('./data/benchmark_results/crossings.json', JSON.stringify(crossingmap), 'utf8', () => {});
-
-    // console.log(crossingmap)
     console.log("done!")
 }
 
 let failspermethod = {}
 for (let method of methods) failspermethod[method] = 0;
 
-runAll("complete")
+runAll("random")

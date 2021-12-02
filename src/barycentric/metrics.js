@@ -3,18 +3,27 @@ let is_hyperedge = (edge) => {
 }
 
 let is_same_rank = (edge) => {
-    return new Set(edge.nodes.map(n => n.depth)).size == 1
+    if (edge.is_same_rank == undefined) edge.is_same_rank = (new Set(edge.nodes.map(n => n.depth)).size == 1)
+    return edge.is_same_rank;
+}
+
+let getbounds = (edge, graph, depth) => {
+    if (edge.bounds == [] || edge.bounds == undefined) {
+        let bounds = edge.nodes.map(n => graph.nodeIndex[depth].indexOf(n))
+        edge.bounds = [Math.min.apply(0, bounds), Math.max.apply(0, bounds)]
+    }
+    return edge.bounds
 }
 
 let crossing_same_rank_same_rank = (graph, depth, edge1, edge2) => {
-    let e1bounds = edge1.nodes.map(n => graph.nodeIndex[depth].indexOf(n)).sort()
-    let mine1 = Math.min.apply(0, e1bounds)
-    let maxe1 = Math.max.apply(0, e1bounds)
 
-    let e2bounds = edge2.nodes.map(n => graph.nodeIndex[depth].indexOf(n)).sort()
+    let e1bounds = getbounds(edge1, graph, depth)
+    let mine1 = e1bounds[0]
+    let maxe1 = e1bounds[1]
 
-    let mine2 = Math.min.apply(0, e2bounds)
-    let maxe2 = Math.max.apply(0, e2bounds)
+    let e2bounds = getbounds(edge2, graph, depth)
+    let mine2 = e2bounds[0]
+    let maxe2 = e2bounds[1]
 
     if (maxe1 < mine2 || maxe2 < mine1) return 0;
 
@@ -57,6 +66,9 @@ let crossing_same_rank_same_rank = (graph, depth, edge1, edge2) => {
 }
 
 let crossing_not_same_rank = (graph, depth, edge1, edge2) => {
+
+    if (graph.nodeIndex[depth + 1] == undefined) return 0;
+
     let u1 = edge1.nodes.find(n => n.depth == depth)
     let v1 = edge1.nodes.find(n => n.depth == depth + 1)
 
@@ -91,13 +103,9 @@ let crossing_same_rank_not_same_rank = (graph, depth, edge1, edge2) => {
 }
 
 let count_crossings_at_depth = (graph, depth, include_hyperedges = false) => {
-
     let edgeset = graph.edges.filter(e => e.nodes.every(n => n.depth == depth || n.depth == depth + 1));
-
     if (include_hyperedges) edgeset = edgeset.concat(graph.hyperedges.filter(e => e.nodes.some(n => n.depth == depth)))
-
     edgeset = edgeset.filter(e => !e.nodes.every(n => n.depth == depth + 1))
-
     let r = 0;
 
     for (let i=0; i<edgeset.length - 1; i++){
@@ -113,6 +121,10 @@ let count_crossings_at_depth = (graph, depth, include_hyperedges = false) => {
 }
 
 let count_all_crossings = (graph, include_hyperedges = false) => {
+
+    for (let edge of graph.edges) edge.bounds = [];
+    for (let hyperedge of graph.hyperedges) hyperedge.bounds = [];
+
     let r = 0;
     for (let depth of [... new Set(graph.nodes.map(n => n.depth))]){
         r += count_crossings_at_depth(graph, depth, include_hyperedges)
@@ -128,14 +140,31 @@ let count_all_crossings = (graph, include_hyperedges = false) => {
 //     return r;
 // }
 
+let count_edge_length_vertical_only = (graph) => {
+    let r = 0;
+
+    let edgeset = graph.edges.filter(e => e.nodes[0].depth != e.nodes[1].depth);
+    
+    for (let edge of edgeset){
+        let narray = edge.nodes.map(n => n.y == undefined? graph.nodeIndex[n.depth].indexOf(n)*nodeXdist : n.y)
+        let n1 = Math.max.apply(0, narray)
+        let n2 = Math.min.apply(0, narray)
+        r += Math.abs(n1 - n2)
+    }
+
+    return r;
+}
+
 let count_edge_length_at_depth = (graph, depth, include_hyperedges = false) => {
     let r = 0;
+
+    nodeXdist = 20;
 
     let edgeset = graph.edges;
     if (include_hyperedges) edgeset = edgeset.concat(graph.hyperedges)
     
     for (let edge of edgeset){
-        let narray = edge.nodes.map(n => n.y == undefined? graph.nodeIndex[n.depth].indexOf(n) : n.y)
+        let narray = edge.nodes.map(n => n.y == undefined? graph.nodeIndex[n.depth].indexOf(n)*nodeXdist : n.y)
         let n1 = Math.max.apply(0, narray)
         let n2 = Math.min.apply(0, narray)
         r += Math.abs(n1 - n2)
@@ -146,6 +175,6 @@ let count_edge_length_at_depth = (graph, depth, include_hyperedges = false) => {
 
 try {
     module.exports = exports = {
-        count_all_crossings, count_crossings_at_depth, count_edge_length_at_depth
+        count_all_crossings, count_crossings_at_depth, count_edge_length_at_depth, count_edge_length_vertical_only
     };
  } catch (e) {}

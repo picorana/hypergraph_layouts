@@ -7,8 +7,12 @@
   <script src="lib/glpk.min.js"></script>
   <!-- <script src="lib/reorder.min.js"></script> -->
   <script src="lib/d3-interpolate.min.js"></script>
+  <script src="lib/nouislider.min.js"></script>
   <script src="lib/bootstrap.min.js"></script>
 
+  <script src="https://code.easypz.io/easypz.latest.min.js"></script>
+
+  <link rel="stylesheet" href="lib/nouislider.min.css">
   <link rel="stylesheet" href="lib/bootstrap.min.css">
 
   <script src="src/case_studies/simplegraph.js"></script>
@@ -168,7 +172,7 @@ let parseDataset = function (data, teamdata) {
             // if (involvedNodes.length == 2) graph.addEdge({nodes: involvedNodes, weight: weight})
             // else if (involvedNodes.length > 2)
 
-            // if (involvedNodes.length > 2)
+            if (involvedNodes.length > 2)
                 graph.hyperedges.push({nodes: involvedNodes, weight: weight})
         }
 
@@ -288,6 +292,9 @@ let isolateElemGraph = function (graph, groupnames) {
             edge.color = edge.nodes[0].color;
         }
     }
+
+    graph.nodes.map(n => n.name = "n" + graph.nodes.indexOf(n))
+    graph.hyperedges.map(h => h.nodes.sort((a, b) => {if (Math.random() < 0.5) return -1; else return 1;}))
 }
 
 let isolateThemeGraph = function (graph, themenames) {
@@ -345,6 +352,7 @@ let drawInriaCollabs = async function (box, split_type, draw_iterations = false)
     newbox.append("div").attr("class", "boxelem").text("edge length 1: " + Math.round(count_edge_length_at_depth(graph, 0, true)))
     newbox.append("div").attr("class", "boxelem").text("num hyperedges: " + graph.hyperedges.length)
     newbox.append("div").attr("class", "boxelem").text("num edges: " + graph.edges.length)
+    newbox.append("div").attr("class", "boxelem").html("hyperedges: " + graph.hyperedges.filter(h => h.nodes.length > 2).map(h => "[" + h.nodes.map(n => n.abbrv).join(" ") + "]").join(" <br> "))
 
     let start_time = new Date()
 
@@ -454,6 +462,63 @@ let init = async function () {
 
     let box = row.append("div").attr("class", "col-sm")
 
+    await drawInriaCollabs(box, "split2");
+
+     box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+
+     box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+
+     box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+
+     box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+
+     box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+
+     box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+
+    // box = row.append("div").attr("class", "col-sm")
+
+    // await drawInriaCollabs(box, "split2");
+
+    // box = row.append("div").attr("class", "col-sm")
+
+    // await drawInriaCollabs(box, "aggregate1");
+
+    // box = row.append("div").attr("class", "col-sm")
+
+    // await drawInriaCollabs(box, "aggregate2");
+
+    // box = row.append("div").attr("class", "col-sm")
+
+    // await drawInriaCollabs(box, "addnode");
+
+    // box = row.append("div").attr("class", "col-sm")
+
+    // await drawInriaCollabs(box, "bipartite");
+
+    row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+    stratisfimalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    stratisfimalrowfinal = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+    box = row.append("div").attr("class", "col-sm")
+
     await drawInriaCollabs(box, "split1");
 
     box = row.append("div").attr("class", "col-sm")
@@ -476,6 +541,7 @@ let init = async function () {
 
     await drawInriaCollabs(box, "bipartite");
 }
+
 
 async function solve_with_graphviz (graph) {
     let gtd = graphToDot(graph);
@@ -552,21 +618,21 @@ function reduce_y(graph){
 let time_to_postprocess = 0;
 let time_to_postprocess2 = 0;
 let compute_layout_with_graphviz = false;
-let colorsByTheme = false;
+let colorsByTheme = true;
 
 let isolatedSelection = [];
 let isolatedTheme = [];
 let groupworks = {}
 let teamdata;
 
-let svgheight = 1200
-let svgwidth = 700
-let singlesvgheight = 800
+let svgheight = 400
+let svgwidth = 400
+let singlesvgheight = 400
 let iteration_distance = svgheight/5
 
 let nodeYdist = 100;
 let nodeXdist = 20;
-let drawNodeLabels = true;
+let drawNodeLabels = false;
 let drawLabelForSelectionOnly = false;
 let graphvizdistancemultiplier = 0.3;
 
@@ -597,7 +663,7 @@ let base_edge_weight = 0.2;
 let collab_weight_ratio = 2;
 
 // let yearsVisualized = [2000, 2020]
-let yearsVisualized = [2018, 2020]
+let yearsVisualized = [2017, 2019]
 
 let time_to_transform = 0
 let time_to_sort = 0

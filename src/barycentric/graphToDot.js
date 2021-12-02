@@ -44,7 +44,7 @@ let graphToDot = (graph) => {
         r += `}\n`
     }
 
-    console.log(graph.nodes)
+    // console.log(graph.nodes)
 
     for (let edge of graph.edges){
         let w = '';

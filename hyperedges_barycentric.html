@@ -205,7 +205,8 @@ let drawBox = async function (box, split_type, graph_type = "simple1") {
         .attr("preserveAspectRatio", "xMinYMin meet")
         .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
     
-    graph.draw(svg, nodeYdist, nodeXdist);
+    // graph.draw(svg, nodeYdist, nodeXdist);
+    drawHypergraph(svg, graph);
 
     switch(split_type){
         case "split1": desplit1(graph); break;
@@ -241,9 +242,10 @@ let svgwidth = 320
 let singlesvgheight = 150
 let iteration_distance = 120
 
-let nodeYdist = 70;
+let nodeYdist = 50;
 let nodeXdist = 20;
 let drawNodeLabels = true;
+let drawLabelForSelectionOnly = false;
 
 let time_to_transform = 0
 let time_to_sort = 0
@@ -251,7 +253,7 @@ let time_to_postprocess = 0
 let iterations_to_convergence = 0
 
 let methods = ["split1", "split2", "aggregate1", "aggregate2", "addnode", "bipartite"]
-let inputgraphs = ["simple1", "simple2", "simple3", "simple4"]
+let inputgraphs = ["n0", "n1", "simple1", "simple2", "simple3", "simple4"]
 // let inputgraphs = ["simple1"]
 
 let method_descriptions = {

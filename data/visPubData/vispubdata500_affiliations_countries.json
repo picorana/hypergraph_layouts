@@ -6,7 +6,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Utah,USA (U0)",
         "genealogy_details": [],
         "genealogy": "University of Utah,USA"
@@ -18,7 +18,7 @@
             1991,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Stuttgart, Germany (U1)",
         "genealogy_details": [],
         "genealogy": "University of Stuttgart, Germany",
@@ -31,7 +31,7 @@
             2002,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Konstanz,Germany (U2)",
         "genealogy_details": [],
         "genealogy": "University of Konstanz,Germany",
@@ -44,7 +44,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, Davis, USA (U3)",
         "genealogy_details": [],
         "genealogy": "University of California, Davis, USA",
@@ -57,7 +57,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Stony Brook University, USA (U4)",
         "genealogy_details": [],
         "genealogy": "Stony Brook University, USA"
@@ -69,7 +69,7 @@
             1994,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Purdue University, USA (U5)",
         "genealogy_details": [],
         "genealogy": "Purdue University, USA",
@@ -82,7 +82,7 @@
             1995,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Georgia Institute of Technology, USA (U6)",
         "genealogy_details": [],
         "genealogy": "Georgia Institute of Technology, USA",
@@ -95,7 +95,7 @@
             2006,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Hong Kong University of Science and Technology, China (U7)",
         "genealogy_details": [],
         "genealogy": "Hong Kong University of Science and Technology, China"
@@ -107,7 +107,7 @@
             1997,
             2018
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Vienna University of Technology, Austria (U8)",
         "genealogy_details": [],
         "genealogy": "Vienna University of Technology, Austria"
@@ -119,7 +119,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "IBM Research, USA (U9)",
         "genealogy_details": [],
         "genealogy": "IBM Research, USA",
@@ -132,7 +132,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Ohio State University, Columbus, USA (U10)",
         "genealogy_details": [],
         "genealogy": "Ohio State University, Columbus, USA",
@@ -145,7 +145,7 @@
             2004,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Zhejiang University,China (U11)",
         "genealogy_details": [],
         "genealogy": "Zhejiang University,China"
@@ -157,7 +157,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Stanford University, USA (U12)",
         "genealogy_details": [],
         "genealogy": "Stanford University, USA",
@@ -170,7 +170,7 @@
             2004,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of North Carolina, Charlotte, USA (U13)",
         "genealogy_details": [],
         "genealogy": "University of North Carolina, Charlotte, USA"
@@ -182,7 +182,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Harvard University,USA (U14)",
         "genealogy_details": [],
         "genealogy": "Harvard University,USA",
@@ -195,7 +195,7 @@
             1995,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Pacific Northwest National Laboratory, USA (U15)",
         "genealogy_details": [],
         "genealogy": "Pacific Northwest National Laboratory, USA"
@@ -207,7 +207,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Maryland, College Park, USA (U16)",
         "genealogy_details": [],
         "genealogy": "University of Maryland, College Park, USA",
@@ -220,7 +220,7 @@
             2001,
             2019
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "VRVis Research Center, Austria (U17)",
         "genealogy_details": [],
         "genealogy": "VRVis Research Center, Austria"
@@ -232,7 +232,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Lawrence Livermore National Laboratory, USA (U18)",
         "genealogy_details": [],
         "genealogy": "Lawrence Livermore National Laboratory, USA"
@@ -244,7 +244,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of North Carolina, Chapel Hill, USA (U19)",
         "genealogy_details": [],
         "genealogy": "University of North Carolina, Chapel Hill, USA"
@@ -256,7 +256,7 @@
             1998,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Virginia Tech, USA (U20)",
         "genealogy_details": [],
         "genealogy": "Virginia Tech, USA"
@@ -268,7 +268,7 @@
             2000,
             2018
         ],
-        "country": "Sweden",
+        "country": "Europe",
         "fullname": "Link\u00f6ping University,Sweden (U21)",
         "genealogy_details": [],
         "genealogy": "Link\u00f6ping University,Sweden"
@@ -280,7 +280,7 @@
             1999,
             2019
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Eindhoven University of Technology, The Netherlands (U22)",
         "genealogy_details": [],
         "genealogy": "Eindhoven University of Technology, The Netherlands"
@@ -292,7 +292,7 @@
             1993,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Inria, France (U23)",
         "genealogy_details": [],
         "genealogy": "Inria, France",
@@ -305,7 +305,7 @@
             2001,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "New York University, USA (U24)",
         "genealogy_details": [],
         "genealogy": "New York University, USA"
@@ -317,7 +317,7 @@
             1998,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Microsoft Research, USA (U25)",
         "genealogy_details": [],
         "genealogy": "Microsoft Research, USA",
@@ -330,7 +330,7 @@
             1994,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Simon Fraser University, Canada (U26)",
         "genealogy_details": [],
         "genealogy": "Simon Fraser University, Canada"
@@ -342,7 +342,7 @@
             1995,
             2019
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "ETH Zurich, Switzerland (U27)",
         "genealogy_details": [],
         "genealogy": "ETH Zurich, Switzerland",
@@ -355,7 +355,7 @@
             1994,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Fraunhofer Institute, Germany (U28)",
         "genealogy_details": [],
         "genealogy": "Fraunhofer Institute, Germany",
@@ -368,7 +368,7 @@
             2002,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Calgary, Canada (U29)",
         "genealogy_details": [],
         "genealogy": "University of Calgary, Canada"
@@ -380,7 +380,7 @@
             1990,
             2017
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Kaiserslautern, Germany (U30)",
         "genealogy_details": [],
         "genealogy": "University of Kaiserslautern, Germany"
@@ -392,7 +392,7 @@
             2002,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Magdeburg, Germany (U31)",
         "genealogy_details": [],
         "genealogy": "University of Magdeburg, Germany"
@@ -404,7 +404,7 @@
             2008,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Peking University, China (U32)",
         "genealogy_details": [],
         "genealogy": "Peking University, China",
@@ -417,7 +417,7 @@
             1998,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Pennsylvania State University, USA (U33)",
         "genealogy_details": [],
         "genealogy": "Pennsylvania State University, USA"
@@ -429,7 +429,7 @@
             1995,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Minnesota, USA (U34)",
         "genealogy_details": [],
         "genealogy": "University of Minnesota, USA"
@@ -441,7 +441,7 @@
             2003,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Technical University Munich, Germany (U35)",
         "genealogy_details": [],
         "genealogy": "Technical University Munich, Germany"
@@ -453,7 +453,7 @@
             1990,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "NASA, USA (U36)",
         "genealogy_details": [],
         "genealogy": "NASA, USA"
@@ -465,7 +465,7 @@
             2007,
             2018
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "City University, London,UK (U37)",
         "genealogy_details": [],
         "genealogy": "City University, London,UK"
@@ -477,7 +477,7 @@
             1993,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Mississippi State University, USA (U38)",
         "genealogy_details": [],
         "genealogy": "Mississippi State University, USA"
@@ -489,7 +489,7 @@
             1997,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Brown University, USA (U39)",
         "genealogy_details": [],
         "genealogy": "Brown University, USA",
@@ -502,7 +502,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Arizona State University, Tempe, AZ, USA (U40)",
         "genealogy_details": [],
         "genealogy": "Arizona State University, Tempe, AZ, USA"
@@ -514,7 +514,7 @@
             1995,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Toronto,Canada (U41)",
         "genealogy_details": [],
         "genealogy": "University of Toronto,Canada",
@@ -527,7 +527,7 @@
             1996,
             2017
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of British Columbia, Canada (U42)",
         "genealogy_details": [],
         "genealogy": "University of British Columbia, Canada"
@@ -539,7 +539,7 @@
             2013,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Tsinghua University, China (U43)",
         "genealogy_details": [],
         "genealogy": "Tsinghua University, China"
@@ -551,7 +551,7 @@
             1990,
             2019
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "Monash University, Australia (U44)",
         "genealogy_details": [],
         "genealogy": "Monash University, Australia",
@@ -564,7 +564,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Sandia National Laboratories, USA (U45)",
         "genealogy_details": [],
         "genealogy": "Sandia National Laboratories, USA"
@@ -576,7 +576,7 @@
             1993,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, Berkeley, USA (U46)",
         "genealogy_details": [],
         "genealogy": "University of California, Berkeley, USA"
@@ -588,7 +588,7 @@
             2005,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Leipzig, Germany (U47)",
         "genealogy_details": [],
         "genealogy": "University of Leipzig, Germany"
@@ -600,7 +600,7 @@
             2007,
             2018
         ],
-        "country": "Norway",
+        "country": "Europe",
         "fullname": "University of Bergen, Norway (U48)",
         "genealogy_details": [],
         "genealogy": "University of Bergen, Norway"
@@ -612,7 +612,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Washington, USA (U49)",
         "genealogy_details": [],
         "genealogy": "University of Washington, USA",
@@ -625,7 +625,7 @@
             1996,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Zuse Institute, Berlin, Germany (U50)",
         "genealogy_details": [],
         "genealogy": "Zuse Institute, Berlin, Germany"
@@ -637,7 +637,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Worcester Polytechnical Institute, USA (U51)",
         "genealogy_details": [],
         "genealogy": "Worcester Polytechnical Institute, USA"
@@ -649,7 +649,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Texas, Austin, USA (U52)",
         "genealogy_details": [],
         "genealogy": "University of Texas, Austin, USA"
@@ -661,7 +661,7 @@
             1993,
             2019
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Delft University of Technology, The Netherlands (U53)",
         "genealogy_details": [],
         "genealogy": "Delft University of Technology, The Netherlands"
@@ -673,7 +673,7 @@
             2006,
             2019
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Swansea University, UK (U54)",
         "genealogy_details": [],
         "genealogy": "Swansea University, UK"
@@ -685,7 +685,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Wisconsin, Madison, USA (U55)",
         "genealogy_details": [],
         "genealogy": "University of Wisconsin, Madison, USA",
@@ -698,7 +698,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Los Alamos National Laboratory, USA (U56)",
         "genealogy_details": [],
         "genealogy": "Los Alamos National Laboratory, USA"
@@ -710,7 +710,7 @@
             2010,
             2019
         ],
-        "country": "Saudi Arabia",
+        "country": "Middle East",
         "fullname": "King Abdullah University of Science and Technology, Saudi Arabia (U57)",
         "genealogy_details": [],
         "genealogy": "King Abdullah University of Science and Technology, Saudi Arabia",
@@ -723,7 +723,7 @@
             2004,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Tufts University, USA (U58)",
         "genealogy_details": [],
         "genealogy": "Tufts University, USA"
@@ -735,7 +735,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Lawrence Berkeley National Laboratory, USA (U59)",
         "genealogy_details": [],
         "genealogy": "Lawrence Berkeley National Laboratory, USA"
@@ -747,7 +747,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Massachusetts Institute of Technology, USA (U60)",
         "genealogy_details": [],
         "genealogy": "Massachusetts Institute of Technology, USA"
@@ -759,7 +759,7 @@
             1990,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "AT&T Labs, USA (U61)",
         "genealogy_details": [],
         "genealogy": "AT&T Labs, USA"
@@ -771,7 +771,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Carnegie Mellon University, USA (U62)",
         "genealogy_details": [],
         "genealogy": "Carnegie Mellon University, USA"
@@ -783,7 +783,7 @@
             1999,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Hewlett Packard Laboratories, USA (U63)",
         "genealogy_details": [],
         "genealogy": "Hewlett Packard Laboratories, USA"
@@ -795,7 +795,7 @@
             1992,
             2017
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Technical University of Darmstadt, Germany (U64)",
         "genealogy_details": [],
         "genealogy": "Technical University of Darmstadt, Germany",
@@ -808,7 +808,7 @@
             1991,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Illinois, Urbana-Champaign, USA (U65)",
         "genealogy_details": [],
         "genealogy": "University of Illinois, Urbana-Champaign, USA"
@@ -820,7 +820,7 @@
             1994,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Argonne National Laboratory, USA (U66)",
         "genealogy_details": [],
         "genealogy": "Argonne National Laboratory, USA"
@@ -832,7 +832,7 @@
             2015,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Shandong University, China (U67)",
         "genealogy_details": [],
         "genealogy": "Shandong University, China",
@@ -845,7 +845,7 @@
             2007,
             2019
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "University of Groningen, The Netherlands (U68)",
         "genealogy_details": [],
         "genealogy": "University of Groningen, The Netherlands"
@@ -857,7 +857,7 @@
             1991,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "General Electric Corporation Research & Dev. Center, NY, USA (U69)",
         "genealogy_details": [],
         "genealogy": "General Electric Corporation Research & Dev. Center, NY, USA"
@@ -869,7 +869,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Illinois, Chicago, USA (U70)",
         "genealogy_details": [],
         "genealogy": "University of Illinois, Chicago, USA"
@@ -881,7 +881,7 @@
             2004,
             2016
         ],
-        "country": "Brazil",
+        "country": "South America",
         "fullname": "University of Sao Paulo, Brazil (U71)",
         "genealogy_details": [],
         "genealogy": "University of Sao Paulo, Brazil"
@@ -893,7 +893,7 @@
             2008,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Oregon State University, USA (U72)",
         "genealogy_details": [],
         "genealogy": "Oregon State University, USA"
@@ -905,7 +905,7 @@
             1994,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Maryland, Baltimore County, USA (U73)",
         "genealogy_details": [],
         "genealogy": "University of Maryland, Baltimore County, USA"
@@ -917,7 +917,7 @@
             1993,
             2017
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Tubingen, Germany (U74)",
         "genealogy_details": [],
         "genealogy": "University of T\u00fcbingen, Germany",
@@ -942,7 +942,7 @@
             1994,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Texas A&M University, USA (U76)",
         "genealogy_details": [],
         "genealogy": "Texas A&M University, USA"
@@ -954,7 +954,7 @@
             2012,
             2016
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Middlesex University, UK (U77)",
         "genealogy_details": [],
         "genealogy": "Middlesex University, UK"
@@ -966,7 +966,7 @@
             1990,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Indiana, Bloomington, USA (U78)",
         "genealogy_details": [],
         "genealogy": "University of Indiana, Bloomington, USA"
@@ -978,7 +978,7 @@
             1990,
             2001
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "State University of New York, Stony Brook, USA (U79)",
         "genealogy_details": [],
         "genealogy": "State University of New York, Stony Brook, USA"
@@ -990,7 +990,7 @@
             1995,
             2019
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Graz University of Technology, Austria (U80)",
         "genealogy_details": [],
         "genealogy": "Graz University of Technology, Austria",
@@ -1003,7 +1003,7 @@
             2004,
             2011
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Oculus Info Inc., USA (U81)",
         "genealogy_details": [],
         "genealogy": "Oculus Info Inc., USA"
@@ -1015,7 +1015,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Michigan, USA (U82)",
         "genealogy_details": [],
         "genealogy": "University of Michigan, USA"
@@ -1027,7 +1027,7 @@
             1991,
             2013
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Rutgers University, USA (U83)",
         "genealogy_details": [],
         "genealogy": "Rutgers University, USA"
@@ -1039,7 +1039,7 @@
             1993,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, Santa Cruz, USA (U84)",
         "genealogy_details": [],
         "genealogy": "University of California, Santa Cruz, USA"
@@ -1051,7 +1051,7 @@
             1997,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Arizona, USA (U85)",
         "genealogy_details": [],
         "genealogy": "University of Arizona, USA"
@@ -1063,7 +1063,7 @@
             2011,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Microsoft Research Asia, China (U86)",
         "genealogy_details": [],
         "genealogy": "Microsoft Research Asia, China"
@@ -1075,7 +1075,7 @@
             2002,
             2011
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, Irvine, USA (U87)",
         "genealogy_details": [],
         "genealogy": "University of California, Irvine, USA"
@@ -1087,7 +1087,7 @@
             2007,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Victoria, Canada (U88)",
         "genealogy_details": [],
         "genealogy": "University of Victoria, Canada"
@@ -1099,7 +1099,7 @@
             2001,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Max Planck Institute, Germany (U89)",
         "genealogy_details": [],
         "genealogy": "Max Planck Institute, Germany"
@@ -1111,7 +1111,7 @@
             2007,
             2018
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of Oxford, UK (U90)",
         "genealogy_details": [],
         "genealogy": "University of Oxford, UK"
@@ -1123,7 +1123,7 @@
             2008,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Wayne State University, USA (U91)",
         "genealogy_details": [],
         "genealogy": "Wayne State University, USA"
@@ -1135,7 +1135,7 @@
             1990,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Johns Hopkins University, USA (U92)",
         "genealogy_details": [],
         "genealogy": "Johns Hopkins University, USA"
@@ -1147,7 +1147,7 @@
             1993,
             2018
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "CNRS,France (U93)",
         "genealogy_details": [],
         "genealogy": "CNRS,France"
@@ -1159,7 +1159,7 @@
             1997,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Palo Alto Research Center, USA (U94)",
         "genealogy_details": [],
         "genealogy": "Palo Alto Research Center, USA"
@@ -1171,7 +1171,7 @@
             2000,
             2016
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Rostock, Germany (U95)",
         "genealogy_details": [],
         "genealogy": "University of Rostock, Germany"
@@ -1183,7 +1183,7 @@
             1995,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Technical University of Braunschweig, Germany (U96)",
         "genealogy_details": [],
         "genealogy": "Technical University of Braunschweig, Germany"
@@ -1195,7 +1195,7 @@
             1996,
             2014
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Erlangen, Germany (U97)",
         "genealogy_details": [],
         "genealogy": "University of Erlangen, Germany"
@@ -1207,7 +1207,7 @@
             2003,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Harvard Medical School, USA (U98)",
         "genealogy_details": [],
         "genealogy": "Harvard Medical School, USA",
@@ -1220,7 +1220,7 @@
             1991,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Naval Research Laboratory, USA (U99)",
         "genealogy_details": [],
         "genealogy": "Naval Research Laboratory, USA"
@@ -1232,7 +1232,7 @@
             2000,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of M\u00fcnster, Germany (U100)",
         "genealogy_details": [],
         "genealogy": "University of M\u00fcnster, Germany"
@@ -1244,7 +1244,7 @@
             2007,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Google Inc., USA (U101)",
         "genealogy_details": [],
         "genealogy": "Google Inc., USA"
@@ -1256,7 +1256,7 @@
             2004,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Northwestern University, Evanston, IL, USA (U102)",
         "genealogy_details": [],
         "genealogy": "Northwestern University, Evanston, IL, USA"
@@ -1268,7 +1268,7 @@
             1993,
             2016
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of Leeds, UK (U103)",
         "genealogy_details": [],
         "genealogy": "University of Leeds, UK"
@@ -1280,7 +1280,7 @@
             2008,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Pittsburgh, USA (U104)",
         "genealogy_details": [],
         "genealogy": "University of Pittsburgh, USA"
@@ -1292,7 +1292,7 @@
             1990,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Florida, USA (U105)",
         "genealogy_details": [],
         "genealogy": "University of Florida, USA"
@@ -1304,7 +1304,7 @@
             1998,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "North Carolina State University, USA (U106)",
         "genealogy_details": [],
         "genealogy": "North Carolina State University, USA"
@@ -1316,7 +1316,7 @@
             1995,
             2018
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Seoul National University, Seoul, South Korea (U107)",
         "genealogy_details": [],
         "genealogy": "Seoul National University, Seoul, South Korea",
@@ -1329,7 +1329,7 @@
             1999,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Bonn, Germany (U108)",
         "genealogy_details": [],
         "genealogy": "University of Bonn, Germany"
@@ -1341,7 +1341,7 @@
             2010,
             2018
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Upper Austrian University of Applied Sciences, Austria (U109)",
         "genealogy_details": [],
         "genealogy": "Upper Austrian University of Applied Sciences, Austria"
@@ -1353,7 +1353,7 @@
             2017,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Central South University, China (U110)",
         "genealogy_details": [],
         "genealogy": "Central South University, China"
@@ -1365,7 +1365,7 @@
             2004,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Indiana, USA (U111)",
         "genealogy_details": [],
         "genealogy": "University of Indiana, USA"
@@ -1377,7 +1377,7 @@
             1992,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Munich, Germany (U112)",
         "genealogy_details": [],
         "genealogy": "University of Munich, Germany"
@@ -1389,7 +1389,7 @@
             2009,
             2016
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Chinese Academy of Sciences, China (U113)",
         "genealogy_details": [],
         "genealogy": "Chinese Academy of Sciences, China"
@@ -1401,7 +1401,7 @@
             2008,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Kent State University, USA (U114)",
         "genealogy_details": [],
         "genealogy": "Kent State University, USA"
@@ -1413,7 +1413,7 @@
             2010,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Heidelberg, Germany (U115)",
         "genealogy_details": [],
         "genealogy": "University of Heidelberg, Germany"
@@ -1425,7 +1425,7 @@
             1990,
             1999
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Mitre Corporation, USA (U116)",
         "genealogy_details": [],
         "genealogy": "Mitre Corporation, USA"
@@ -1437,7 +1437,7 @@
             1991,
             2019
         ],
-        "country": "Singapore",
+        "country": "East Asia",
         "fullname": "National University of Singapore, Singapore (U117)",
         "genealogy_details": [],
         "genealogy": "National University of Singapore, Singapore"
@@ -1449,7 +1449,7 @@
             2014,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Tableau Research, USA (U118)",
         "genealogy_details": [],
         "genealogy": "Tableau Research, USA"
@@ -1461,7 +1461,7 @@
             2005,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Oak Ridge National Laboratory, USA (U119)",
         "genealogy_details": [],
         "genealogy": "Oak Ridge National Laboratory, USA"
@@ -1485,7 +1485,7 @@
             1992,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of New Hampshire, USA (U121)",
         "genealogy_details": [],
         "genealogy": "University of New Hampshire, USA"
@@ -1497,7 +1497,7 @@
             2000,
             2017
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "RWTH Aachen, Germany (U122)",
         "genealogy_details": [],
         "genealogy": "RWTH Aachen, Germany",
@@ -1510,7 +1510,7 @@
             2004,
             2013
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "University of Bordeaux,France (U123)",
         "genealogy_details": [],
         "genealogy": "University of Bordeaux,France"
@@ -1522,7 +1522,7 @@
             2013,
             2015
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Tianjin University, China (U124)",
         "genealogy_details": [],
         "genealogy": "Tianjin University, China"
@@ -1534,7 +1534,7 @@
             1993,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Deutsches Zentrum f\u00fcr Luft- und Raumfahrt, Germany (U125)",
         "genealogy_details": [],
         "genealogy": "Deutsches Zentrum f\u00fcr Luft- und Raumfahrt, Germany"
@@ -1546,7 +1546,7 @@
             2001,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Yale University, USA (U126)",
         "genealogy_details": [],
         "genealogy": "Yale University, USA"
@@ -1558,7 +1558,7 @@
             2003,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Drexel University, USA (U127)",
         "genealogy_details": [],
         "genealogy": "Drexel University, USA"
@@ -1570,7 +1570,7 @@
             2007,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Bosch Research, USA (U128)",
         "genealogy_details": [],
         "genealogy": "Bosch Research, USA"
@@ -1582,7 +1582,7 @@
             2009,
             2017
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Bangor University, UK (U129)",
         "genealogy_details": [],
         "genealogy": "Bangor University, UK"
@@ -1594,7 +1594,7 @@
             1998,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "California Institute of Technology, USA (U130)",
         "genealogy_details": [],
         "genealogy": "California Institute of Technology, USA",
@@ -1607,7 +1607,7 @@
             1995,
             2006
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Center for Mathematics & Computer Science, Amsterdam, The Netherlands (U131)",
         "genealogy_details": [],
         "genealogy": "Center for Mathematics & Computer Science, Amsterdam, The Netherlands"
@@ -1619,7 +1619,7 @@
             2007,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, Santa Barbara, USA (U132)",
         "genealogy_details": [],
         "genealogy": "University of California, Santa Barbara, USA",
@@ -1632,7 +1632,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Colorado, USA (U133)",
         "genealogy_details": [],
         "genealogy": "University of Colorado, USA"
@@ -1644,7 +1644,7 @@
             2006,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Tennessee, USA (U134)",
         "genealogy_details": [],
         "genealogy": "University of Tennessee, USA"
@@ -1656,7 +1656,7 @@
             1995,
             2017
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Zurich University, Switzerland (U135)",
         "genealogy_details": [],
         "genealogy": "Zurich University, Switzerland",
@@ -1669,7 +1669,7 @@
             1996,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Southern California, USA (U136)",
         "genealogy_details": [],
         "genealogy": "University of Southern California, USA"
@@ -1681,7 +1681,7 @@
             2004,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Chicago, USA (U137)",
         "genealogy_details": [],
         "genealogy": "University of Chicago, USA"
@@ -1693,7 +1693,7 @@
             2014,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Duisburg-Essen, Germany (U138)",
         "genealogy_details": [],
         "genealogy": "University of Duisburg-Essen, Germany"
@@ -1705,7 +1705,7 @@
             2009,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Intel Corporation, USA (U139)",
         "genealogy_details": [],
         "genealogy": "Intel Corporation, USA"
@@ -1717,7 +1717,7 @@
             2006,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Iowa State University, USA (U140)",
         "genealogy_details": [],
         "genealogy": "Iowa State University, USA"
@@ -1741,7 +1741,7 @@
             1994,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, Los Angeles, USA (U142)",
         "genealogy_details": [],
         "genealogy": "University of California, Los Angeles, USA"
@@ -1753,7 +1753,7 @@
             1991,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Massachusetts Lowell, USA (U143)",
         "genealogy_details": [],
         "genealogy": "University of Massachusetts Lowell, USA"
@@ -1765,7 +1765,7 @@
             1998,
             2017
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "University of Vienna, Austria (U144)",
         "genealogy_details": [],
         "genealogy": "University of Vienna, Austria"
@@ -1777,7 +1777,7 @@
             2012,
             2017
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "German Research Centre for Geosciences, Potsdam, Germany (U145)",
         "genealogy_details": [],
         "genealogy": "German Research Centre for Geosciences, Potsdam, Germany"
@@ -1789,7 +1789,7 @@
             2006,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Microsoft, USA (U146)",
         "genealogy_details": [],
         "genealogy": "Microsoft, USA"
@@ -1801,7 +1801,7 @@
             2007,
             2014
         ],
-        "country": "Singapore",
+        "country": "East Asia",
         "fullname": "Nanyang Technological University, Singapore (U147)",
         "genealogy_details": [],
         "genealogy": "Nanyang Technological University, Singapore"
@@ -1813,7 +1813,7 @@
             2012,
             2018
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Ulsan National Institute of Science and Technology, South Korea (U148)",
         "genealogy_details": [],
         "genealogy": "Ulsan National Institute of Science and Technology, South Korea",
@@ -1826,7 +1826,7 @@
             2008,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Ulm, Germany (U149)",
         "genealogy_details": [],
         "genealogy": "University of Ulm, Germany"
@@ -1838,7 +1838,7 @@
             2013,
             2018
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Johannes Kepler University, Linz, Austria (U150)",
         "genealogy_details": [],
         "genealogy": "Johannes Kepler University, Linz, Austria"
@@ -1850,7 +1850,7 @@
             1994,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "National Institute of Standards and Technology, USA (U151)",
         "genealogy_details": [],
         "genealogy": "National Institute of Standards and Technology, USA"
@@ -1862,7 +1862,7 @@
             1993,
             2004
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Illinois, USA (U152)",
         "genealogy_details": [],
         "genealogy": "University of Illinois, USA"
@@ -1874,7 +1874,7 @@
             2001,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Technical University of Dresden, Germany (U153)",
         "genealogy_details": [],
         "genealogy": "Technical University of Dresden, Germany"
@@ -1886,7 +1886,7 @@
             2007,
             2015
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "National ICT Australia, Australia (U154)",
         "genealogy_details": [],
         "genealogy": "National ICT Australia, Australia"
@@ -1898,7 +1898,7 @@
             2005,
             2016
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Manitoba, Canada (U155)",
         "genealogy_details": [],
         "genealogy": "University of Manitoba, Canada"
@@ -1910,7 +1910,7 @@
             2007,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "East China Normal University, China (U156)",
         "genealogy_details": [],
         "genealogy": "East China Normal University, China"
@@ -1922,7 +1922,7 @@
             2014,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Adobe Research, USA (U157)",
         "genealogy_details": [],
         "genealogy": "Adobe Research, USA",
@@ -1935,7 +1935,7 @@
             2011,
             2013
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of W\u00fcrzburg, Germany (U158)",
         "genealogy_details": [],
         "genealogy": "University of W\u00fcrzburg, Germany"
@@ -1947,7 +1947,7 @@
             2015,
             2017
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Autodesk Research, Canada (U159)",
         "genealogy_details": [],
         "genealogy": "Autodesk Research, Canada",
@@ -1960,7 +1960,7 @@
             2019,
             2019
         ],
-        "country": "SCI InstituteUniversity of Utah",
+        "country": "North America",
         "fullname": "SCI InstituteUniversity of Utah (U160)",
         "genealogy_details": [],
         "genealogy": "SCI InstituteUniversity of Utah"
@@ -1972,7 +1972,7 @@
             1999,
             2005
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "State Univiversity, Blacksburg, VA, USA (U161)",
         "genealogy_details": [],
         "genealogy": "State Univiversity, Blacksburg, VA, USA"
@@ -1984,7 +1984,7 @@
             2009,
             2013
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Oklahoma, USA (U162)",
         "genealogy_details": [],
         "genealogy": "University of Oklahoma, USA"
@@ -1996,7 +1996,7 @@
             2014,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Potsdam University of Applied Sciences, Germany (U163)",
         "genealogy_details": [],
         "genealogy": "Potsdam University of Applied Sciences, Germany"
@@ -2008,7 +2008,7 @@
             2014,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Sorbonne University,France (U164)",
         "genealogy_details": [],
         "genealogy": "Sorbonne University,France"
@@ -2020,7 +2020,7 @@
             2010,
             2019
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "University of Amsterdam,The Netherlands (U165)",
         "genealogy_details": [],
         "genealogy": "University of Amsterdam,The Netherlands"
@@ -2032,7 +2032,7 @@
             2004,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "SSS Research, Inc, USA (U166)",
         "genealogy_details": [],
         "genealogy": "SSS Research, Inc, USA"
@@ -2044,7 +2044,7 @@
             1990,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Princeton University, USA (U167)",
         "genealogy_details": [],
         "genealogy": "Princeton University, USA"
@@ -2056,7 +2056,7 @@
             1996,
             2019
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "Tel Aviv University, Israel (U168)",
         "genealogy_details": [],
         "genealogy": "Tel Aviv University, Israel"
@@ -2068,7 +2068,7 @@
             1997,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, San Diego, USA (U169)",
         "genealogy_details": [],
         "genealogy": "University of California, San Diego, USA"
@@ -2080,7 +2080,7 @@
             1993,
             2019
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "Australian National University, Australia (U170)",
         "genealogy_details": [],
         "genealogy": "Australian National University, Australia"
@@ -2092,7 +2092,7 @@
             1994,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Cornell University, USA (U171)",
         "genealogy_details": [],
         "genealogy": "Cornell University, USA",
@@ -2105,7 +2105,7 @@
             1994,
             2007
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "Technion-Israel Institute of Technology, Haifa, Israel (U172)",
         "genealogy_details": [],
         "genealogy": "Technion-Israel Institute of Technology, Haifa, Israel"
@@ -2117,7 +2117,7 @@
             1999,
             2008
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "Ben-Gurion University of the Negev, Israel (U173)",
         "genealogy_details": [],
         "genealogy": "Ben-Gurion University of the Negev, Israel"
@@ -2129,7 +2129,7 @@
             2008,
             2016
         ],
-        "country": "Brazil",
+        "country": "South America",
         "fullname": "Universidade Federal do Rio Grande do Sul,Brazil (U174)",
         "genealogy_details": [],
         "genealogy": "Universidade Federal do Rio Grande do Sul,Brazil"
@@ -2141,7 +2141,7 @@
             2006,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "IBM, USA (U175)",
         "genealogy_details": [],
         "genealogy": "IBM, USA"
@@ -2153,7 +2153,7 @@
             2001,
             2002
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "MeVis-Center for Medical Diagnostic Systems, Bremen, Germany (U176)",
         "genealogy_details": [],
         "genealogy": "MeVis-Center for Medical Diagnostic Systems, Bremen, Germany"
@@ -2165,7 +2165,7 @@
             2004,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Universit\u00e9 Paris-Sud,France (U177)",
         "genealogy_details": [],
         "genealogy": "Universit\u00e9 Paris-Sud,France"
@@ -2177,7 +2177,7 @@
             2008,
             2012
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "SimVis GmbH, Austria (U178)",
         "genealogy_details": [],
         "genealogy": "SimVis GmbH, Austria"
@@ -2189,7 +2189,7 @@
             2012,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Siemens, Germany (U179)",
         "genealogy_details": [],
         "genealogy": "Siemens, Germany"
@@ -2201,7 +2201,7 @@
             2011,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Notre Dame, USA (U180)",
         "genealogy_details": [],
         "genealogy": "University of Notre Dame, USA"
@@ -2225,7 +2225,7 @@
             2012,
             2018
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Ontario Institute of Technology, Canada (U182)",
         "genealogy_details": [],
         "genealogy": "University of Ontario Institute of Technology, Canada"
@@ -2237,7 +2237,7 @@
             2009,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "ENAC, France (U183)",
         "genealogy_details": [],
         "genealogy": "ENAC, France",
@@ -2250,7 +2250,7 @@
             2012,
             2018
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Tongji University, China (U184)",
         "genealogy_details": [],
         "genealogy": "Tongji University, China"
@@ -2274,7 +2274,7 @@
             2013,
             2016
         ],
-        "country": "Denmark",
+        "country": "Europe",
         "fullname": "University of Copenhagen, Denmark (U186)",
         "genealogy_details": [],
         "genealogy": "University of Copenhagen, Denmark"
@@ -2286,7 +2286,7 @@
             2015,
             2019
         ],
-        "country": "Czech Republic",
+        "country": "Europe",
         "fullname": "Masaryk University, Czech Republic (U187)",
         "genealogy_details": [],
         "genealogy": "Masaryk University, Czech Republic"
@@ -2298,7 +2298,7 @@
             1990,
             2018
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "CSIRO, Australia (U188)",
         "genealogy_details": [],
         "genealogy": "CSIRO, Australia"
@@ -2310,7 +2310,7 @@
             1993,
             2003
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Boeing, USA (U189)",
         "genealogy_details": [],
         "genealogy": "Boeing, USA"
@@ -2322,7 +2322,7 @@
             2005,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Rutgers State University, NJ, USA (U190)",
         "genealogy_details": [],
         "genealogy": "Rutgers State University, NJ, USA"
@@ -2334,7 +2334,7 @@
             1991,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Tulane University, New Orleans, LA, USA (U191)",
         "genealogy_details": [],
         "genealogy": "Tulane University, New Orleans, LA, USA"
@@ -2346,7 +2346,7 @@
             1991,
             2013
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Imperial College London, UK (U192)",
         "genealogy_details": [],
         "genealogy": "Imperial College London, UK"
@@ -2358,7 +2358,7 @@
             1994,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Alabama, Huntsville, AL, USA (U193)",
         "genealogy_details": [],
         "genealogy": "University of Alabama, Huntsville, AL, USA"
@@ -2370,7 +2370,7 @@
             1992,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Columbia University, New York, USA (U194)",
         "genealogy_details": [],
         "genealogy": "Columbia University, New York, USA"
@@ -2382,7 +2382,7 @@
             1992,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of New Mexico, USA (U195)",
         "genealogy_details": [],
         "genealogy": "University of New Mexico, USA"
@@ -2394,7 +2394,7 @@
             1993,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Michigan State University, USA (U196)",
         "genealogy_details": [],
         "genealogy": "Michigan State University, USA"
@@ -2406,7 +2406,7 @@
             2002,
             2012
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of Glasgow, UK (U197)",
         "genealogy_details": [],
         "genealogy": "University of Glasgow, UK"
@@ -2418,7 +2418,7 @@
             1997,
             2018
         ],
-        "country": "Spain",
+        "country": "Europe",
         "fullname": "Universitat Polit\u00e8cnica de Catalunya,Spain (U198)",
         "genealogy_details": [],
         "genealogy": "Universitat Polit\u00e8cnica de Catalunya,Spain"
@@ -2430,7 +2430,7 @@
             2000,
             2007
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of Wales, UK (U199)",
         "genealogy_details": [],
         "genealogy": "University of Wales, UK"
@@ -2442,7 +2442,7 @@
             2014,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "T\u00e9l\u00e9com ParisTech, France (U200)",
         "genealogy_details": [],
         "genealogy": "T\u00e9l\u00e9com ParisTech, France"
@@ -2454,7 +2454,7 @@
             2002,
             2019
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "University of Technology, Sydney, Australia (U201)",
         "genealogy_details": [],
         "genealogy": "University of Technology, Sydney, Australia"
@@ -2466,7 +2466,7 @@
             2003,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Duke University, USA (U202)",
         "genealogy_details": [],
         "genealogy": "Duke University, USA"
@@ -2478,7 +2478,7 @@
             2004,
             2017
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "University of Sydney, Australia (U203)",
         "genealogy_details": [],
         "genealogy": "University of Sydney, Australia",
@@ -2491,7 +2491,7 @@
             2008,
             2011
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Philips Healthcare, The Netherlands (U204)",
         "genealogy_details": [],
         "genealogy": "Philips Healthcare, The Netherlands"
@@ -2503,7 +2503,7 @@
             2010,
             2011
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "IBM Research, China (U205)",
         "genealogy_details": [],
         "genealogy": "IBM Research, China"
@@ -2515,7 +2515,7 @@
             2014,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Karlsruhe Institute of Technology, Germany (U206)",
         "genealogy_details": [],
         "genealogy": "Karlsruhe Institute of Technology, Germany"
@@ -2527,7 +2527,7 @@
             2015,
             2017
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "St. P\u00f6lten University of Applied Sciences, Austria (U207)",
         "genealogy_details": [],
         "genealogy": "St. P\u00f6lten University of Applied Sciences, Austria"
@@ -2539,7 +2539,7 @@
             2013,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Novartis Institute of BioMedical Research, USA (U208)",
         "genealogy_details": [],
         "genealogy": "Novartis Institute of BioMedical Research, USA",
@@ -2552,7 +2552,7 @@
             1990,
             1990
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Sterling Federal Syst. Inc., Palo Alto, CA, USA (U209)",
         "genealogy_details": [],
         "genealogy": "Sterling Federal Syst. Inc., Palo Alto, CA, USA"
@@ -2564,7 +2564,7 @@
             1996,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Chinese University of Hong Kong, China (U210)",
         "genealogy_details": [],
         "genealogy": "Chinese University of Hong Kong, China",
@@ -2577,7 +2577,7 @@
             1991,
             2015
         ],
-        "country": "Norway",
+        "country": "Europe",
         "fullname": "Christian Michelsen Research, Norway (U211)",
         "genealogy_details": [],
         "genealogy": "Christian Michelsen Research, Norway"
@@ -2589,7 +2589,7 @@
             1994,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Science Applications Int. Corp., McLean, VA, USA (U212)",
         "genealogy_details": [],
         "genealogy": "Science Applications Int. Corp., McLean, VA, USA"
@@ -2601,7 +2601,7 @@
             1997,
             2003
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "Weizmann Institute of Science, Rehovot, Israel (U213)",
         "genealogy_details": [],
         "genealogy": "Weizmann Institute of Science, Rehovot, Israel"
@@ -2625,7 +2625,7 @@
             2019,
             2019
         ],
-        "country": "Microsoft Research",
+        "country": "North America",
         "fullname": "Microsoft Research (U215)",
         "genealogy_details": [],
         "genealogy": "Microsoft Research",
@@ -2638,7 +2638,7 @@
             2007,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Intel Corp., USA (U216)",
         "genealogy_details": [],
         "genealogy": "Intel Corp., USA"
@@ -2650,7 +2650,7 @@
             2016,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Universit\u00e9 Paris Saclay,France (U217)",
         "genealogy_details": [],
         "genealogy": "Universit\u00e9 Paris Saclay,France"
@@ -2674,7 +2674,7 @@
             2005,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Ernst-Moritz-Arndt University Greifswald, Germany (U219)",
         "genealogy_details": [],
         "genealogy": "Ernst-Moritz-Arndt University Greifswald, Germany"
@@ -2686,7 +2686,7 @@
             2008,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Jacobs University Bremen, Germany (U220)",
         "genealogy_details": [],
         "genealogy": "Jacobs University Bremen, Germany"
@@ -2698,7 +2698,7 @@
             2016,
             2019
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of London, UK (U221)",
         "genealogy_details": [],
         "genealogy": "University of London, UK"
@@ -2710,7 +2710,7 @@
             2015,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Massachusettes, Darthmouth, USA (U222)",
         "genealogy_details": [],
         "genealogy": "University of Massachusettes, Darthmouth, USA"
@@ -2722,7 +2722,7 @@
             2008,
             2008
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Beijing University of Posts and Telecommunications, China (U223)",
         "genealogy_details": [],
         "genealogy": "Beijing University of Posts and Telecommunications, China"
@@ -2734,7 +2734,7 @@
             2015,
             2018
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Korea University, South Korea (U224)",
         "genealogy_details": [],
         "genealogy": "Korea University, South Korea"
@@ -2746,7 +2746,7 @@
             2009,
             2014
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "University of Strasbourg, France (U225)",
         "genealogy_details": [],
         "genealogy": "University of Strasbourg, France"
@@ -2758,7 +2758,7 @@
             2010,
             2012
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Laval University, Quebec, Canada (U226)",
         "genealogy_details": [],
         "genealogy": "Laval University, Quebec, Canada"
@@ -2770,7 +2770,7 @@
             2016,
             2017
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Leiden University, The Netherlands (U227)",
         "genealogy_details": [],
         "genealogy": "Leiden University, The Netherlands"
@@ -2782,7 +2782,7 @@
             2014,
             2019
         ],
-        "country": "Argentina",
+        "country": "South America",
         "fullname": "Universidad Nacional del Sur, Bah\u00eda Blanca, Argentina (U228)",
         "genealogy_details": [],
         "genealogy": "Universidad Nacional del Sur, Bah\u00eda Blanca, Argentina"
@@ -2794,7 +2794,7 @@
             2015,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "American Museum of Natural History, USA (U229)",
         "genealogy_details": [],
         "genealogy": "American Museum of Natural History, USA"
@@ -2806,7 +2806,7 @@
             2015,
             2015
         ],
-        "country": "Singapore",
+        "country": "East Asia",
         "fullname": "Institute for Infocomm Research, Singapore (U230)",
         "genealogy_details": [],
         "genealogy": "Institute for Infocomm Research, Singapore"
@@ -2818,7 +2818,7 @@
             2018,
             2019
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "The Hong Kong University of Science and Technology, China (U231)",
         "genealogy_details": [],
         "genealogy": "The Hong Kong University of Science and Technology, China"
@@ -2842,7 +2842,7 @@
             2018,
             2018
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Alibaba-Zhejiang University Joint Institute of Frontier Technologies,China (U233)",
         "genealogy_details": [],
         "genealogy": "Alibaba-Zhejiang University Joint Institute of Frontier Technologies,China"
@@ -2854,7 +2854,7 @@
             1990,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Temple University, Philadelphia, PA, USA (U234)",
         "genealogy_details": [],
         "genealogy": "Temple University, Philadelphia, PA, USA"
@@ -2866,7 +2866,7 @@
             1990,
             2000
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Silicon Graphics Computer Syst., Mountain View, CA, USA (U235)",
         "genealogy_details": [],
         "genealogy": "Silicon Graphics Computer Syst., Mountain View, CA, USA"
@@ -2878,7 +2878,7 @@
             1991,
             1992
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "San Diego Supercomputing Center, CA, USA (U236)",
         "genealogy_details": [],
         "genealogy": "San Diego Supercomputing Center, CA, USA"
@@ -2890,7 +2890,7 @@
             1994,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Mississippi, USA (U237)",
         "genealogy_details": [],
         "genealogy": "University of Mississippi, USA"
@@ -2902,7 +2902,7 @@
             1992,
             1993
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Digital Equipment Corp.,USA (U238)",
         "genealogy_details": [],
         "genealogy": "Digital Equipment Corp.,USA"
@@ -2914,7 +2914,7 @@
             1992,
             2000
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Massachusetts, Amherst, USA (U239)",
         "genealogy_details": [],
         "genealogy": "University of Massachusetts, Amherst, USA"
@@ -2938,7 +2938,7 @@
             1993,
             1993
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Illinois Institute of Technology, Chicago, USA (U241)",
         "genealogy_details": [],
         "genealogy": "Illinois Institute of Technology, Chicago, USA"
@@ -2950,7 +2950,7 @@
             1994,
             2002
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Brigham Young University, USA (U242)",
         "genealogy_details": [],
         "genealogy": "Brigham Young University, USA"
@@ -2962,7 +2962,7 @@
             2001,
             2003
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Florida State University, Tallahassee, FL, USA (U243)",
         "genealogy_details": [],
         "genealogy": "Florida State University, Tallahassee, FL, USA"
@@ -2974,7 +2974,7 @@
             1995,
             2007
         ],
-        "country": "Sweden",
+        "country": "Europe",
         "fullname": "Chalmers University of Technology, Sweden (U244)",
         "genealogy_details": [],
         "genealogy": "Chalmers University of Technology, Sweden"
@@ -2998,7 +2998,7 @@
             2019,
             2019
         ],
-        "country": "Shenzhen University",
+        "country": "East Asia",
         "fullname": "Shenzhen University (U246)",
         "genealogy_details": [],
         "genealogy": "Shenzhen University"
@@ -3010,7 +3010,7 @@
             1998,
             2017
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "University of Korea, Seoul, South Korea (U247)",
         "genealogy_details": [],
         "genealogy": "University of Korea, Seoul, South Korea",
@@ -3023,7 +3023,7 @@
             1998,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, USA (U248)",
         "genealogy_details": [],
         "genealogy": "University of California, USA"
@@ -3035,7 +3035,7 @@
             1998,
             2004
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Texas, San Antonio, USA (U249)",
         "genealogy_details": [],
         "genealogy": "University of Texas, San Antonio, USA"
@@ -3047,7 +3047,7 @@
             2001,
             2001
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Kentucky University, Lexington, USA (U250)",
         "genealogy_details": [],
         "genealogy": "Kentucky University, Lexington, USA"
@@ -3059,7 +3059,7 @@
             2000,
             2016
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of Lancaster, UK (U251)",
         "genealogy_details": [],
         "genealogy": "University of Lancaster, UK"
@@ -3083,7 +3083,7 @@
             2002,
             2018
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "University of Toulouse,France (U253)",
         "genealogy_details": [],
         "genealogy": "University of Toulouse,France"
@@ -3095,7 +3095,7 @@
             2005,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "National Institute of Health, MD, USA (U254)",
         "genealogy_details": [],
         "genealogy": "National Institute of Health, MD, USA"
@@ -3107,7 +3107,7 @@
             2007,
             2015
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Korea Advanced Institute of Science and Technology, South Korea (U255)",
         "genealogy_details": [],
         "genealogy": "Korea Advanced Institute of Science and Technology, South Korea"
@@ -3119,7 +3119,7 @@
             2003,
             2006
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Queen's University, Kingston, Ont., Canada (U256)",
         "genealogy_details": [],
         "genealogy": "Queen's University, Kingston, Ont., Canada"
@@ -3131,7 +3131,7 @@
             2006,
             2007
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Philips Medical Systems, The Netherlands (U257)",
         "genealogy_details": [],
         "genealogy": "Philips Medical Systems, The Netherlands"
@@ -3155,7 +3155,7 @@
             2009,
             2015
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "IBM Research, Israel (U259)",
         "genealogy_details": [],
         "genealogy": "IBM Research, Israel"
@@ -3167,7 +3167,7 @@
             2006,
             2011
         ],
-        "country": "Spain",
+        "country": "Europe",
         "fullname": "University of Girona,Spain (U260)",
         "genealogy_details": [],
         "genealogy": "University of Girona,Spain"
@@ -3179,7 +3179,7 @@
             2014,
             2014
         ],
-        "country": "Brazil",
+        "country": "South America",
         "fullname": "Institute of Mathematics and Computer Science, S\u00e3o Carlos, Sp, Brazil (U261)",
         "genealogy_details": [],
         "genealogy": "Institute of Mathematics and Computer Science, S\u00e3o Carlos, Sp, Brazil"
@@ -3191,7 +3191,7 @@
             2007,
             2011
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Georgetown University, Washington DC, USA (U262)",
         "genealogy_details": [],
         "genealogy": "Georgetown University, Washington DC, USA"
@@ -3203,7 +3203,7 @@
             2009,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "IDEA, USA (U263)",
         "genealogy_details": [],
         "genealogy": "IDEA, USA"
@@ -3215,7 +3215,7 @@
             2009,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Brigham and Women's Hospital, USA (U264)",
         "genealogy_details": [],
         "genealogy": "Brigham and Women's Hospital, USA"
@@ -3227,7 +3227,7 @@
             2009,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Mayo Clinic, USA (U265)",
         "genealogy_details": [],
         "genealogy": "Mayo Clinic, USA"
@@ -3239,7 +3239,7 @@
             2010,
             2016
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Trier, Germany (U266)",
         "genealogy_details": [],
         "genealogy": "University of Trier, Germany"
@@ -3251,7 +3251,7 @@
             2011,
             2015
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "OCAD University, Canada (U267)",
         "genealogy_details": [],
         "genealogy": "OCAD University, Canada"
@@ -3263,7 +3263,7 @@
             2010,
             2010
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Memorial University of Newfoundland, Canada (U268)",
         "genealogy_details": [],
         "genealogy": "Memorial University of Newfoundland, Canada"
@@ -3275,7 +3275,7 @@
             2019,
             2019
         ],
-        "country": "Northwestern University",
+        "country": "North America",
         "fullname": "Northwestern University (U269)",
         "genealogy_details": [],
         "genealogy": "Northwestern University"
@@ -3287,7 +3287,7 @@
             2019,
             2019
         ],
-        "country": "Northeastern University",
+        "country": "North America",
         "fullname": "Northeastern University (U270)",
         "genealogy_details": [],
         "genealogy": "Northeastern University"
@@ -3299,7 +3299,7 @@
             2012,
             2017
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Augsburg, Germany (U271)",
         "genealogy_details": [],
         "genealogy": "University of Augsburg, Germany"
@@ -3311,7 +3311,7 @@
             2016,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Koblenz-Landau, Germany (U272)",
         "genealogy_details": [],
         "genealogy": "University of Koblenz-Landau, Germany"
@@ -3323,7 +3323,7 @@
             2014,
             2017
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Austrian Institute of Technology, Austria (U273)",
         "genealogy_details": [],
         "genealogy": "Austrian Institute of Technology, Austria"
@@ -3335,7 +3335,7 @@
             2015,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Kohn Pedersen Fox Associates PC, USA (U274)",
         "genealogy_details": [],
         "genealogy": "Kohn Pedersen Fox Associates PC, USA"
@@ -3347,7 +3347,7 @@
             2016,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Harvard Institute for Quantitative Social Sciences, USA (U275)",
         "genealogy_details": [],
         "genealogy": "Harvard Institute for Quantitative Social Sciences, USA",
@@ -3360,7 +3360,7 @@
             2017,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "The Scripps Research Institute, California, USA (U276)",
         "genealogy_details": [],
         "genealogy": "The Scripps Research Institute, California, USA"
@@ -3372,7 +3372,7 @@
             2018,
             2018
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Catharina Hospital Eindhoven, The Netherlands (U277)",
         "genealogy_details": [],
         "genealogy": "Catharina Hospital Eindhoven, The Netherlands"
@@ -3384,7 +3384,7 @@
             1990,
             1990
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Wavefront Technology Inc., Santa Barbara, CA, USA (U278)",
         "genealogy_details": [],
         "genealogy": "Wavefront Technology Inc., Santa Barbara, CA, USA"
@@ -3396,7 +3396,7 @@
             1991,
             1991
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "IBM European Visualization Centre, UK (U279)",
         "genealogy_details": [],
         "genealogy": "IBM European Visualization Centre, UK"
@@ -3408,7 +3408,7 @@
             1992,
             1992
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "David Sarnoff Research Center, Princeton, NJ, USA (U280)",
         "genealogy_details": [],
         "genealogy": "David Sarnoff Research Center, Princeton, NJ, USA"
@@ -3420,7 +3420,7 @@
             1992,
             1996
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Netherlands Energy Research Foundation, Petten, The Netherlands (U281)",
         "genealogy_details": [],
         "genealogy": "Netherlands Energy Research Foundation, Petten, The Netherlands"
@@ -3432,7 +3432,7 @@
             1993,
             2018
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Edinburgh University, UK (U282)",
         "genealogy_details": [],
         "genealogy": "Edinburgh University, UK",
@@ -3457,7 +3457,7 @@
             2003,
             2003
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Oregon Health & Science University, USA (U284)",
         "genealogy_details": [],
         "genealogy": "Oregon Health & Science University, USA"
@@ -3469,7 +3469,7 @@
             1995,
             2002
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Waterloo University, Canada (U285)",
         "genealogy_details": [],
         "genealogy": "Waterloo University, Canada"
@@ -3481,7 +3481,7 @@
             1995,
             1995
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Birmingham University, UK (U286)",
         "genealogy_details": [],
         "genealogy": "Birmingham University, UK"
@@ -3505,7 +3505,7 @@
             2003,
             2003
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "PNNL, Richland, WA, USA (U288)",
         "genealogy_details": [],
         "genealogy": "PNNL, Richland, WA, USA"
@@ -3517,7 +3517,7 @@
             1999,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Kitware Inc., USA (U289)",
         "genealogy_details": [],
         "genealogy": "Kitware Inc., USA"
@@ -3529,7 +3529,7 @@
             1998,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Rice University,USA (U290)",
         "genealogy_details": [],
         "genealogy": "Rice University,USA"
@@ -3553,7 +3553,7 @@
             2011,
             2014
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University Hospital Magdeburg, Germany (U292)",
         "genealogy_details": [],
         "genealogy": "University Hospital Magdeburg, Germany"
@@ -3565,7 +3565,7 @@
             2000,
             2003
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Ecole Polytechnique Federale de Lausanne, Switzerland (U293)",
         "genealogy_details": [],
         "genealogy": "Ecole Polytechnique Federale de Lausanne, Switzerland"
@@ -3577,7 +3577,7 @@
             2007,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Siemens,USA (U294)",
         "genealogy_details": [],
         "genealogy": "Siemens,USA"
@@ -3589,7 +3589,7 @@
             2019,
             2019
         ],
-        "country": "Chapel Hill",
+        "country": "North America",
         "fullname": "University of North Carolina, Chapel Hill (U295)",
         "genealogy_details": [],
         "genealogy": "University of North Carolina, Chapel Hill"
@@ -3601,7 +3601,7 @@
             2003,
             2007
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Napier University, Edinburgh, UK (U296)",
         "genealogy_details": [],
         "genealogy": "Napier University, Edinburgh, UK"
@@ -3613,7 +3613,7 @@
             2009,
             2013
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "\u00c9TS Montr\u00e9al, Canada (U297)",
         "genealogy_details": [],
         "genealogy": "\u00c9TS Montr\u00e9al, Canada"
@@ -3625,7 +3625,7 @@
             2004,
             2015
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Know-Center GmbH, Graz, Austria (U298)",
         "genealogy_details": [],
         "genealogy": "Know-Center GmbH, Graz, Austria"
@@ -3637,7 +3637,7 @@
             2011,
             2011
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Wright State University, USA (U299)",
         "genealogy_details": [],
         "genealogy": "Wright State University, USA"
@@ -3649,7 +3649,7 @@
             2019,
             2019
         ],
-        "country": "University of Illinois at Chicago",
+        "country": "North America",
         "fullname": "University of Illinois at Chicago (U300)",
         "genealogy_details": [],
         "genealogy": "University of Illinois at Chicago"
@@ -3661,7 +3661,7 @@
             2007,
             2009
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Swiss National Supercomputing Centre, Switzerland (U301)",
         "genealogy_details": [],
         "genealogy": "Swiss National Supercomputing Centre, Switzerland"
@@ -3673,7 +3673,7 @@
             2008,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Palantir Tech, USA (U302)",
         "genealogy_details": [],
         "genealogy": "Palantir Tech, USA"
@@ -3685,7 +3685,7 @@
             2009,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Palantir Technologies, USA (U303)",
         "genealogy_details": [],
         "genealogy": "Palantir Technologies, USA"
@@ -3709,7 +3709,7 @@
             2009,
             2009
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "BC Cancer Agency, Genome Sciences Centre, Canada (U305)",
         "genealogy_details": [],
         "genealogy": "BC Cancer Agency, Genome Sciences Centre, Canada"
@@ -3721,7 +3721,7 @@
             2009,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "ER One Institute, Washington Hospital Center, Medstar Health, USA (U306)",
         "genealogy_details": [],
         "genealogy": "ER One Institute, Washington Hospital Center, Medstar Health, USA"
@@ -3745,7 +3745,7 @@
             2010,
             2016
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Microsoft Research INRIA Joint Centre, France (U308)",
         "genealogy_details": [],
         "genealogy": "Microsoft Research INRIA Joint Centre, France",
@@ -3758,7 +3758,7 @@
             2018,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Houston, USA (U309)",
         "genealogy_details": [],
         "genealogy": "University of Houston, USA"
@@ -3770,7 +3770,7 @@
             2017,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "FX Palo Alto Laboratory, USA (U310)",
         "genealogy_details": [],
         "genealogy": "FX Palo Alto Laboratory, USA"
@@ -3782,7 +3782,7 @@
             2012,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Exploratorium San Francisco,USA (U311)",
         "genealogy_details": [],
         "genealogy": "Exploratorium San Francisco,USA"
@@ -3806,7 +3806,7 @@
             2015,
             2016
         ],
-        "country": "Spain",
+        "country": "Europe",
         "fullname": "Barcelona Supercomputing Center, Spain (U313)",
         "genealogy_details": [],
         "genealogy": "Barcelona Supercomputing Center, Spain"
@@ -3818,7 +3818,7 @@
             2015,
             2016
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Southwest University of Science and Technology, China (U314)",
         "genealogy_details": [],
         "genealogy": "Southwest University of Science and Technology, China"
@@ -3830,7 +3830,7 @@
             2016,
             2018
         ],
-        "country": "Denmark",
+        "country": "Europe",
         "fullname": "Aarhus University, Aarhus, Denmark (U315)",
         "genealogy_details": [],
         "genealogy": "Aarhus University, Aarhus, Denmark"
@@ -3842,7 +3842,7 @@
             2017,
             2017
         ],
-        "country": "Brazil",
+        "country": "South America",
         "fullname": "Pontifical Catholic University, Brazil (U316)",
         "genealogy_details": [],
         "genealogy": "Pontifical Catholic University, Brazil"
@@ -3854,7 +3854,7 @@
             2017,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Allen Institute for Cell Science, USA (U317)",
         "genealogy_details": [],
         "genealogy": "Allen Institute for Cell Science, USA"
@@ -3866,7 +3866,7 @@
             2019,
             2019
         ],
-        "country": "Institute for Atmospheric and Climate ScienceETH Z\u00fcrich",
+        "country": "Europe",
         "fullname": "Institute for Atmospheric and Climate ScienceETH Z\u00fcrich (U318)",
         "genealogy_details": [],
         "genealogy": "Institute for Atmospheric and Climate ScienceETH Z\u00fcrich"
@@ -3878,7 +3878,7 @@
             1990,
             1990
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Rensselaer Polytechnical Institute, Troy, NY, USA (U319)",
         "genealogy_details": [],
         "genealogy": "Rensselaer Polytechnical Institute, Troy, NY, USA"
@@ -3890,7 +3890,7 @@
             1992,
             1993
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "CERN, Geneva, Switzerland (U320)",
         "genealogy_details": [],
         "genealogy": "CERN, Geneva, Switzerland"
@@ -3902,7 +3902,7 @@
             1991,
             1991
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Mihalisin Associates, Ambler, PA, USA (U321)",
         "genealogy_details": [],
         "genealogy": "Mihalisin Associates, Ambler, PA, USA"
@@ -3914,7 +3914,7 @@
             1990,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Washington University, St. Louis, USA (U322)",
         "genealogy_details": [],
         "genealogy": "Washington University, St. Louis, USA"
@@ -3926,7 +3926,7 @@
             1992,
             1992
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Advanced Science Visualization Laboratory, San Diego, CA, USA (U323)",
         "genealogy_details": [],
         "genealogy": "Advanced Science Visualization Laboratory, San Diego, CA, USA"
@@ -3938,10 +3938,11 @@
             2018,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "MIT, USA (U324)",
         "genealogy_details": [],
-        "genealogy": "MIT, USA"
+        "genealogy": "MIT, USA",
+        "abbrv": "MIT"
     },
     "U325": {
         "id": "U325",
@@ -3950,7 +3951,7 @@
             1998,
             2000
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Hull University, UK (U325)",
         "genealogy_details": [],
         "genealogy": "Hull University, UK"
@@ -3962,7 +3963,7 @@
             1994,
             1998
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "George Washington University, USA (U326)",
         "genealogy_details": [],
         "genealogy": "George Washington University, USA"
@@ -3974,7 +3975,7 @@
             1994,
             1994
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Fluent Inc., Lebanon, NH, USA (U327)",
         "genealogy_details": [],
         "genealogy": "Fluent Inc., Lebanon, NH, USA"
@@ -3986,7 +3987,7 @@
             2012,
             2013
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Kaiser-Franz-Josef Hospital Vienna, Austria (U328)",
         "genealogy_details": [],
         "genealogy": "Kaiser-Franz-Josef Hospital Vienna, Austria"
@@ -4010,7 +4011,7 @@
             1999,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Mitsubuishi Electric Research Labs, USA (U330)",
         "genealogy_details": [],
         "genealogy": "Mitsubuishi Electric Research Labs, USA"
@@ -4022,7 +4023,7 @@
             1994,
             1994
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of California, San Francisco, USA (U331)",
         "genealogy_details": [],
         "genealogy": "University of California, San Francisco, USA"
@@ -4034,7 +4035,7 @@
             1995,
             1995
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "Melbourne University, Parkville, Vic., Australia (U332)",
         "genealogy_details": [],
         "genealogy": "Melbourne University, Parkville, Vic., Australia"
@@ -4046,7 +4047,7 @@
             1996,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Bell Labs, USA (U333)",
         "genealogy_details": [],
         "genealogy": "Bell Labs, USA"
@@ -4058,7 +4059,7 @@
             1995,
             1996
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "East Anglia University, UK (U334)",
         "genealogy_details": [],
         "genealogy": "East Anglia University, UK"
@@ -4082,7 +4083,7 @@
             1995,
             1999
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Regina, Canada (U336)",
         "genealogy_details": [],
         "genealogy": "University of Regina, Canada"
@@ -4094,7 +4095,7 @@
             1998,
             2007
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "University of Fribourg, Switzerland (U337)",
         "genealogy_details": [],
         "genealogy": "University of Fribourg, Switzerland"
@@ -4106,7 +4107,7 @@
             2013,
             2015
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "State University of New York,South Korea (U338)",
         "genealogy_details": [],
         "genealogy": "State University of New York,South Korea"
@@ -4118,7 +4119,7 @@
             2001,
             2004
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Minnesota, Twin Cities, USA (U339)",
         "genealogy_details": [],
         "genealogy": "University of Minnesota, Twin Cities, USA"
@@ -4130,7 +4131,7 @@
             2007,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "NVIDIA Corporation,USA (U340)",
         "genealogy_details": [],
         "genealogy": "NVIDIA Corporation,USA"
@@ -4142,7 +4143,7 @@
             2012,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Savannah River National Laboratory, USA (U341)",
         "genealogy_details": [],
         "genealogy": "Savannah River National Laboratory, USA"
@@ -4154,7 +4155,7 @@
             2003,
             2003
         ],
-        "country": "Sweden",
+        "country": "Europe",
         "fullname": "Future Applications Lab, Viktoria Institute, Goteborg, Sweden (U342)",
         "genealogy_details": [],
         "genealogy": "Future Applications Lab, Viktoria Institute, Goteborg, Sweden"
@@ -4166,7 +4167,7 @@
             2005,
             2005
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Bauhaus University Weimar, Germany (U343)",
         "genealogy_details": [],
         "genealogy": "Bauhaus University Weimar, Germany"
@@ -4178,7 +4179,7 @@
             2006,
             2008
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Siegen, Germany (U344)",
         "genealogy_details": [],
         "genealogy": "University of Siegen, Germany"
@@ -4190,7 +4191,7 @@
             2019,
             2019
         ],
-        "country": "University of Bergen",
+        "country": "Europe",
         "fullname": "University of Bergen (U345)",
         "genealogy_details": [],
         "genealogy": "University of Bergen"
@@ -4202,7 +4203,7 @@
             2008,
             2012
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Friedrich-Schiller-University Jena, Germany (U346)",
         "genealogy_details": [],
         "genealogy": "Friedrich-Schiller-University Jena, Germany"
@@ -4214,7 +4215,7 @@
             2001,
             2005
         ],
-        "country": "Sweden",
+        "country": "Europe",
         "fullname": "Uppsala University, Sweden (U347)",
         "genealogy_details": [],
         "genealogy": "Uppsala University, Sweden"
@@ -4226,7 +4227,7 @@
             2001,
             2001
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Philips Research Laboratory, Hamburg, Germany (U348)",
         "genealogy_details": [],
         "genealogy": "Philips Research Laboratory, Hamburg, Germany"
@@ -4238,7 +4239,7 @@
             2001,
             2001
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "De Montfort University, Leicester, UK (U349)",
         "genealogy_details": [],
         "genealogy": "De Montfort University, Leicester, UK"
@@ -4250,7 +4251,7 @@
             2012,
             2012
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of Bedfordshire, UK (U350)",
         "genealogy_details": [],
         "genealogy": "University of Bedfordshire, UK"
@@ -4262,7 +4263,7 @@
             2008,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "German Climate Computing Center, Germany (U351)",
         "genealogy_details": [],
         "genealogy": "German Climate Computing Center, Germany"
@@ -4274,7 +4275,7 @@
             2009,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of South Carolina, USA (U352)",
         "genealogy_details": [],
         "genealogy": "University of South Carolina, USA"
@@ -4286,7 +4287,7 @@
             2015,
             2018
         ],
-        "country": "Sweden",
+        "country": "Europe",
         "fullname": "KTH Royal Institute of Technology, Stockholm, Sweden (U353)",
         "genealogy_details": [],
         "genealogy": "KTH Royal Institute of Technology, Stockholm, Sweden"
@@ -4298,7 +4299,7 @@
             2010,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "\u00c9cole de technologie sup\u00e9rieure, Canada (U354)",
         "genealogy_details": [],
         "genealogy": "\u00c9cole de technologie sup\u00e9rieure, Canada"
@@ -4310,7 +4311,7 @@
             2003,
             2003
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Advanced Computer Vision GmbH, ACV, Vienna, Austria (U355)",
         "genealogy_details": [],
         "genealogy": "Advanced Computer Vision GmbH, ACV, Vienna, Austria"
@@ -4322,7 +4323,7 @@
             2019,
             2019
         ],
-        "country": "Technische Universit\u00e4t Kaiserslautern",
+        "country": "Europe",
         "fullname": "Technische Universit\u00e4t Kaiserslautern (U356)",
         "genealogy_details": [],
         "genealogy": "Technische Universit\u00e4t Kaiserslautern"
@@ -4334,7 +4335,7 @@
             2004,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Northern Arizona University, USA (U357)",
         "genealogy_details": [],
         "genealogy": "Northern Arizona University, USA"
@@ -4346,7 +4347,7 @@
             2006,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Adobe Systems, USA (U358)",
         "genealogy_details": [],
         "genealogy": "Adobe Systems, USA",
@@ -4359,7 +4360,7 @@
             2006,
             2011
         ],
-        "country": "Sweden",
+        "country": "Europe",
         "fullname": "Sectra Imtec AB, Sweden (U359)",
         "genealogy_details": [],
         "genealogy": "Sectra Imtec AB, Sweden"
@@ -4371,7 +4372,7 @@
             2008,
             2010
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Agilent Laboratories, USA (U360)",
         "genealogy_details": [],
         "genealogy": "Agilent Laboratories, USA"
@@ -4383,7 +4384,7 @@
             2011,
             2016
         ],
-        "country": "Brazil",
+        "country": "South America",
         "fullname": "University of Campinas,Brazil (U361)",
         "genealogy_details": [],
         "genealogy": "University of Campinas,Brazil"
@@ -4395,7 +4396,7 @@
             2007,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "ATS Intelligent Discovery, USA (U362)",
         "genealogy_details": [],
         "genealogy": "ATS Intelligent Discovery, USA"
@@ -4407,7 +4408,7 @@
             2007,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Space Sciences Laboratory, USA (U363)",
         "genealogy_details": [],
         "genealogy": "Space Sciences Laboratory, USA"
@@ -4419,7 +4420,7 @@
             2007,
             2011
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "University of NSW, Australia (U364)",
         "genealogy_details": [],
         "genealogy": "University of NSW, Australia"
@@ -4431,7 +4432,7 @@
             2007,
             2007
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "University of Basel,Switzerland (U365)",
         "genealogy_details": [],
         "genealogy": "University of Basel,Switzerland"
@@ -4443,7 +4444,7 @@
             2015,
             2019
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "University of St Andrews, UK (U366)",
         "genealogy_details": [],
         "genealogy": "University of St Andrews, UK"
@@ -4455,7 +4456,7 @@
             2016,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Smith College, USA (U367)",
         "genealogy_details": [],
         "genealogy": "Smith College, USA",
@@ -4468,7 +4469,7 @@
             2008,
             2012
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Danube University Krems, Austria (U368)",
         "genealogy_details": [],
         "genealogy": "Danube University Krems, Austria"
@@ -4492,7 +4493,7 @@
             2008,
             2008
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "SPADAC, Inc., USA (U370)",
         "genealogy_details": [],
         "genealogy": "SPADAC, Inc., USA"
@@ -4504,7 +4505,7 @@
             2008,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Southern Illinois University, USA (U371)",
         "genealogy_details": [],
         "genealogy": "Southern Illinois University, USA"
@@ -4516,7 +4517,7 @@
             2002,
             2011
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Institut de Recherche en Informatique de Toulouse, France (U372)",
         "genealogy_details": [],
         "genealogy": "Institut de Recherche en Informatique de Toulouse, France"
@@ -4528,7 +4529,7 @@
             2009,
             2009
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Ecole Mines Al\u00e8s, France (U373)",
         "genealogy_details": [],
         "genealogy": "Ecole Mines Al\u00e8s, France"
@@ -4540,7 +4541,7 @@
             2014,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Twitter, Inc., USA (U374)",
         "genealogy_details": [],
         "genealogy": "Twitter, Inc., USA"
@@ -4564,7 +4565,7 @@
             2009,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "HRL Laboratories, LLC, USA (U376)",
         "genealogy_details": [],
         "genealogy": "HRL Laboratories, LLC, USA"
@@ -4576,7 +4577,7 @@
             2010,
             2010
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Charles River Analytics, USA (U377)",
         "genealogy_details": [],
         "genealogy": "Charles River Analytics, USA"
@@ -4588,7 +4589,7 @@
             2016,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Visa Research, USA (U378)",
         "genealogy_details": [],
         "genealogy": "Visa Research, USA",
@@ -4601,7 +4602,7 @@
             2009,
             2013
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "IBM,France (U379)",
         "genealogy_details": [],
         "genealogy": "IBM,France"
@@ -4613,7 +4614,7 @@
             2011,
             2011
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Dalle Molle Institute for Artificial Intelligence, Lugano, Switzerland (U380)",
         "genealogy_details": [],
         "genealogy": "Dalle Molle Institute for Artificial Intelligence, Lugano, Switzerland"
@@ -4625,7 +4626,7 @@
             2012,
             2012
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Dalhousie University, Canada (U381)",
         "genealogy_details": [],
         "genealogy": "Dalhousie University, Canada"
@@ -4649,7 +4650,7 @@
             2014,
             2015
         ],
-        "country": "Spain",
+        "country": "Europe",
         "fullname": "Universidad Rey Juan Carlos,Spain (U383)",
         "genealogy_details": [],
         "genealogy": "Universidad Rey Juan Carlos,Spain"
@@ -4661,7 +4662,7 @@
             2019,
             2019
         ],
-        "country": "Georgia Tech",
+        "country": "North America",
         "fullname": "Georgia Tech (U384)",
         "genealogy_details": [],
         "genealogy": "Georgia Tech"
@@ -4673,7 +4674,7 @@
             2014,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Missouri at Columbia, USA (U385)",
         "genealogy_details": [],
         "genealogy": "University of Missouri at Columbia, USA"
@@ -4685,7 +4686,7 @@
             2015,
             2015
         ],
-        "country": "Argentina",
+        "country": "South America",
         "fullname": "INGEOSUR CONICET, Argentina (U386)",
         "genealogy_details": [],
         "genealogy": "INGEOSUR CONICET, Argentina"
@@ -4697,7 +4698,7 @@
             2014,
             2017
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "University of Applied Sciences and Arts Northwestern Switzerland FHNW, Switzerland (U387)",
         "genealogy_details": [],
         "genealogy": "University of Applied Sciences and Arts Northwestern Switzerland FHNW, Switzerland"
@@ -4709,7 +4710,7 @@
             2014,
             2014
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Institut Claudius Regaud, Toulouse, France (U388)",
         "genealogy_details": [],
         "genealogy": "Institut Claudius Regaud, Toulouse, France"
@@ -4721,7 +4722,7 @@
             2018,
             2018
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Alibaba Group, China (U389)",
         "genealogy_details": [],
         "genealogy": "Alibaba Group, China"
@@ -4733,7 +4734,7 @@
             2015,
             2015
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "The University of Queensland, Australia (U390)",
         "genealogy_details": [],
         "genealogy": "The University of Queensland, Australia"
@@ -4745,7 +4746,7 @@
             2015,
             2015
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "University of Haifa, Israel (U391)",
         "genealogy_details": [],
         "genealogy": "University of Haifa, Israel"
@@ -4757,7 +4758,7 @@
             2015,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Bucknell University, USA (U392)",
         "genealogy_details": [],
         "genealogy": "Bucknell University, USA"
@@ -4769,7 +4770,7 @@
             2015,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Technical University of Dortmund, Germany (U393)",
         "genealogy_details": [],
         "genealogy": "Technical University of Dortmund, Germany"
@@ -4781,7 +4782,7 @@
             2019,
             2019
         ],
-        "country": "Noah's Ark LabHuawei Technologies Co. Ltd.",
+        "country": "",
         "fullname": "Noah's Ark LabHuawei Technologies Co. Ltd. (U394)",
         "genealogy_details": [],
         "genealogy": "Noah's Ark LabHuawei Technologies Co. Ltd."
@@ -4793,7 +4794,7 @@
             2015,
             2015
         ],
-        "country": "Singapore",
+        "country": "East Asia",
         "fullname": "Urban Redevelopment Authority, Singapore (U395)",
         "genealogy_details": [],
         "genealogy": "Urban Redevelopment Authority, Singapore"
@@ -4805,7 +4806,7 @@
             2019,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Ontario Tech University, Canada (U396)",
         "genealogy_details": [],
         "genealogy": "Ontario Tech University, Canada"
@@ -4817,7 +4818,7 @@
             2016,
             2016
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "International Seismological Centre, UK (U397)",
         "genealogy_details": [],
         "genealogy": "International Seismological Centre, UK"
@@ -4829,7 +4830,7 @@
             2016,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "LabKey Software, USA (U398)",
         "genealogy_details": [],
         "genealogy": "LabKey Software, USA"
@@ -4841,7 +4842,7 @@
             2018,
             2018
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Helmholtz Center for Environmental Research, Leipzig, Germany (U399)",
         "genealogy_details": [],
         "genealogy": "Helmholtz Center for Environmental Research, Leipzig, Germany"
@@ -4853,7 +4854,7 @@
             2019,
             2019
         ],
-        "country": "Institute of Fluid MechanicsTU Dresden",
+        "country": "Europe",
         "fullname": "Institute of Fluid MechanicsTU Dresden (U400)",
         "genealogy_details": [],
         "genealogy": "Institute of Fluid MechanicsTU Dresden"
@@ -4865,7 +4866,7 @@
             2019,
             2019
         ],
-        "country": "MD Anderson Cancer CenterUniversity of Texas",
+        "country": "North America",
         "fullname": "MD Anderson Cancer CenterUniversity of Texas (U401)",
         "genealogy_details": [],
         "genealogy": "MD Anderson Cancer CenterUniversity of Texas"
@@ -4877,7 +4878,7 @@
             2019,
             2019
         ],
-        "country": "University of Utah",
+        "country": "North America",
         "fullname": "University of Utah (U402)",
         "genealogy_details": [],
         "genealogy": "University of Utah"
@@ -4889,7 +4890,7 @@
             1990,
             1992
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Grumman Data Systems, Woodbury, NY, USA (U403)",
         "genealogy_details": [],
         "genealogy": "Grumman Data Systems, Woodbury, NY, USA"
@@ -4901,7 +4902,7 @@
             1990,
             1990
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Institute Francais due Petrole, Rueil Malmaison, France (U404)",
         "genealogy_details": [],
         "genealogy": "Institute Francais due Petrole, Rueil Malmaison, France"
@@ -4913,7 +4914,7 @@
             1990,
             1990
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Syracuse University, NY, USA (U405)",
         "genealogy_details": [],
         "genealogy": "Syracuse University, NY, USA"
@@ -4925,7 +4926,7 @@
             1991,
             1991
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Colorado, Colorado Springs, USA (U406)",
         "genealogy_details": [],
         "genealogy": "University of Colorado, Colorado Springs, USA"
@@ -4937,7 +4938,7 @@
             1991,
             1991
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Thinking Machines Corp., Cambridge, MA, USA (U407)",
         "genealogy_details": [],
         "genealogy": "Thinking Machines Corp., Cambridge, MA, USA"
@@ -4949,7 +4950,7 @@
             1991,
             1991
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Xerox Webster Research Center, Webster, NY, USA (U408)",
         "genealogy_details": [],
         "genealogy": "Xerox Webster Research Center, Webster, NY, USA"
@@ -4961,7 +4962,7 @@
             1991,
             2010
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Rochester Institute of Technology, NY, USA (U409)",
         "genealogy_details": [],
         "genealogy": "Rochester Institute of Technology, NY, USA"
@@ -4973,7 +4974,7 @@
             1992,
             1992
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "USACE Waterways Exp. Station, Vicksburg, MS, USA (U410)",
         "genealogy_details": [],
         "genealogy": "USACE Waterways Exp. Station, Vicksburg, MS, USA"
@@ -4985,7 +4986,7 @@
             1995,
             1995
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Science Visualization Laboratory, US Environ. Protection Agency, Research Triangle Park, NC, USA (U411)",
         "genealogy_details": [],
         "genealogy": "Science Visualization Laboratory, US Environ. Protection Agency, Research Triangle Park, NC, USA"
@@ -4997,7 +4998,7 @@
             1992,
             1992
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Hughes Training Inc., West Covina, CA, USA (U412)",
         "genealogy_details": [],
         "genealogy": "Hughes Training Inc., West Covina, CA, USA"
@@ -5009,7 +5010,7 @@
             2019,
             2019
         ],
-        "country": "Link\u00f6ping UniversityUniversity of Utah",
+        "country": "",
         "fullname": "Link\u00f6ping UniversityUniversity of Utah (U413)",
         "genealogy_details": [],
         "genealogy": "Link\u00f6ping UniversityUniversity of Utah"
@@ -5021,7 +5022,7 @@
             2006,
             2006
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "Swammerdam Institute for Life Sciences,The Netherlands (U414)",
         "genealogy_details": [],
         "genealogy": "Swammerdam Institute for Life Sciences,The Netherlands"
@@ -5033,7 +5034,7 @@
             1993,
             1993
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Oracle Corp., Redwood Shores, CA, USA (U415)",
         "genealogy_details": [],
         "genealogy": "Oracle Corp., Redwood Shores, CA, USA"
@@ -5045,7 +5046,7 @@
             1993,
             1993
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Schlumberger Laboratory for Computer Science, Austin, TX, USA (U416)",
         "genealogy_details": [],
         "genealogy": "Schlumberger Laboratory for Computer Science, Austin, TX, USA"
@@ -5057,7 +5058,7 @@
             1993,
             1993
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "Santos Ltd., Australia (U417)",
         "genealogy_details": [],
         "genealogy": "Santos Ltd., Australia"
@@ -5069,7 +5070,7 @@
             1993,
             1993
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Joanneum Research, Graz, Austria (U418)",
         "genealogy_details": [],
         "genealogy": "Joanneum Research, Graz, Austria"
@@ -5093,7 +5094,7 @@
             2001,
             2003
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "SAS Institute Inc.,USA (U420)",
         "genealogy_details": [],
         "genealogy": "SAS Institute Inc.,USA"
@@ -5105,7 +5106,7 @@
             1994,
             1994
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "DEC Syst. Research Center, Palo Alto, CA, USA (U421)",
         "genealogy_details": [],
         "genealogy": "DEC Syst. Research Center, Palo Alto, CA, USA"
@@ -5117,7 +5118,7 @@
             1995,
             1997
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Visible Decision Inc., Toronto, Ont., Canada (U422)",
         "genealogy_details": [],
         "genealogy": "Visible Decision Inc., Toronto, Ont., Canada"
@@ -5129,7 +5130,7 @@
             1995,
             1995
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Inf. & Support Services, Boeing Co., Seattle, WA, USA (U423)",
         "genealogy_details": [],
         "genealogy": "Inf. & Support Services, Boeing Co., Seattle, WA, USA"
@@ -5141,7 +5142,7 @@
             1995,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "University of Waterloo, Canada (U424)",
         "genealogy_details": [],
         "genealogy": "University of Waterloo, Canada"
@@ -5153,7 +5154,7 @@
             1995,
             1995
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Sogang University, Seoul, South Korea (U425)",
         "genealogy_details": [],
         "genealogy": "Sogang University, Seoul, South Korea"
@@ -5165,7 +5166,7 @@
             2017,
             2017
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Disney Research, Zurich,Switzerland (U426)",
         "genealogy_details": [],
         "genealogy": "Disney Research, Zurich,Switzerland",
@@ -5178,7 +5179,7 @@
             1995,
             1999
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "German National Research Center for Computer Science, St. Augustin, Germany (U427)",
         "genealogy_details": [],
         "genealogy": "German National Research Center for Computer Science, St. Augustin, Germany"
@@ -5190,7 +5191,7 @@
             1995,
             1995
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "Nottingham University, UK (U428)",
         "genealogy_details": [],
         "genealogy": "Nottingham University, UK"
@@ -5202,7 +5203,7 @@
             1996,
             2004
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "The MITRE Corporation, USA (U429)",
         "genealogy_details": [],
         "genealogy": "The MITRE Corporation, USA"
@@ -5226,7 +5227,7 @@
             2003,
             2003
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Macrofocus GmbH, Zurich, Switzerland (U431)",
         "genealogy_details": [],
         "genealogy": "Macrofocus GmbH, Zurich, Switzerland"
@@ -5238,7 +5239,7 @@
             2008,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Tableau Software, USA (U432)",
         "genealogy_details": [],
         "genealogy": "Tableau Software, USA"
@@ -5250,7 +5251,7 @@
             2019,
             2019
         ],
-        "country": "Institute of Computer ScienceLeipzig University",
+        "country": "Europe",
         "fullname": "Institute of Computer ScienceLeipzig University (U433)",
         "genealogy_details": [],
         "genealogy": "Institute of Computer ScienceLeipzig University"
@@ -5274,7 +5275,7 @@
             2014,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Clemson University, Clemson, SC, USA (U435)",
         "genealogy_details": [],
         "genealogy": "Clemson University, Clemson, SC, USA"
@@ -5298,7 +5299,7 @@
             1998,
             2018
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Brookhaven National Laboratory, USA (U437)",
         "genealogy_details": [],
         "genealogy": "Brookhaven National Laboratory, USA"
@@ -5310,7 +5311,7 @@
             2004,
             2004
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Virginia University, Charlottesville, VA, USA (U438)",
         "genealogy_details": [],
         "genealogy": "Virginia University, Charlottesville, VA, USA"
@@ -5322,7 +5323,7 @@
             2013,
             2013
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Colorado School of Mines, USA (U439)",
         "genealogy_details": [],
         "genealogy": "Colorado School of Mines, USA"
@@ -5334,7 +5335,7 @@
             2005,
             2005
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Potsdam, Germany (U440)",
         "genealogy_details": [],
         "genealogy": "University of Potsdam, Germany"
@@ -5346,7 +5347,7 @@
             2019,
             2019
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Institut Polytechnique de Paris,France (U441)",
         "genealogy_details": [],
         "genealogy": "Institut Polytechnique de Paris,France"
@@ -5358,7 +5359,7 @@
             2001,
             2014
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Texas, USA (U442)",
         "genealogy_details": [],
         "genealogy": "University of Texas, USA"
@@ -5370,7 +5371,7 @@
             2003,
             2003
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Appl. Med. Visualizations, West Valley, UT, USA (U443)",
         "genealogy_details": [],
         "genealogy": "Appl. Med. Visualizations, West Valley, UT, USA"
@@ -5382,7 +5383,7 @@
             2001,
             2001
         ],
-        "country": "Israel",
+        "country": "Middle East",
         "fullname": "The Hebrew University of Jerusalem,Israel (U444)",
         "genealogy_details": [],
         "genealogy": "The Hebrew University of Jerusalem,Israel"
@@ -5394,7 +5395,7 @@
             2019,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Tableau Software,Palo Alto,California,USA (U445)",
         "genealogy_details": [],
         "genealogy": "Tableau Software,Palo Alto,California,USA"
@@ -5406,7 +5407,7 @@
             2001,
             2001
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Ohio Supercomput. Center, OH, USA (U446)",
         "genealogy_details": [],
         "genealogy": "Ohio Supercomput. Center, OH, USA"
@@ -5418,7 +5419,7 @@
             2002,
             2002
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Biotechnol. Institute, Delaware University, Newark, DE, USA (U447)",
         "genealogy_details": [],
         "genealogy": "Biotechnol. Institute, Delaware University, Newark, DE, USA"
@@ -5430,7 +5431,7 @@
             2002,
             2002
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Variagenics Inc., Cambridge, MA, USA (U448)",
         "genealogy_details": [],
         "genealogy": "Variagenics Inc., Cambridge, MA, USA"
@@ -5442,7 +5443,7 @@
             2004,
             2010
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Universit\u00e9 du Qu\u00e9bec, Canada (U449)",
         "genealogy_details": [],
         "genealogy": "Universit\u00e9 du Qu\u00e9bec, Canada"
@@ -5454,7 +5455,7 @@
             2011,
             2011
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Michigan Technological University, USA (U450)",
         "genealogy_details": [],
         "genealogy": "Michigan Technological University, USA"
@@ -5466,7 +5467,7 @@
             2012,
             2013
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Medical University of Vienna, Austria (U451)",
         "genealogy_details": [],
         "genealogy": "Medical University of Vienna, Austria"
@@ -5478,7 +5479,7 @@
             2004,
             2019
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Carleton University, Canada (U452)",
         "genealogy_details": [],
         "genealogy": "Carleton University, Canada"
@@ -5490,7 +5491,7 @@
             2015,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Hawai'i at M\u0101noa, USA (U453)",
         "genealogy_details": [],
         "genealogy": "University of Hawai'i at M\u0101noa, USA"
@@ -5502,7 +5503,7 @@
             2019,
             2019
         ],
-        "country": "Bosch Research North America",
+        "country": "North America",
         "fullname": "Bosch Research North America (U454)",
         "genealogy_details": [],
         "genealogy": "Bosch Research North America"
@@ -5514,7 +5515,7 @@
             2015,
             2015
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "SynerScope B. V.,The Netherlands (U455)",
         "genealogy_details": [],
         "genealogy": "SynerScope B. V.,The Netherlands"
@@ -5526,7 +5527,7 @@
             2005,
             2005
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "University of Idaho, USA (U456)",
         "genealogy_details": [],
         "genealogy": "University of Idaho, USA"
@@ -5538,7 +5539,7 @@
             2012,
             2012
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Austrian Academy of Sciences, Austria (U457)",
         "genealogy_details": [],
         "genealogy": "Austrian Academy of Sciences, Austria"
@@ -5550,7 +5551,7 @@
             2012,
             2014
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Sejong University, South Korea (U458)",
         "genealogy_details": [],
         "genealogy": "Sejong University, South Korea"
@@ -5562,7 +5563,7 @@
             2006,
             2006
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Yeshiva University,USA (U459)",
         "genealogy_details": [],
         "genealogy": "Yeshiva University,USA"
@@ -5574,7 +5575,7 @@
             2016,
             2018
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "Data61,Australia (U460)",
         "genealogy_details": [],
         "genealogy": "Data61,Australia",
@@ -5587,7 +5588,7 @@
             2006,
             2006
         ],
-        "country": "The Netherlands",
+        "country": "Europe",
         "fullname": "MagnaView, The Netherlands (U461)",
         "genealogy_details": [],
         "genealogy": "MagnaView, The Netherlands"
@@ -5599,7 +5600,7 @@
             2006,
             2018
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "Universit\u00e9 de Lyon,France (U462)",
         "genealogy_details": [],
         "genealogy": "Universit\u00e9 de Lyon,France"
@@ -5623,7 +5624,7 @@
             2006,
             2006
         ],
-        "country": "South Korea",
+        "country": "East Asia",
         "fullname": "Pohang University of Science and Technology,South Korea (U464)",
         "genealogy_details": [],
         "genealogy": "Pohang University of Science and Technology,South Korea"
@@ -5635,7 +5636,7 @@
             2006,
             2006
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "IRISA,France (U465)",
         "genealogy_details": [],
         "genealogy": "IRISA,France"
@@ -5647,7 +5648,7 @@
             2006,
             2006
         ],
-        "country": "France",
+        "country": "Europe",
         "fullname": "CEA,France (U466)",
         "genealogy_details": [],
         "genealogy": "CEA,France"
@@ -5659,7 +5660,7 @@
             2019,
             2019
         ],
-        "country": "University of London",
+        "country": "Europe",
         "fullname": "Fraunhofer IAISCity, University of London (U467)",
         "genealogy_details": [],
         "genealogy": "Fraunhofer IAISCity, University of London"
@@ -5671,7 +5672,7 @@
             2007,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "National Center for Infectious Diseases, Centers for Disease Control and Prevention, USA (U468)",
         "genealogy_details": [],
         "genealogy": "National Center for Infectious Diseases, Centers for Disease Control and Prevention, USA"
@@ -5683,7 +5684,7 @@
             2007,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Applied Visions Inc., USA (U469)",
         "genealogy_details": [],
         "genealogy": "Applied Visions Inc., USA"
@@ -5695,7 +5696,7 @@
             2019,
             2019
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Siemens Corporate Technology, Munich, Germany (U470)",
         "genealogy_details": [],
         "genealogy": "Siemens Corporate Technology, Munich, Germany"
@@ -5707,7 +5708,7 @@
             2014,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Aptima Inc., USA (U471)",
         "genealogy_details": [],
         "genealogy": "Aptima Inc., USA"
@@ -5719,7 +5720,7 @@
             2007,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Bank of America, USA (U472)",
         "genealogy_details": [],
         "genealogy": "Bank of America, USA"
@@ -5731,7 +5732,7 @@
             2007,
             2019
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Union College, USA (U473)",
         "genealogy_details": [],
         "genealogy": "Union College, USA"
@@ -5743,7 +5744,7 @@
             2007,
             2007
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Beijing Normal University, China (U474)",
         "genealogy_details": [],
         "genealogy": "Beijing Normal University, China"
@@ -5755,7 +5756,7 @@
             2007,
             2008
         ],
-        "country": "Switzerland",
+        "country": "Europe",
         "fullname": "Swiss Federal Laboratories for Materials Science and Technology,Switzerland (U475)",
         "genealogy_details": [],
         "genealogy": "Swiss Federal Laboratories for Materials Science and Technology,Switzerland"
@@ -5767,7 +5768,7 @@
             2007,
             2015
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "Saarland University, Saarbr\u00fccken, Germany (U476)",
         "genealogy_details": [],
         "genealogy": "Saarland University, Saarbr\u00fccken, Germany"
@@ -5779,7 +5780,7 @@
             2007,
             2007
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "General Motors R&D,USA (U477)",
         "genealogy_details": [],
         "genealogy": "General Motors R&D,USA"
@@ -5791,7 +5792,7 @@
             2016,
             2016
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "National Intrepid Center of Excellence, Walter Reed National Military Medical Center, Bethesda, MD, USA (U478)",
         "genealogy_details": [],
         "genealogy": "National Intrepid Center of Excellence, Walter Reed National Military Medical Center, Bethesda, MD, USA"
@@ -5803,7 +5804,7 @@
             2008,
             2015
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "The University of Melbourne,Australia (U479)",
         "genealogy_details": [],
         "genealogy": "The University of Melbourne,Australia"
@@ -5815,7 +5816,7 @@
             2015,
             2015
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "The Center for Coastal and Ocean Mapping,USA (U480)",
         "genealogy_details": [],
         "genealogy": "The Center for Coastal and Ocean Mapping,USA"
@@ -5827,7 +5828,7 @@
             2012,
             2012
         ],
-        "country": "China",
+        "country": "East Asia",
         "fullname": "Fujian Agriculture and Forestry University, Fuzhou, China (U481)",
         "genealogy_details": [],
         "genealogy": "Fujian Agriculture and Forestry University, Fuzhou, China"
@@ -5851,7 +5852,7 @@
             2012,
             2012
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "eBay Research Labs,USA (U483)",
         "genealogy_details": [],
         "genealogy": "eBay Research Labs,USA"
@@ -5863,7 +5864,7 @@
             2008,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Vision Systems & Technology, Inc., USA (U484)",
         "genealogy_details": [],
         "genealogy": "Vision Systems & Technology, Inc., USA"
@@ -5875,7 +5876,7 @@
             2011,
             2011
         ],
-        "country": "Australia",
+        "country": "Oceania",
         "fullname": "Vision Systems & Technology, Inc., a SAS Company, Australia (U485)",
         "genealogy_details": [],
         "genealogy": "Vision Systems & Technology, Inc., a SAS Company, Australia"
@@ -5887,7 +5888,7 @@
             2019,
             2019
         ],
-        "country": "Federal University of Rio Grande do Sul",
+        "country": "South America",
         "fullname": "Federal University of Rio Grande do Sul (U486)",
         "genealogy_details": [],
         "genealogy": "Federal University of Rio Grande do Sul"
@@ -5911,7 +5912,7 @@
             2008,
             2008
         ],
-        "country": "Austria",
+        "country": "Europe",
         "fullname": "Austrian Foundry Research Institute, Austria (U488)",
         "genealogy_details": [],
         "genealogy": "Austrian Foundry Research Institute, Austria"
@@ -5923,7 +5924,7 @@
             2008,
             2008
         ],
-        "country": "Norway",
+        "country": "Europe",
         "fullname": "StatoilHydro, Bergen, Norway (U489)",
         "genealogy_details": [],
         "genealogy": "StatoilHydro, Bergen, Norway"
@@ -5935,7 +5936,7 @@
             2008,
             2018
         ],
-        "country": "Czech Republic",
+        "country": "Europe",
         "fullname": "Czech Technical University in Prague, Czech Republic (U490)",
         "genealogy_details": [],
         "genealogy": "Czech Technical University in Prague, Czech Republic"
@@ -5947,7 +5948,7 @@
             2008,
             2010
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "King's College London, UK (U491)",
         "genealogy_details": [],
         "genealogy": "King's College London, UK"
@@ -5959,7 +5960,7 @@
             2009,
             2009
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Children's National Medical Center, USA (U492)",
         "genealogy_details": [],
         "genealogy": "Children's National Medical Center, USA"
@@ -5971,7 +5972,7 @@
             2007,
             2010
         ],
-        "country": "Canada",
+        "country": "North America",
         "fullname": "Ontario Cancer Institute, Canada (U493)",
         "genealogy_details": [],
         "genealogy": "Ontario Cancer Institute, Canada"
@@ -5983,7 +5984,7 @@
             2013,
             2017
         ],
-        "country": "USA",
+        "country": "North America",
         "fullname": "Middlebury College,USA (U494)",
         "genealogy_details": [],
         "genealogy": "Middlebury College,USA"
@@ -6007,7 +6008,7 @@
             2009,
             2009
         ],
-        "country": "UK",
+        "country": "Europe",
         "fullname": "The University of Sheffield, UK (U496)",
         "genealogy_details": [],
         "genealogy": "The University of Sheffield, UK"
@@ -6019,7 +6020,7 @@
             2009,
             2009
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "derivo GmbH, Germany (U497)",
         "genealogy_details": [],
         "genealogy": "derivo GmbH, Germany"
@@ -6031,7 +6032,7 @@
             2012,
             2012
         ],
-        "country": "Germany",
+        "country": "Europe",
         "fullname": "University of Osnabr\u00fcck, Germany (U498)",
         "genealogy_details": [],
         "genealogy": "University of Osnabr\u00fcck, Germany"

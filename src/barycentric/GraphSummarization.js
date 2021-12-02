@@ -14,11 +14,11 @@ summarize = (graph) => {
         Vg.push({id : node.id, subnodes: [node]})
     }
 
-    for (let edge of graph.edges){
+    for (let edge of graph.edges.filter(e => e.involved_in_split != false)){
         Es.push({nodes: edge.nodes})
     }
 
-    for (let edge of graph.edges){
+    for (let edge of graph.edges.filter(e => e.involved_in_split != false)){
         Eg.push({nodes: edge.nodes})
     }
 
@@ -187,11 +187,23 @@ summarize = (graph) => {
     } while (H.length > 0);
 
     for (let node of Vs){
-        let newnode = {depth: 0, childnodes: node.subnodes, name: node.subnodes.map(n => n.name).join(""), type: "aggregate"}
+        let d = node.subnodes.map(n => n.depth).reduce((a, b) => a + b)/node.subnodes.length
+        if (Math.round(d) != d) {
+            graph.nodes.filter(n => n.depth >= d).map(n => n.depth += 1)
+            graph.nodeIndex.push([]);
+            for (let i = Math.ceil(d); i < graph.nodeIndex.length - 1; i++){
+                let nodeset = graph.nodeIndex[i];
+                graph.nodeIndex[i] = [];
+                graph.nodeIndex[i+1] = graph.nodeIndex[i+1].concat(nodeset);
+            }
+            d = Math.ceil(d);
+        }
+        let newnode = {depth: d, childnodes: node.subnodes, name: node.subnodes.map(n => n.name).join(""), type: "aggregate"}
         graph.removeNodes(node.subnodes)
         graph.addNode(newnode)
     }
 
+    let edges_not_involved = graph.edges.filter(e => e.involved_in_split == false);
     graph.edges = [];
     graph.hyperedges = [];
 
@@ -204,6 +216,19 @@ summarize = (graph) => {
         }
         else graph.hyperedges.push({nodes: involvedNodes})
     }
+
+    for (let edge of edges_not_involved){
+        let n1 = graph.nodes.find(n => n.childnodes.includes(edge.nodes[0]))
+        let n2 = graph.nodes.find(n => n.childnodes.includes(edge.nodes[1]))
+
+        if (n1 == n2) continue;
+        edge.originalnodes = [edge.nodes[0], edge.nodes[1]];
+        edge.nodes[0] = n1
+        edge.nodes[1] = n2
+        graph.edges.push(edge)
+    }
+
+    graph.addAnchors();
 }
 
 try {

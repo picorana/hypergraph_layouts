@@ -6,6 +6,7 @@
     "gulp": "^4.0.2",
     "gulp-concat": "^2.6.1",
     "gulp-sourcemaps": "^3.0.0",
+    "just-clone": "^5.0.1",
     "node-graphviz": "^0.1.0",
     "nouislider": "^15.2.0"
   }

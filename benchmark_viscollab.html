@@ -64,7 +64,7 @@
       }
 
       body {
-          width: 130%;
+          width: 100%;
       }
 
   </style>
@@ -341,24 +341,20 @@ let method_descriptions = {
     "bipartite" : "Just a test to see if the result differs from Aggregate 1."
 }
 
-let firstStartup = async function(){
-    let graph = new Graph();
-    let gtd = graphToDot(graph);
-    let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
-}
-
 let drawResults = function(results){
-
     results = results.filter(r => r.nodenum != undefined)
 
-    let maxnodenum = Math.max.apply(0, results.map(r => r.nodenum))
-    // maxnodenum = 100
+    let filterval = "hyperedgenum"
+
+    let maxnodenum = Math.max.apply(0, results.map(r => r[filterval]))
+    maxnodenum = 50
     let maxtime = Math.max.apply(0, results.map(r => r.time_to_sort + r.time_to_transform + r.time_to_postprocess))
     let maxcrossings = Math.max.apply(0, results.map(r => r.crossings))
-    maxcrossings = 1000
+    let maxlength = Math.max.apply(0, results.map(r => r.edge_length/20))
+    // maxcrossings = 1000
 
     for (let method of methods){
-        let rmethod = results.filter(r => r.method == method)
+        let rmethod = results.filter(r => r.method == method && r.time_to_sort + r.time_to_transform + r.time_to_postprocess < 20000)
         let r = [];
         let rr = [];
         let c = [];
@@ -367,20 +363,24 @@ let drawResults = function(results){
         let transformr = [];
         let sortr = [];
         let edgelengthr = [];
+        let eedgelengthr = [];
 
         let drawyaxis = false;
         if (method == "split1") drawyaxis = true;
 
-        for (let numnodes = 4; numnodes < maxnodenum; numnodes++){
-            let thisvalues = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort + r.time_to_postprocess + r.time_to_transform)
-            // let thisvalues = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort)
-            let thisvaluespostprocess = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_postprocess)
-            let thisvaluestransform = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_transform)
-            let thisvaluessort = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort)
-            let thisvaluesc = rmethod.filter(r => r.nodenum == numnodes).map(r => r.crossings)
-            let thisvaluesedgelength = rmethod.filter(r => r.nodenum == numnodes).map(r => r.edge_length)
+        for (let numnodes = 5; numnodes < maxnodenum; numnodes++){
 
-            // if (thisvalues.length < 25*.5) continue;
+            let thisvalues = rmethod.filter(r => r[filterval] == numnodes).map(r => r.time_to_sort + r.time_to_postprocess + r.time_to_transform)
+            // let thisvalues = rmethod.filter(r => r.nodenum == numnodes).map(r => r.time_to_sort)
+            let thisvaluespostprocess = rmethod.filter(r => r[filterval] == numnodes).map(r => r.time_to_postprocess)
+            let thisvaluestransform = rmethod.filter(r => r[filterval] == numnodes).map(r => r.time_to_transform)
+            let thisvaluessort = rmethod.filter(r => r[filterval] == numnodes).map(r => r.time_to_sort)
+            let thisvaluesc = rmethod.filter(r => r[filterval] == numnodes).map(r => r.crossings)
+            let thisvaluesedgelength = rmethod.filter(r => r[filterval] == numnodes).map(r => r.edge_length/20)
+
+            // console.log(numnodes, thisvalues.length, nodesizedict[numnodes])
+
+            if (thisvalues.length < 10) continue;
 
             for (let val of thisvalues){
                 rr.push([numnodes, Math.max(val, 10)])
@@ -391,76 +391,104 @@ let drawResults = function(results){
             }
 
             if (thisvalues.length > 0){
-                let thisvalue = thisvalues.reduce((a, b) => a + b)/thisvalues.length
+                let thisvalue = quantile(thisvalues, .5)
+                // let thisvalue = thisvalues.reduce((a, b) => a + b)/thisvalues.length
                 r.push([numnodes, Math.max(thisvalue, 10)])
             }
 
             if (thisvaluesc.length > 0){
-                let thisvalue = thisvaluesc.reduce((a, b) => a + b)/thisvaluesc.length
+                // let thisvalue = thisvaluesc.reduce((a, b) => a + b)/thisvaluesc.length
+                let thisvalue = quantile(thisvaluesc, .5)
                 c.push([numnodes, thisvalue])
             }
 
             if (thisvaluespostprocess.length > 0){
-                let thisvalue = thisvaluespostprocess.reduce((a, b) => a + b)/thisvaluespostprocess.length
+                // let thisvalue = thisvaluespostprocess.reduce((a, b) => a + b)/thisvaluespostprocess.length
+                let thisvalue = quantile(thisvaluespostprocess, .5)
                 postr.push([numnodes, Math.max(thisvalue + 0.01, 10)])
             }
 
             if (thisvaluestransform.length > 0){
-                let thisvalue = Math.max(10, thisvaluestransform.reduce((a, b) => a + b)/thisvaluestransform.length)
+                // let thisvalue = Math.max(10, thisvaluestransform.reduce((a, b) => a + b)/thisvaluestransform.length)
+                let thisvalue = quantile(thisvaluestransform, .5)
                 transformr.push([numnodes, Math.max(thisvalue + 0.01, 10)])
             }
 
             if (thisvaluessort.length > 0){
-                let thisvalue = thisvaluessort.reduce((a, b) => a + b)/thisvaluessort.length
+                // let thisvalue = thisvaluessort.reduce((a, b) => a + b)/thisvaluessort.length
+                let thisvalue = quantile(thisvaluessort, .5)
                 sortr.push([numnodes, Math.max(thisvalue + 0.01, 10)])
             }
 
             if (thisvaluesedgelength.length > 0){
-                let thisvalue = thisvaluesedgelength.reduce((a, b) => a + b)/thisvaluesedgelength.length
+                // let thisvalue = thisvaluesedgelength.reduce((a, b) => a + b)/thisvaluesedgelength.length
+                let thisvalue = quantile(thisvaluesedgelength, .5)
                 edgelengthr.push([numnodes, Math.max(thisvalue + 0.01, 10)])
             }
+
+            for (let el of thisvaluesedgelength){
+                eedgelengthr.push([numnodes, el])
+            }
+
+            rr = [...new Set(rr)]
+            eedgelengthr = [... new Set(eedgelengthr)]
+            cc = [... new Set(cc)]
         }
 
-        console.log(c)
+        // let curve = d3.line()
+        const line = d3.line()
+            .curve(d3.curveBasis);
 
         newbox = resultrow.append("div").attr("class", "col-sm")
 
         newbox.append("div").html(method)
 
         let padding = {top: 20, left: 30}
-        let height = 150
+        let height = 100
         let width = 150
 
-        let y = d3.scaleLog()
-            .domain([10, 5000])
-            .range([ width, 0 ]);
+        let y = d3.scaleLinear()
+            .domain([10, 20000])
+            .range([ height, 0 ]);
 
         let ycross = d3.scaleLinear()
             .domain([0, maxcrossings])
-            .range([ width, 0 ]);
+            .range([ height, 0 ]);
+
+        let ylength = d3.scaleLinear()
+            .domain([0, maxlength])
+            .range([ height, 0 ]);
 
         let x = d3.scaleLinear()
-            .domain([ 4, maxnodenum ])
-            .range([ 0, height ]);
+            .domain([ 5, maxnodenum ])
+            .range([ 0, width ]);
 
         let svg = newbox.append("svg").attr("class", "boxelem")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 " + 200 + " " + 200)
+            .attr("viewBox", "0 0 " + 200 + " " + 150)
 
-        let gridy = [20, 30, 50, 100, 200, 300, 500]
+        let gridy = [5000, 10000, 15000]
         for (let i of gridy){
             svg.append("path")
-                .attr("stroke", "#ccc")
+                .attr("stroke", "#ddd")
                 .attr("stroke-dasharray", "3 3")
                 .attr("d", () => { return d3.line()([[padding.left, padding.top + y(i)], [width + padding.left, padding.top + y(i)]])})
         }
 
-        for (let i = 4; i < maxnodenum; i += 50){
+        for (let i = 5; i < maxnodenum; i += 5){
             svg.append("path")
-                .attr("stroke", "#ccc")
+                .attr("stroke", "#ddd")
                 .attr("stroke-dasharray", "3 3")
                 .attr("d", () => { return d3.line()([[x(i) + padding.left, padding.top + height], [x(i) + padding.left, padding.top]])})
         }
+
+        if (r[r.length - 1][0] < 49) svg.append("path")
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 2)
+            .attr("d", () => {
+                return d3.line()([[padding.left + x(r[r.length - 1][0]), padding.top], [padding.left + x(r[r.length - 1][0]), padding.top + height]])
+            })
+
 
         if (drawyaxis){
             svg.append("g")
@@ -474,23 +502,26 @@ let drawResults = function(results){
 
         svg.append("path")
             .attr("fill", linecolors[2][1])
-            .attr("opacity", 0.3)
+            .attr("opacity", 0.2)
             .attr("d", () => {
                 let r1 = [];
                 let r2 = [];
 
                 for (let i of r){
                     let thisrr = rr.filter(el => el[0] == i[0]).map(el => el[1])
-                    let top = Math.max.apply(0, thisrr)
-                    let bottom = Math.min.apply(0, thisrr)
+                    let top = quantile(thisrr, .75)
+                    let bottom = quantile(thisrr, .25)
+                    console.log(thisrr, top, bottom)
                     r1.push([x(i[0]) + padding.left, y(top) + padding.top])
                     r2.push([x(i[0]) + padding.left, y(bottom) + padding.top])
                 }
 
+                r1.push(r1[r1.length - 1])
                 r2 = r2.reverse()
+                r1.push(r2[0])
                 r1 = r1.concat(r2)
                 
-                return d3.line()(r1);
+                return line(r1);
             })
 
         svg.selectAll("cirle")
@@ -501,18 +532,30 @@ let drawResults = function(results){
                 .attr("cy", r => padding.top + y(r[1]))
                 .attr("r", 1)
                 .attr("fill", "steelblue")
-                .style("opacity", 0.3)
+                .style("opacity", 0.5)
+
+        // svg.append("path")
+        //     .attr("fill", "none")
+        //     .attr("stroke", linecolors[3][1])
+        //     .attr("stroke-width", 1.5)
+        //     .attr("d", () => {
+        //         let rline = [];
+        //         for (let entry of postr){
+        //             rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+        //         }
+        //         return line(rline)
+        //     })
 
         svg.append("path")
             .attr("fill", "none")
             .attr("stroke", linecolors[2][1])
-            .attr("stroke-width", 1.5)
+            .attr("stroke-width", 2)
             .attr("d", () => {
                 let rline = [];
                 for (let entry of r){
                     rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
                 }
-                return d3.line()(rline)
+                return line(rline)
             })
 
         // svg.append("path")
@@ -527,55 +570,62 @@ let drawResults = function(results){
         //         return d3.line()(rline)
         //     })
 
-        svg.append("path")
-            .attr("fill", "none")
-            .attr("stroke", linecolors[1][1])
-            .attr("stroke-width", 1.5)
-            .attr("d", () => {
-                let rline = [];
-                for (let entry of transformr){
-                    rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
-                }
-                return d3.line()(rline)
-            })
+        // svg.append("path")
+        //     .attr("fill", "none")
+        //     .attr("stroke", linecolors[1][1])
+        //     .attr("stroke-width", 1.5)
+        //     .attr("d", () => {
+        //         let rline = [];
+        //         for (let entry of transformr){
+        //             rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+        //         }
+        //         return line(rline)
+        //     })
 
-        svg.append("path")
-            .attr("fill", "none")
-            .attr("stroke", linecolors[0][1])
-            .attr("stroke-width", 1.5)
-            .attr("d", () => {
-                let rline = [];
-                for (let entry of sortr){
-                    rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
-                }
-                return d3.line()(rline)
-            })
+        // svg.append("path")
+        //     .attr("fill", "none")
+        //     .attr("stroke", linecolors[0][1])
+        //     .attr("stroke-width", 1.5)
+        //     .attr("d", () => {
+        //         let rline = [];
+        //         for (let entry of sortr){
+        //             rline.push([padding.left + x(entry[0]), padding.top + y(entry[1])])
+        //         }
+        //         return line(rline)
+        //     })
 
 
         let svgcross = newbox.append("svg").attr("class", "boxelem")
             .attr("preserveAspectRatio", "xMinYMin meet")
-            .attr("viewBox", "0 0 " + 200 + " " + 200)
+            .attr("viewBox", "0 0 " + 200 + " " + 150)
 
-        for (let i = 4; i < maxnodenum; i += 50){
+        for (let i = 5; i < maxnodenum; i += 5){
             svgcross.append("path")
-                .attr("stroke", "#ccc")
+                .attr("stroke", "#ddd")
                 .attr("stroke-dasharray", "3 3")
-                .attr("d", () => { return d3.line()([[x(i) + padding.left, padding.top + height], [x(i) + padding.left, padding.top]])})
+                .attr("d", () => { return line([[x(i) + padding.left, padding.top + height], [x(i) + padding.left, padding.top]])})
         }
 
-        gridy = [2000, 4000, 6000, 8000]
+        gridy = [50, 100, 150, 200, 250]
         for (let i of gridy){
             svgcross.append("path")
-                .attr("stroke", "#ccc")
+                .attr("stroke", "#ddd")
                 .attr("stroke-dasharray", "3 3")
-                .attr("d", () => { return d3.line()([[padding.left, padding.top + ycross(i)], [width + padding.left, padding.top + ycross(i)]])})
+                .attr("d", () => { return line([[padding.left, padding.top + ycross(i)], [width + padding.left, padding.top + ycross(i)]])})
         }
 
         if (drawyaxis){
             svgcross.append("g")
             .attr("transform", "translate(" + (padding.left) + ", " + padding.top + ")")
-            .call(d3.axisLeft(ycross).tickArguments([5, "s"]).tickPadding(6));
+            .call(d3.axisLeft(ycross).tickArguments([3,".0s"]).tickPadding(10));
         }
+
+        if (r[r.length - 1][0] < 49) svgcross.append("path")
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 2)
+            .attr("d", () => {
+                return d3.line()([[padding.left + x(r[r.length - 1][0]), padding.top], [padding.left + x(r[r.length - 1][0]), padding.top + height]])
+            })
         
         svgcross.append("g")
             .attr("transform", "translate(" + padding.left + ", " + (padding.top + height) + ")")
@@ -583,39 +633,41 @@ let drawResults = function(results){
 
         svgcross.append("path")
         .attr("fill", d3.schemeTableau10[6])
-        .attr("opacity", 0.3)
+        .attr("opacity", 0.2)
         .attr("d", () => {
             let r1 = [];
             let r2 = [];
 
             for (let i of c){
                 let thisrr = cc.filter(el => el[0] == i[0]).map(el => el[1])
-                let top = Math.max.apply(0, thisrr)
-                let bottom = Math.min.apply(0, thisrr)
+                let top = quantile(thisrr, .75)
+                let bottom = quantile(thisrr, .25)
                 r1.push([x(i[0]) + padding.left, ycross(top) + padding.top])
                 r2.push([x(i[0]) + padding.left, ycross(bottom) + padding.top])
             }
 
+            r1.push(r1[r1.length - 1])
             r2 = r2.reverse()
+            r1.push(r2[0])
             r1 = r1.concat(r2)
             
-            return d3.line()(r1);
+            return line(r1);
         })
 
-        // svgcross.selectAll("cirle")
-        //     .data(cc)
-        //     .enter()
-        //     .append("circle")
-        //         .attr("cx", r => padding.left + x(r[0]))
-        //         .attr("cy", r => padding.top + ycross(r[1]))
-        //         .attr("r", 1)
-        //         .attr("fill", d3.schemeTableau10[6])
-        //         .style("opacity", 0.3)
+        svgcross.selectAll("cirle")
+            .data(cc)
+            .enter()
+            .append("circle")
+                .attr("cx", r => padding.left + x(r[0]))
+                .attr("cy", r => padding.top + ycross(r[1]))
+                .attr("r", 1)
+                .attr("fill", d3.schemeTableau10[6])
+                .style("opacity", 0.5)
 
         svgcross.append("path")
         .attr("fill", "none")
         .attr("stroke", d3.schemeTableau10[6])
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", 2)
         .attr("d", () => {
             let rline = [];
 
@@ -623,51 +675,92 @@ let drawResults = function(results){
                 rline.push([padding.left + x(entry[0]), padding.top + ycross(entry[1])])
             }
 
-            return d3.line()(rline)
+            return line(rline)
+        })
+
+        let svglength = newbox.append("svg").attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + 200 + " " + 150)
+
+        for (let i = 5; i < maxnodenum; i += 5){
+            svglength.append("path")
+                .attr("stroke", "#ddd")
+                .attr("stroke-dasharray", "3 3")
+                .attr("d", () => { return line([[x(i) + padding.left, padding.top + height], [x(i) + padding.left, padding.top]])})
+        }
+
+        gridy = [200, 400, 600, 800]
+        for (let i of gridy){
+            svglength.append("path")
+                .attr("stroke", "#ddd")
+                .attr("stroke-dasharray", "3 3")
+                .attr("d", () => { return line([[padding.left, padding.top + ylength(i)], [width + padding.left, padding.top + ylength(i)]])})
+        }
+
+        if (drawyaxis){
+            svglength.append("g")
+            .attr("transform", "translate(" + (padding.left) + ", " + padding.top + ")")
+            .call(d3.axisLeft(ylength).tickArguments([3,".0s"]).tickPadding(10));
+        }
+
+        if (r[r.length - 1][0] < 49) svglength.append("path")
+            .attr("stroke", "#ccc")
+            .attr("stroke-width", 2)
+            .attr("d", () => {
+                return d3.line()([[padding.left + x(r[r.length - 1][0]), padding.top], [padding.left + x(r[r.length - 1][0]), padding.top + height]])
+            })
+        
+        svglength.append("g")
+            .attr("transform", "translate(" + padding.left + ", " + (padding.top + height) + ")")
+            .call(d3.axisBottom(x).ticks(5));
+
+        svglength.append("path")
+        .attr("fill", d3.schemeTableau10[7])
+        .attr("opacity", 0.2)
+        .attr("d", () => {
+            let r1 = [];
+            let r2 = [];
+
+            for (let i of edgelengthr){
+                let thisrr = eedgelengthr.filter(el => el[0] == i[0]).map(el => el[1])
+                let top = Math.max.apply(0, thisrr)
+                let bottom = Math.min.apply(0, thisrr)
+                r1.push([x(i[0]) + padding.left, ylength(top) + padding.top])
+                r2.push([x(i[0]) + padding.left, ylength(bottom) + padding.top])
+            }
+
+            r1.push(r1[r1.length - 1])
+            r2 = r2.reverse()
+            r1.push(r2[0])
+            r1 = r1.concat(r2)
+            
+            return line(r1);
+        })
+
+        svglength.selectAll("cirle")
+            .data(eedgelengthr)
+            .enter()
+            .append("circle")
+                .attr("cx", r => padding.left + x(r[0]))
+                .attr("cy", r => padding.top + ylength(r[1]))
+                .attr("r", 1)
+                .attr("fill", d3.schemeTableau10[7])
+                .style("opacity", 0.5)
+
+        svglength.append("path")
+        .attr("fill", "none")
+        .attr("stroke", d3.schemeTableau10[7])
+        .attr("stroke-width", 2)
+        .attr("d", () => {
+            let rline = [];
+
+            for (let entry of edgelengthr){
+                rline.push([padding.left + x(entry[0]), padding.top + ylength(entry[1])])
+            }
+
+            return line(rline)
         })
     }
-}
-
-let runAll = async function() {
-
-    await firstStartup();
-
-    let results = [];
-
-    for (let i = 0; i < 10; i++){
-        let fname = "./data/benchmarks/generated/graph_preferential_" + i;
-        // let count = 0;
-        // for await (let j of makeTextFileLineIterator(fname)) count++;
-        // if (count > 300) continue;
-        console.log(fname)
-
-        // d3.select("body").append("div").style("width", "100%").style("height", "10px").style("background-color", "gray")
-
-        // row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        // descriptionrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        // originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        // transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        // iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        // finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-        // graphvizrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-
-        resultrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
-
-        try {
-            for (let method of methods){
-                let box; //= row.append("div").attr("class", "col-sm")
-                let res = await drawBox(box, method, fname);
-
-                res.method = method;
-                results.push(res);
-            }
-        } catch (e) {console.log(e, i)}
-    }
-
-    console.log(results)
-    drawResults(results);
-
-    console.log("done!")
 }
 
 let readAll = async function () {
@@ -683,8 +776,14 @@ let readAll = async function () {
 
     resultrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
 
-    let results = await d3.json("./data/benchmark_results/resultsrandom2.json")
-    drawResults(results.results)
+    let results = await d3.json("./data/benchmark_results/results_collab_2layer.json")
+    let results3 = await d3.json("./data/benchmark_results/results_collab_3layer.json")
+    let results5 = await d3.json("./data/benchmark_results/results_collab_5layer.json")
+    let resultsinria = await d3.json("./data/benchmark_results/results_inria_collab_2_2layer.json")
+    // let resultsinria = await d3.json("./data/benchmark_results/results_inria_collab_1layer.json")
+    // let resultsinria = await d3.json("./data/benchmark_results/results_inria_collab_5_2layer.json")
+    // drawResults(results.results.concat(results3.results).concat(results5.results).concat(resultsinria.results))
+    drawResults(resultsinria.results);
 
     let legend = resultrow.append("svg")
         .attr("width", 400)
@@ -708,7 +807,7 @@ let readAll = async function () {
         .attr("fill", d => d[1])
 }
 
-linecolors = [["sort", d3.schemeTableau10[3]], ["transform", d3.schemeTableau10[2]], ["total", d3.schemeTableau10[0]]]
+linecolors = [["sort", d3.schemeTableau10[3]], ["transform", d3.schemeTableau10[2]], ["total", d3.schemeTableau10[0]], ["postprocess", d3.schemeTableau10[7]]]
 
 // runAll()
 readAll()

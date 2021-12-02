@@ -1,0 +1,485 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <script src="lib/d3.min.js"></script>
+  <script src="lib/glpk.min.js"></script>
+  <!-- <script src="lib/reorder.min.js"></script> -->
+  <script src="lib/d3-interpolate.min.js"></script>
+  <script src="lib/nouislider.min.js"></script>
+  <script src="lib/bootstrap.min.js"></script>
+
+  <script src="https://code.easypz.io/easypz.latest.min.js"></script>
+
+  <link rel="stylesheet" href="lib/nouislider.min.css">
+  <link rel="stylesheet" href="lib/bootstrap.min.css">
+
+  <script src="src/case_studies/simplegraph.js"></script>
+  <script src="src/case_studies/infobox.js"></script>
+  <script src="src/stratisfimal/simpleLp.js"></script>
+  <script src="src/utils.js"></script>
+  <script src="src/ProblemList.js"></script>
+  <script src="src/ProblemlistSorter.js"></script>
+  <script src="src/ProblemlistPainter.js"></script>
+  <script src="src/CollabParser.js"></script>
+  <script src="src/barycentric/GraphSummarization.js"></script>
+  <script src="src/barycentric/hyperedge_split_functions.js"></script>
+  <script src="src/barycentric/metrics.js"></script>
+  <script src="src/barycentric/sort_and_draw.js"></script>
+  <script src="src/barycentric/graphToDot.js"></script>
+
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@hpcc-js/wasm/dist/index.min.js"></script>
+  <script src="lib/cola.min.js"></script>
+
+  <style>
+      text {
+          font-family: Arial;
+          font-size: x-small;
+          color: gray;
+          text-anchor: middle;
+      }
+
+      svg {
+          /* padding: 5%; */
+      }
+
+      .optionbox {
+          position: fixed;
+          top: 0px;
+          background-color: #b2c6d7;
+          padding: 1%;
+          font-size: 0.7em;
+          display: none;
+      }
+
+      .btn {
+          font-size: 0.8em;
+          padding: .175rem .75rem;
+      }
+
+      .noUi-target {
+          scale: 70%;
+      }
+
+      .boxelem {
+          display: block;
+      }
+
+      body {
+          overflow: scroll;
+          width: 300%;
+      }
+
+  </style>
+
+</head>
+
+<body>
+
+</body>
+
+</html>
+
+<script>
+
+var hpccWasm = window["@hpcc-js/wasm"];
+
+let getThemesForTimePeriod = (data, teamdata) => {
+    
+    let d = [... new Set(Object.entries(data)
+        .filter(el => el[0] >= yearsVisualized[0] && el[0] <= yearsVisualized[1])
+        .map(el => Object.keys(el[1]).map(el => el.split(":")))
+        .flat().flat().map(el => {if (teamdata[el.split("(")[1].replace(")", "")] == undefined) console.log(el); return teamdata[el.split("(")[1].replace(")", "")][thememarker]}))]
+
+    return d;
+}
+
+let add_collab_to_groupworks = function (data, year, collab, teamdata) {
+    let collabarr = collab.split(":")
+
+    for (let elem of collabarr){
+        if (groupworks[elem] == undefined) groupworks[elem] = {}
+        if (groupworks[elem][year] == undefined) groupworks[elem][year] = { total_publications : 0, total_collabs: 0 }
+        if (groupworks[elem][year].by_theme == undefined) groupworks[elem][year].by_theme = {}
+        groupworks[elem][year].totalnum += data[year][collab];
+        
+        for (let elem2 of collabarr){
+            if (elem == elem2) continue;
+            let theme = get_theme(elem2, teamdata)
+
+            if (groupworks[elem][year]["by_theme"][theme] == undefined) groupworks[elem][year]["by_theme"][theme] = 0
+            groupworks[elem][year]["by_theme"][theme] += data[year][collab]
+            groupworks[elem][year].total_collabs += data[year][collab]
+        }
+    }
+}
+
+let get_theme = function(group) {
+    return teamdata[group.split("(")[1].replace(")", "")][thememarker]
+}
+
+let parseDataset = function (data, teamdata) {
+
+    themes = getThemesForTimePeriod(data, teamdata);
+
+    let graph = new Graph();
+    graph.hyperedges = [];
+
+    // splits the graph. Note: this merges all nodes with the same name
+    for (let year in data){
+        if (year < yearsVisualized[0] || year > yearsVisualized[1]) continue;
+
+        for (let collab in data[year]){
+
+            // add data to groupworks
+            add_collab_to_groupworks(data, year, collab, teamdata)
+
+            let collabarr = collab.split(":")
+
+            if (collabarr.length < 2) continue;
+            if (data[year][collab] < collabcutoff) continue;
+
+            for (let group of collabarr){
+                let gname = group.split("(")[0]
+                let gcode = group.split("(")[1].replace(")", "")
+                if (graph.nodes.find(n => n.name == gname && n.depth == year - yearsVisualized[0])) continue;
+                else {
+                    let theme = get_theme(group, teamdata);
+                    if (themecolordict[theme] == undefined) themecolordict[theme] = d3.interpolateWarm(themes.indexOf(theme)/themes.length)
+                    graph.addNode({depth: year - yearsVisualized[0], gcode: gcode, name: gname, groupname: gname, color: themecolordict[theme], theme: theme});
+                }
+            }
+
+            let involvedNodes = graph.nodes.filter(n => n.depth == year - yearsVisualized[0] && collabarr.map(c => c.split("(")[0]).includes(n.name))
+            
+            // let weight = Math.ceil(data[year][collab]/collab_weight_ratio)
+            let weight = base_edge_weight
+
+            if (involvedNodes.length == 2) graph.addEdge({nodes: involvedNodes, weight: weight})
+            else if (involvedNodes.length > 2) graph.hyperedges.push({nodes: involvedNodes, weight: weight})
+        }
+
+        if (year > yearsVisualized[0]){
+            let d = year - yearsVisualized[0]            
+            if (graph.nodeIndex[d] == undefined) continue;
+
+            for (let node of graph.nodeIndex[d]){
+
+                if (graph.nodeIndex[d - 1].find(n => n.name == node.name)) {
+                    let prevnode = graph.nodeIndex[d - 1].find(n => n.groupname == node.groupname)
+                    graph.addEdge({weight: !isolatedSelection.includes(node.name)? group_edge_weight : selected_edge_weight, nodes: [prevnode, node], color: prevnode.color, drawtype: "dashed"})
+                } 
+                else {
+                    let prevnodes = graph.nodes.filter(n => n.groupname == node.groupname && n.depth < d)
+                    if (prevnodes.length < 1) continue;
+                    let maxprevdepth = Math.max.apply(0, prevnodes.map(n => n.depth))
+                    let mprevnode = prevnodes.find(n => n.depth == maxprevdepth)
+                    graph.addEdge({nodes: [mprevnode, node], color: mprevnode.color, weight: !isolatedSelection.includes(node.name)? group_edge_weight : selected_edge_weight, drawtype: "dashed"})
+                }
+
+            }
+        }
+    }
+
+    return graph;
+}
+
+let isolateElemGraph = function (graph, groupnames) {
+
+    let aux = function (node, deg) {
+
+        if (!node.degreeFromSelection || deg < node.degreeFromSelection) node.degreeFromSelection = deg;
+
+        if (node.visited || deg > node.degreeFromSelection) return;
+        else node.visited = true;
+
+        if (deg >= maxDegreesFromInclusionSelection) return;
+
+        let othernodes = graph.edges.concat(graph.hyperedges)
+            .filter(e => e.nodes.includes(node) && e.weight >= inclusioncutoff).map(e => e.nodes).filter(n => n != node).flat()
+
+        // entire group should be visualized
+        // let samegroup = graph.nodes.filter(n => n.name == node.name)
+        // samegroup.map(n => n.visited = true)
+        // for (let n of samegroup) if (n.degreeFromSelection > node.degreeFromSelection) n.degreeFromSelection = node.degreeFromSelection;
+
+        for (let n of othernodes) {
+            if (n.name == node.name) aux(n, deg);
+            else aux(n, deg + 1);
+        }
+    }
+
+    for (let node of graph.nodes.filter(n => groupnames.includes(n.name))) aux(node, 0);
+
+    graph.removeNodes(graph.nodes.filter(n => n.visited != true))
+    graph.edges = graph.edges.filter(e => e.nodes.every(n => graph.nodes.includes(n)))
+    graph.hyperedges = graph.hyperedges.filter(e => e.nodes.every(n => graph.nodes.includes(n)))
+
+}
+
+let isolateThemeGraph = function (graph, themenames) {
+    // console.log(themenames)
+    graph.removeNodes(graph.nodes.filter(n => !themenames.includes(n.theme)))
+    // console.log(graph.nodes.filter(n => n.theme == "USA"))
+    graph.edges = graph.edges.filter(e => e.nodes.every(n => graph.nodes.includes(n)))
+    graph.hyperedges = graph.hyperedges.filter(e => e.nodes.every(n => graph.nodes.includes(n)))
+}
+
+let drawInriaCollabs = async function (box, split_type, draw_iterations = false) {
+
+    let data = await d3.json(datafilepath)
+    teamdata = await d3.json(teamdatafilepath)
+
+    // sanitize
+    for (let entry in data){
+        let l = data[entry]
+        data[entry] = {}
+
+        for (let elem in l){
+            let newelem = id_cleanup_no_space(elem)
+            data[entry][newelem] = l[elem]
+        }
+    }
+
+    // get a list of all the existing themes
+    let themes = new Set();
+
+    for (let entry in teamdata){
+        themes.add(teamdata[entry][thememarker])
+    }
+
+    themes = [...themes]
+
+    newbox = originalrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").html("<h3>" + split_type + "<h3>")
+    newbox.append("div").attr("class", "boxelem").text("original:")
+
+    // let svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    //     .attr("preserveAspectRatio", "xMinYMin meet")
+    //     .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    let graph = parseDataset(data, teamdata, themes);
+
+    if (isolatedSelection.length > 0) isolateElemGraph(graph, isolatedSelection)
+    if (isolatedTheme.length > 0) isolateThemeGraph(graph, isolatedTheme);
+
+    // graph.addAnchors()
+
+    // for (let gname of [...new Set(graph.nodes.map(n => n.name))]){
+    //     graph.addGroup({nodes: graph.nodes.filter(n => n.name == gname)})
+    // }
+
+    // drawHypergraph(svg, graph);
+
+    let start_time = new Date()
+
+    switch(split_type){ 
+        case "split1": split1(graph); break;
+        case "split2": split2(graph); break;
+        case "aggregate1": aggregate1(graph); break;
+        case "aggregate2": aggregate2(graph); split2(graph); break;
+        case "addnode": addnode1(graph); break;
+    }
+
+    time_to_transform = new Date() - start_time
+
+    newbox = transformrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").text("transform: (" + graph.edges.length + " edges)")
+
+    // svg = newbox.append("svg")
+    //     .attr("class", "boxelem")
+    
+    // if (graph.nodeIndex[0].length > 5) svg.attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    // g = svg.append("g")
+    // graph.draw(g, nodeYdist, nodeXdist)
+
+    if (draw_iterations) {
+        newbox = iterationrow.append("div").attr("class", "col-sm")
+        newbox.append("div").attr("class", "boxelem").text("iterations:")
+
+        svg = newbox.append("svg")
+            .attr("class", "boxelem")
+            .attr("preserveAspectRatio", "xMinYMin meet")
+            .attr("viewBox", "0 0 " + svgwidth + " " + svgheight)
+    }
+
+    start_time = new Date()
+
+    // sortAndDraw(svg, graph, draw_iterations);    
+
+    let gtd = graphToDot(graph);
+
+    console.log(gtd)
+
+    let s = await hpccWasm.graphviz.layout(gtd, "svg", "dot")
+    // newbox.html(s)
+    for (let node of graph.nodes){
+        let t = s.slice(s.search(node.id))
+        let m = t.slice(t.search("cx")).split('"')
+        node.y = parseInt(m[1])*0.3 + 50
+    }
+    for (let nindex of graph.nodeIndex){
+        nindex.sort((a, b) => a.y > b.y)
+    }
+
+    // for (let d = 0; d < yearsVisualized[1] - yearsVisualized[0]; d++){
+    //     for (let node of graph.nodeIndex[d]){
+    //         let prevnodes = graph.nodes.filter(n => n.name == node.name && n.depth < d - 1)
+    //         if (prevnodes.length < 1) continue;
+    //         let maxprevdepth = Math.max.apply(0, prevnodes.map(n => n.depth))
+    //         let mprevnode = prevnodes.find(n => n.depth == maxprevdepth)
+    //         graph.addEdge({nodes: [mprevnode, node], weight: 1, drawtype: "dashed"})
+    //     }
+    // }
+
+    time_to_sort = new Date() - start_time
+
+    newbox = finalrow.append("div").attr("class", "col-sm")
+    newbox.append("div").attr("class", "boxelem").text("final:")
+
+    switch(split_type){
+        case "split1": desplit1(graph); break;
+        case "split2": desplit1(graph); break;
+        case "aggregate1": disaggregate(graph); break;
+        case "aggregate2": desplit1(graph); disaggregate(graph); break;
+        case "addnode": disnode(graph); break;
+    }
+
+    svg = newbox.append("svg")
+        .attr("class", "boxelem")
+        .attr("preserveAspectRatio", "xMinYMin meet")
+        .attr("viewBox", "0 0 " + svgwidth + " " + singlesvgheight)
+
+    let yearsep = 1
+    for (let i = yearsVisualized[0]; i <= yearsVisualized[1]; i+=yearsep){
+
+        let ivert = i - yearsVisualized[0]
+        let ycoord = -10 + ivert*nodeYdist
+
+        svg.append("path")
+            .attr("stroke", "#ccc")
+            .attr("stroke-dasharray", "10 6")
+            .attr("d", () => { 
+                return d3.line()([[0, ycoord], [svgwidth, ycoord]])
+            })
+
+        svg.append("text")
+            .attr("x", 0)
+            .attr("fill", "#aaa")
+            .style("text-anchor", "start")
+            .attr("y", ycoord + 10)
+            .text(i)
+    }
+
+    drawHypergraph(svg, graph);
+
+    add_infobox(svg)
+
+    let legend = svg.selectAll(".legendentry")
+        .data(Object.keys(themecolordict))
+        .enter()
+        .append("g")
+        .attr("transform", (d, i) => "translate(4000, " + (100 + i*20) + ")")
+    
+    legend.append("text")
+        .style("font-size", "1em")
+        .style("text-anchor", "start")
+        .text(d => d)
+
+    legend.append("circle")
+        .attr("r", 5)
+        .attr("cx", -10)
+        .attr("cy", -5)
+        .attr("fill", d => themecolordict[d])
+
+    newbox.append("div").attr("class", "boxelem").text("crossings 1: " + count_all_crossings(graph, true))
+    newbox.append("div").attr("class", "boxelem").text("edge length 1: " + count_edge_length_at_depth(graph, 0, true))
+    newbox.append("div").attr("class", "boxelem").text("time to transform: " + time_to_transform + " ms")
+    newbox.append("div").attr("class", "boxelem").text("time to sort: " + time_to_sort + " ms")
+
+
+
+    // // cola
+    // for (let edge of graph.edges){
+    //     edge.source = edge.nodes[0];
+    //     edge.target = edge.nodes[1];
+    // }
+
+    // var d3cola = cola.d3adaptor()
+    // .linkDistance(30)
+    // .size([svgwidth, svgheight]);
+
+    // d3cola
+    // .nodes(graph.nodes)
+    // .links(graph.edges)
+    // .constraints({"axis":"y", "left":0, "right":1, "gap":25})
+    // .symmetricDiffLinkLengths(5)
+    // .avoidOverlaps(true)
+    // .start(10,15,20);
+}
+
+let init = async function () {
+    row = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    originalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    transformrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    iterationrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+    finalrow = d3.select("body").append("div").attr("class", "row").style("margin", "2%")
+
+    let box = row.append("div").attr("class", "col-sm")
+
+    await drawInriaCollabs(box, "split2");
+}
+
+let isolatedSelection = [];
+let isolatedTheme = [];
+let groupworks = {}
+let teamdata;
+
+let svgheight = 1500
+let svgwidth = 5500
+let singlesvgheight = 2000
+let iteration_distance = svgheight/5
+
+let nodeYdist = 70;
+let nodeXdist = 20;
+let drawNodeLabels = true;
+
+let collabcutoff = 5;
+let inclusioncutoff = 0;
+let maxDegreesFromInclusionSelection = 2;
+
+let themecolordict = {}
+
+let datafilepath = "./data/inria-collab.json"
+let teamdatafilepath = "./data/inria-teams.json"
+let thememarker = "theme"
+// isolatedSelection = ["AVIZ "]
+// isolatedTheme = ["Interaction et visualisation"]
+
+// let datafilepath = "./data/visPubData/vispubdata500_collab.json"
+// let teamdatafilepath = "./data/visPubData/vispubdata500_affiliations.json"
+// let thememarker = "country"
+// isolatedSelection = ["New York University, USA "]
+// isolatedTheme = ["Germany"]
+
+let selected_edge_weight = 100000;
+let group_edge_weight = 10000;
+let base_edge_weight = 0.2;
+let collab_weight_ratio = 2;
+
+// let yearsVisualized = [2000, 2020]
+let yearsVisualized = [2010, 2021]
+
+let time_to_transform = 0
+let time_to_sort = 0
+let iterations_to_convergence = 0
+
+let row, originalrow, transformrow, iterationrow, finalrow;
+
+init()
+
+</script>
